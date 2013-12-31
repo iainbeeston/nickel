@@ -3,6 +3,8 @@ Nickel
 
 Nickel extracts date, time, and message information from naturally worded text.
 
+[![Code Climate](https://codeclimate.com/github/iainbeeston/nickel.png)](https://codeclimate.com/github/iainbeeston/nickel)
+
 Install
 -------
 
