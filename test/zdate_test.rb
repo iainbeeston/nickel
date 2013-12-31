@@ -44,6 +44,6 @@ class ZDateTest < Test::Unit::TestCase
 
   def test_to_date
     date = ZDate.new('20090927')
-    assert_equal Date.new(2009, 9, 27), date.to_date
+    assert_equal date, Date.new(2009, 9, 27)
   end
 end

@@ -145,10 +145,6 @@ module Nickel
         0
       end
     end
-
-    def to_s
-      [hour_str, minute_str, second_str].join(':')
-    end
     
     class << self
 
