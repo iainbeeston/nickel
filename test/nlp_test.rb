@@ -1,9 +1,12 @@
 require 'test/unit'
-
 path = File.expand_path(File.dirname(__FILE__))
 require File.join(path, '..', 'lib', 'nickel.rb')
 require File.join(path, 'nlp_tests_helper.rb')
+
 include Nickel
+
+require 'coveralls'
+Coveralls.wear_merged!
 
 # note that ZTime now has the '==' operator, so it won't go through Compare::Objects recursion, meaning we will miss @firm setting, but that is not very important as long as the outcome is correct
 

@@ -1,7 +1,5 @@
 require File.join(File.dirname(__FILE__), 'compare.rb')
 require 'pp'
-require 'coveralls'
-Coveralls.wear!
 
 module NLPTestsHelper
   

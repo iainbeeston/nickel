@@ -1,8 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../lib/nickel")
 
 require 'coveralls'
-Coveralls.wear!
-
+Coveralls.wear_merged!
 
 describe "A single date" do 
   before(:all) { @n = Nickel.parse "oct 15 09" }

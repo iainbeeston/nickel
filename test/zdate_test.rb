@@ -1,9 +1,13 @@
 require 'test/unit'
 
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'nickel', 'ruby_ext', 'to_s2.rb'))
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'nickel', 'zdate.rb'))
+path = File.expand_path(File.dirname(__FILE__))
+require File.join(path, '..', 'lib', 'nickel', 'ruby_ext', 'to_s2.rb')
+require File.join(path, '..', 'lib', 'nickel', 'zdate.rb')
 
 include Nickel
+
+require 'coveralls'
+Coveralls.wear_merged!
 
 class ZDateTest < Test::Unit::TestCase
 
