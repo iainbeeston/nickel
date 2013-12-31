@@ -1,9 +1,10 @@
 require 'rake'
 require 'rake/testtask'
+require 'rspec/core/rake_task'
 require 'rdoc/task'
 
 desc 'Default: run unit tests.'
-task :default => :test
+task :default => [:test, :spec]
 
 desc 'Test the nlp plugin.'
 Rake::TestTask.new(:test) do |t|
@@ -11,6 +12,8 @@ Rake::TestTask.new(:test) do |t|
   t.pattern = 'test/**/*_test.rb'
   t.verbose = true
 end
+
+RSpec::Core::RakeTask.new(:spec)
 
 desc 'Generate documentation for the nlp plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|
