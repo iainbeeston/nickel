@@ -10,9 +10,7 @@ Nickel extracts date, time, and message information from naturally worded text.
 Install
 -------
 
-```
-$ gem install nickel
-```
+If you use bundler add `gem "nickel"` to your gemfile, or if not run `gem install nickel` from the command line.
 
 Usage
 -----
