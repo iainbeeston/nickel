@@ -1,6 +1,7 @@
-# Run with: 
-# ~/dev/nickel(master)$ rspec test/nickel_spec.rb
 require File.expand_path(File.dirname(__FILE__) + "/../lib/nickel")
+
+require 'coveralls'
+Coveralls.wear!
 
 
 describe "A single date" do 
