@@ -82,6 +82,3 @@ Running Tests
 ```
   $ rake test
 ```
-
-Copyright (c) 2008 Lou Zell, maintained by Iain Beeston, released under the MIT license
-
