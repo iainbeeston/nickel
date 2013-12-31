@@ -17,6 +17,10 @@ Gem::Specification.new do |s|
   s.test_files         = s.files.grep(%r{^(test|spec)/})
   s.require_paths      = ["lib"]
 
+  if RUBY_ENGINE == 'rbx'
+    s.add_development_dependency 'rubysl-test-unit'
+  end
+
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
