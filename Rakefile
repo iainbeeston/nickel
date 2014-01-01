@@ -3,7 +3,7 @@ require "bundler/gem_tasks"
 require 'rake/testtask'
 require 'rspec/core/rake_task'
 require 'coveralls/rake/task'
-require 'rdoc/task'
+require 'yard'
 
 task :default => [:test, :spec]
 
@@ -15,12 +15,7 @@ end
 
 RSpec::Core::RakeTask.new(:spec)
 
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Nickel'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
+YARD::Rake::YardocTask.new(:yard)
 
 Coveralls::RakeTask.new
 task :test_with_coveralls => [:test, :spec, 'coveralls:push']

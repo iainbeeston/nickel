@@ -5,11 +5,11 @@
 module Nickel
   
   class ZTime
-    # @firm will be used to indicate user provided am/pm
+    # \@firm will be used to indicate user provided am/pm
     attr_accessor :firm
 
-    # @time is always stored on 24 hour clock, but we could initialize a Time object with ZTime.new("1020", :pm)
-    # we will convert this to 24 hour clock and set @firm = true
+    # \@time is always stored on 24 hour clock, but we could initialize a Time object with ZTime.new("1020", :pm)
+    # we will convert this to 24 hour clock and set \@firm = true
     def initialize(hhmmss = nil, am_pm = nil)
       t = hhmmss ? hhmmss : ::Time.new.strftime("%H%M%S")
       t.gsub!(/:/,'') # remove any hyphens, so a user can initialize with something like "2008-10-23"
@@ -51,8 +51,8 @@ module Nickel
       second_str.to_i
     end
 
-    # add_ methods return new ZTime object
-    # add_ methods take an optional block, the block will be passed the number of days that have passed; 
+    # add\_ methods return new ZTime object
+    # add\_ methods take an optional block, the block will be passed the number of days that have passed; 
     # i.e. adding 48 hours will pass a 2 to the block, this is handy for something like this:
     # time.add_hours(15) {|x| date.add_days(x)}
     def add_minutes(number, &block)

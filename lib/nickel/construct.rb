@@ -81,7 +81,7 @@ module Nickel
       [hash_for_occ_base]
     end
 
-    # @repeats_on is an array of day indices. For example,
+    # \@repeats_on is an array of day indices. For example,
     # "every monday and wed" will produce @repeats_on == [0,2].
     def interpret_weekly_variant
       hash_for_occ_base = {:type => :weekly, :interval => get_interval}
@@ -92,10 +92,10 @@ module Nickel
       array_of_occurrences
     end
 
-    # @repeats_on is an array of arrays: Each sub array has the format
+    # \@repeats_on is an array of arrays: Each sub array has the format
     # [week_of_month, day_of_week].  For example, 
     # "the first and second sat of every month" will produce
-    # @repeats_on == [[1,5], [2,5]]
+    # \@repeats_on == [[1,5], [2,5]]
     def interpret_daymonthly_variant
       hash_for_occ_base = {:type => :daymonthly, :interval => get_interval}
       array_of_occurrences = []
@@ -106,7 +106,7 @@ module Nickel
       array_of_occurrences
     end
 
-    # @repeats_on is an array of datemonthly indices.  For example, 
+    # \@repeats_on is an array of datemonthly indices.  For example, 
     # "the 21st and 22nd of every monthy" will produce @repeats_on == [21, 22]
     def interpret_datemonthly_variant
       hash_for_occ_base = {:type => :datemonthly, :interval => get_interval}
