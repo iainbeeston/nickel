@@ -8,9 +8,6 @@
 #
 # The second term is optional.
 
-require 'logger'
-require 'date'
-
 path = File.expand_path(File.join(File.dirname(__FILE__), 'nickel'))
 
 require File.join(path, 'ruby_ext', 'to_s2.rb')
