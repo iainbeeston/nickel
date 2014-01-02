@@ -17,7 +17,7 @@ Usage
 
 A single occurrence
 
-```
+```ruby
 n = Nickel.parse("use the force on july 1st at 9am", Time.now)
 n.message                       #=> "use the force"
 n.occurrences.first.start_date  #=> "20110701"
@@ -25,7 +25,7 @@ n.occurrences.first.start_date  #=> "20110701"
 
 A daily occurrence
 
-```
+```ruby
 n = Nickel.parse "wake up everyday at 11am"
 n.message                       # => wake up
 n.occurrences[0].type           # => daily
@@ -34,7 +34,7 @@ n.occurrences[0].start_time     # => 11:00:00
 
 A weekly occurrence
 
-```
+```ruby
 n = Nickel.parse "guitar lessons every tuesday at 5pm"
 n.message                       # => guitar lessons
 n.occurrences[0].type           # => weekly
@@ -45,7 +45,7 @@ n.occurrences[0].start_time     # => 17:00:00
 
 A day monthly occurrence
 
-```
+```ruby
 n = Nickel.parse "drink specials on the second thursday of every month"
 n.message                       # => drink specials
 n.occurrences[0].type           # => daymonthly
@@ -56,7 +56,7 @@ n.occurrences[0].interval       # => 1
 
 A date monthly occurrence
 
-```
+```ruby
 n = Nickel.parse "pay credit card every month on the 22nd"
 n.message                       # => pay credit card
 n.occurrences[0].type           # => datemonthly
@@ -66,7 +66,7 @@ n.occurrences[0].interval       # => 1
 
 Multiple occurrences
 
-```
+```ruby
 n = Nickel.parse "band meeting every monday and wednesday at 2pm"
 n.message                       # => band meeting
 n.occurrences[0].type           # => weekly
@@ -79,7 +79,7 @@ n.occurrences[1].start_time     # => 14:00:00
 
 Setting current time
 
-```
+```ruby
 n = Nickel.parse "lunch 3 days from now", DateTime.new(2010,3,31)
 n.message                       # => lunch
 n.occurrences[0].start_date     # => 20100403
