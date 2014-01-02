@@ -21,6 +21,9 @@ Gem::Specification.new do |s|
     s.add_dependency 'rubysl-logger'
     s.add_dependency 'rubysl-date'
     s.add_development_dependency 'rubysl-test-unit'
+    s.add_development_dependency 'rubysl-rake'
+    s.add_development_dependency 'rubysl-bundler'
+    s.add_development_dependency 'rubysl-json'
   end
 
   s.add_development_dependency "bundler"

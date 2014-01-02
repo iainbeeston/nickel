@@ -1,8 +1,8 @@
 language: ruby
-script: rake test_with_coveralls
+script: bundle exec rake test_with_coveralls
 rvm:
   - 2.1
   - 2.0
   - 1.9
   - jruby-19mode
-  - rbx-2.2
+  - rbx
