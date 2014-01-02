@@ -41,7 +41,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1_to_2am
     t1 = ZTime.new("1")
     t2 = ZTime.new("2", :am)
@@ -57,7 +57,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_10_to_11pm
     t1 = ZTime.new("10")
     t2 = ZTime.new("11", :pm)
@@ -145,7 +145,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1021_to_1223am
     t1 = ZTime.new("1021")
     t2 = ZTime.new("1223", :am)
@@ -193,7 +193,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1220_to_12am
     t1 = ZTime.new("1220")
     t2 = ZTime.new("12", :am)
@@ -257,7 +257,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1100_to_425pm
     t1 = ZTime.new("1100")
     t2 = ZTime.new("0425", :pm)
@@ -273,7 +273,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1100_to_425am
     t1 = ZTime.new("1100")
     t2 = ZTime.new("0425", :am)
@@ -289,7 +289,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_0115_to_0120am
     t1 = ZTime.new("0115")
     t2 = ZTime.new("0120", :am)
@@ -321,7 +321,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1020_to_1015am
     t1 = ZTime.new("1020")
     t2 = ZTime.new("1015", :am)
@@ -337,7 +337,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1020_to_1015pm
     t1 = ZTime.new("1020")
     t2 = ZTime.new("1015", :pm)
@@ -369,7 +369,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_1015_to_1020pm
     t1 = ZTime.new("1015")
     t2 = ZTime.new("1020", :pm)
@@ -385,7 +385,7 @@ class ZTimeTest < Test::Unit::TestCase
     t2.modify_such_that_is_after(t1)
     assert_equal(t2_after_modify, t2)
   end
-  
+
   def test_am_pm_modifier1
     t1 = ZTime.new("7", :pm)
     t1d = t1.dup
@@ -401,7 +401,7 @@ class ZTimeTest < Test::Unit::TestCase
     assert_equal(t1d, t1)
     assert_equal(ZTime.new("8", :pm), t2)
   end
-  
+
   def test_am_pm_modifier3
     t1 = ZTime.new("7")
     t2 = ZTime.new("8", :pm)
@@ -411,7 +411,7 @@ class ZTimeTest < Test::Unit::TestCase
     ZTime.am_pm_modifier(t1,t2,t3)
     assert_equal(ZTime.new("7", :pm), t1)
     assert_equal(t2d, t2)
-    assert_equal(ZTime.new("9", :pm), t3)    
+    assert_equal(ZTime.new("9", :pm), t3)
   end
 
   def test_am_pm_modifier4
@@ -420,13 +420,13 @@ class ZTimeTest < Test::Unit::TestCase
     t3 = ZTime.new("9")
     t4 = ZTime.new("4", :pm)
     t5 = ZTime.new("7")
-    
+
     ZTime.am_pm_modifier(t1,t2,t3,t4,t5)
     assert_equal(ZTime.new("7", :am), t1)
     assert_equal(ZTime.new("8", :am), t2)
     assert_equal(ZTime.new("9", :am), t3)
     assert_equal(ZTime.new("4", :pm), t4)
-    assert_equal(ZTime.new("7", :pm), t5)    
+    assert_equal(ZTime.new("7", :pm), t5)
   end
 end
 

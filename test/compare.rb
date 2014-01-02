@@ -35,7 +35,7 @@ module Compare
 
     def same_methods?
       # @o1.methods == @o2.methods  WOW! that was a bug, [1,2] is not the same as [2,1]  <-- I find it hard to believe I didn't know this!
-      @o1.methods.sort == @o2.methods.sort 
+      @o1.methods.sort == @o2.methods.sort
     end
 
     def same_instance_variables?

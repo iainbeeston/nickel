@@ -1,4 +1,4 @@
-# Ruby Nickel Library 
+# Ruby Nickel Library
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
@@ -37,7 +37,7 @@ module Nickel
 
   class RecurrenceConstruct < Construct
     attr_accessor :repeats, :repeats_on
-    
+
     def interpret
       if    variant_of?(:daily)       then interpret_daily_variant
       elsif variant_of?(:weekly)      then interpret_weekly_variant
@@ -48,7 +48,7 @@ module Nickel
         raise StandardError.new("self is an invalid variant, check value of self.repeats or @repeats")
       end
     end
-    
+
     def get_interval
       if    has_interval_of?(1)  then 1
       elsif has_interval_of?(2)  then 2
@@ -93,7 +93,7 @@ module Nickel
     end
 
     # \@repeats_on is an array of arrays: Each sub array has the format
-    # [week_of_month, day_of_week].  For example, 
+    # [week_of_month, day_of_week].  For example,
     # "the first and second sat of every month" will produce
     # \@repeats_on == [[1,5], [2,5]]
     def interpret_daymonthly_variant
@@ -106,7 +106,7 @@ module Nickel
       array_of_occurrences
     end
 
-    # \@repeats_on is an array of datemonthly indices.  For example, 
+    # \@repeats_on is an array of datemonthly indices.  For example,
     # "the 21st and 22nd of every monthy" will produce @repeats_on == [21, 22]
     def interpret_datemonthly_variant
       hash_for_occ_base = {:type => :datemonthly, :interval => get_interval}

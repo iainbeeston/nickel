@@ -1,4 +1,4 @@
-# Ruby Nickel Library 
+# Ruby Nickel Library
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
@@ -11,12 +11,12 @@ module Nickel
     attr_reader :query, :input_date, :input_time, :nlp_query
     attr_reader :construct_finder, :construct_interpreter
     attr_reader :occurrences, :output
-    
-    # Never, EVER change the default behavior to false;  <-- then why did I put it here? 
-    @use_date_correction = true  
+
+    # Never, EVER change the default behavior to false;  <-- then why did I put it here?
+    @use_date_correction = true
     class << self; attr_accessor :use_date_correction; end
 
-    def initialize(query, date_time = Time.now)  
+    def initialize(query, date_time = Time.now)
       raise InvalidDateTimeError unless [DateTime, Time].include?(date_time.class)
       str_time = date_time.strftime("%Y%m%dT%H%M%S")
       validate_input query, str_time
@@ -38,14 +38,14 @@ module Nickel
       @output = @occurrences # legacy
       @occurrences
     end
-    
+
     def setup_logger
       @logger = Logger.new(STDOUT)
       def @logger.blue(a)
         self.warn "\e[44m #{a.inspect} \e[0m"
       end
     end
-    
+
     def inspect
       "message: \"#{message}\", occurrences: #{occurrences.inspect}"
     end
@@ -54,11 +54,11 @@ module Nickel
     def debug_str(inspect_method = :inspect)
       "Current Date: #{self.input_date.readable}\nCurrent Time: #{self.input_time.readable}\n\nQuery: #{self.query}\nStandardized Query: #{self.nlp_query}\nQuery changed in: #{self.nlp_query.changed_in.inspect}\n\nConstructs Found: #{s = "\n"; self.construct_finder.constructs.each{|x| s << x.send(inspect_method) + "\n"}; s}\n\n@construct_interpreter: #{self.construct_interpreter.send(inspect_method)}"
     end
-    
+
     def message
       @nlp_query.message
     end
-    
+
     private
     def validate_input query, date_time
       raise "Empty NLP query" unless query.length > 0

@@ -1,4 +1,4 @@
-# Ruby Nickel Library 
+# Ruby Nickel Library
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
@@ -10,12 +10,12 @@ module Nickel
     # Some notes about this class, @type can take the following values:
     # :single, :daily, :weekly, :daymonthly, :datemonthly,
     attr_accessor :type, :start_date, :end_date, :start_time, :end_time, :interval, :day_of_week, :week_of_month, :date_of_month
-    
+
     def initialize(h)
       @start_date = nil     # prevents warning in testing;  but why is the warning there in the first place? Because I should be using instance_variable_defined in finalize method instead of checking for nil vals
       super(h)
     end
-    
+
     def inspect
       str = %(\#<Occurrence type: #{type})
       str << %(, start_date: "#{start_date.date}")  if start_date
@@ -29,20 +29,20 @@ module Nickel
       str << ">"
       str
     end
-    
-    
+
+
     def finalize(cur_date)
       #@end_date = nil if @end_date.nil?
       # one of the purposes of this method is to find a start date if it is not already specified
 
-      # case type 
+      # case type
       #   when :daily then finalize_daily
       #   when :weekly then finalize_weekly
       #   when :daymonthly then finalize_daymonthly
       #   when :datemonthly then finalize_datemonthly
       # end
-      
-      
+
+
       if @type == :daily && @start_date.nil?
         @start_date = cur_date
       elsif @type == :weekly
@@ -77,7 +77,7 @@ module Nickel
           @start_date = @start_date.get_date_from_day_and_week_of_month(@day_of_week, @week_of_month)
         end
       end
-      
+
     end
 
     class << self

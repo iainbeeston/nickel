@@ -1,9 +1,9 @@
-# Ruby Nickel Library 
+# Ruby Nickel Library
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
 module Nickel
-  
+
   class ZTime
     # \@firm will be used to indicate user provided am/pm
     attr_accessor :firm
@@ -20,7 +20,7 @@ module Nickel
     def time
       @time
     end
-    
+
     def time=(hhmmss)
       @time = lazy(hhmmss)
       @firm = false
@@ -30,29 +30,29 @@ module Nickel
     def hour_str
       @time[0..1]
     end
-    
+
     def minute_str
       @time[2..3]
     end
-    
+
     def second_str
       @time[4..5]
     end
-    
+
     def hour
       hour_str.to_i
     end
-    
+
     def minute
       minute_str.to_i
     end
-    
+
     def second
       second_str.to_i
     end
 
     # add\_ methods return new ZTime object
-    # add\_ methods take an optional block, the block will be passed the number of days that have passed; 
+    # add\_ methods take an optional block, the block will be passed the number of days that have passed;
     # i.e. adding 48 hours will pass a 2 to the block, this is handy for something like this:
     # time.add_hours(15) {|x| date.add_days(x)}
     def add_minutes(number, &block)
@@ -67,7 +67,7 @@ module Nickel
       end
       o.change_minute_to((o.minute + number) % 60)  # modifies self
     end
-    
+
     def add_hours(number, &block)
       o = self.dup
       if block_given?
@@ -82,12 +82,12 @@ module Nickel
       self.time = h.to_s2 + minute_str + second_str
       self
     end
-    
+
     def change_minute_to(m)
       self.time = hour_str + m.to_s2 + second_str
       self
     end
-    
+
     def change_second_to(s)
       self.time = hour_str + minute_str + s.to_s2
       self
@@ -96,46 +96,46 @@ module Nickel
     def readable
       @time[0..1] + ":" + @time[2..3] + ":" + @time[4..5]
     end
-    
+
     def readable_12hr
       hour_on_12hr_clock.to_s2 + ":" + @time[2..3] + " #{am_pm}"
     end
-    
+
     def hour_on_12hr_clock
-      h = hour % 12 
+      h = hour % 12
       h += 12 if h == 0
       h
     end
-    
+
     def is_am?
       hour < 12   # 0 through 11 on 24hr clock
     end
-    
+
     def am_pm
       is_am? ? "am" : "pm"
     end
-    
+
 
     def <(t2)
       (self.hour < t2.hour) || (self.hour == t2.hour && (self.minute < t2.minute || (self.minute == t2.minute && self.second < t2.second)))
     end
-    
+
     def <=(t2)
       (self.hour < t2.hour) || (self.hour == t2.hour && (self.minute < t2.minute || (self.minute == t2.minute && self.second <= t2.second)))
     end
-    
+
     def >(t2)
       (self.hour > t2.hour) || (self.hour == t2.hour && (self.minute > t2.minute || (self.minute == t2.minute && self.second > t2.second)))
     end
-    
+
     def >=(t2)
       (self.hour > t2.hour) || (self.hour == t2.hour && (self.minute > t2.minute || (self.minute == t2.minute && self.second >= t2.second)))
     end
-    
+
     def ==(t2)
       self.hour == t2.hour && self.minute == t2.minute && self.second == t2.second
     end
-    
+
     def <=>(t2)
       if self < t2
         -1
@@ -145,7 +145,7 @@ module Nickel
         0
       end
     end
-    
+
     class << self
 
       # send an array of ZTime objects, this will make a guess at whether they should be am/pm if the user did not specify
@@ -154,7 +154,7 @@ module Nickel
         # find firm time indices
         firm_time_indices = []
         time_array.each_with_index {|t,i| firm_time_indices << i if t.firm}
-        
+
         if firm_time_indices.empty?
           # pure guess
           # DO WE REALLY WANT TO DO THIS?
@@ -170,7 +170,7 @@ module Nickel
           (min_boundary...max_boundary).to_a.reverse.each do |i|      # this says, iterate backwards starting from max_boundary, but not including it, until the min boundary
             time_array[i].modify_such_that_is_before(time_array[i+1])
           end
-          
+
           firm_time_indices.each_index do |j|
             # now handle all times after first firm time until the next firm time
             min_boundary = firm_time_indices[j]
@@ -186,7 +186,7 @@ module Nickel
         # note 12am is 00
         h % 12
       end
-      
+
       def pm_to_24hr(h)
         h == 12 ? 12 : h + 12
       end
@@ -198,7 +198,7 @@ module Nickel
       raise "ZTime#modify_such_that_is_before says: time2 does not have @firm set" if !time2.firm
       # self cannot have @firm set, so all hours will be between 1 and 12
       # time2 is an end time, self could be its current setting, or off by 12 hours
-      
+
       # self to time2 --> self to time2
       # 12   to 2am   --> 1200 to 0200
       # 12   to 12am  --> 1200 to 0000
@@ -225,7 +225,7 @@ module Nickel
       self.firm = true
       self
     end
-    
+
     def modify_such_that_is_after(time1)
       raise "ZTime#modify_such_that_is_after says: trying to modify time that has @firm set" if @firm
       raise "ZTime#modify_such_that_is_after says: time1 does not have @firm set" if !time1.firm
@@ -243,7 +243,7 @@ module Nickel
       elsif self > time1
         # # time1 to self --> time1 to self
         # # 10am  to 11   --> 1000  to 1100
-        # # 
+        # #
         # if time1.hour >= 12 && ZTime.new((time1.hour - 12).to_s2 + time1.minute_str + time1.second_str) > self
         #   change_hour_to(self.hour + 12)
         # else
@@ -269,9 +269,9 @@ module Nickel
         self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
       end
     end
-    
+
     private
-    
+
     def adjust_for(am_pm)
       # how does validation work?  Well, we already know that @time is valid, and once we modify we call time= which will
       # perform validation on the new time.  That won't catch something like this though:  ZTime.new("2215", :am)
@@ -287,27 +287,27 @@ module Nickel
       end
       @firm = true
     end
-    
+
     def validate
       raise "ZTime#validate says: invalid time" unless valid
     end
-    
+
     def valid
       @time.length == 6 && @time !~ /\D/ && valid_hour && valid_minute && valid_second
     end
-    
+
     def valid_hour
       hour >= 0 and hour < 24
     end
-    
+
     def valid_minute
       minute >= 0 and minute < 60
     end
-    
+
     def valid_second
       second >= 0 and second < 60
     end
-    
+
     def lazy(s)
       # someone isn't following directions, but we will let it slide
       s.length == 1 && s = "0#{s}0000"        # only provided h

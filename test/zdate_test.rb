@@ -16,7 +16,7 @@ class ZDateTest < Test::Unit::TestCase
     assert_equal ZDate.new('20091005'), d1.get_next_date_from_date_of_month(5)
     assert_equal nil, d1.get_next_date_from_date_of_month(31)
   end
-  
+
   # def test_get_date_from_day_and_week_of_month
   #   d1 = ZDate.new('20090927')
   #   assert_equal ZDate.new('20090930'), d1.get_date_from_day_and_week_of_month(Z::WED, -1)
@@ -24,7 +24,7 @@ class ZDateTest < Test::Unit::TestCase
   #   # there is no 5th thursday this sept
   #   assert_equal nil, d1.get_date_from_day_and_week_of_month(Z::THU, 5)
   # end
-  
+
   def test_diff_in_days_to_this
     d1 = ZDate.new('20090927')
     assert_equal 0, d1.diff_in_days_to_this(ZDate::SUN)
