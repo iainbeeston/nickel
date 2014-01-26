@@ -1,6 +1,4 @@
-require 'coveralls'
-Coveralls.wear_merged!
-
+require 'spec_helper.rb'
 require File.expand_path(File.dirname(__FILE__) + "/../lib/nickel")
 
 describe "A single date" do
