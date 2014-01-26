@@ -2,148 +2,138 @@ require 'spec_helper.rb'
 require File.expand_path(File.dirname(__FILE__) + "/../lib/nickel")
 
 describe "A single date" do
-  before(:all) { @n = Nickel.parse "oct 15 09" }
+  let(:n) { Nickel.parse "oct 15 09" }
 
   it "should have an empty message" do
-    expect(@n.message).to be_empty
+    expect(n.message).to be_empty
   end
 
   it "should have a start date" do
-    expect(@n.occurrences.size).to eq 1
-    expect(@n.occurrences.first.start_date.date).to eq "20091015"
+    expect(n.occurrences.size).to eq 1
+    expect(n.occurrences.first.start_date.date).to eq "20091015"
   end
 end
 
 describe "A daily occurrence" do
-  before(:all) do
-    @n = Nickel.parse "wake up everyday at 11am"
-    @occurs = @n.occurrences.first
-  end
+  let(:n) { Nickel.parse "wake up everyday at 11am" }
+  let(:occurs) { n.occurrences.first }
 
   it "should have a message" do
-    expect(@n.message).to eq "wake up"
+    expect(n.message).to eq "wake up"
   end
 
   it "should be daily" do
-    expect(@occurs.type).to eq :daily
+    expect(occurs.type).to eq :daily
   end
 
   it "should have a start time" do
-    expect(@occurs.start_time.time).to eq "110000"
+    expect(occurs.start_time.time).to eq "110000"
   end
 end
 
 
 describe "A weekly occurrence" do
-  before(:all) do
-    @n = Nickel.parse "guitar lessons every tuesday at 5pm"
-    @occurs = @n.occurrences.first
-  end
+  let(:n) { Nickel.parse "guitar lessons every tuesday at 5pm" }
+  let(:occurs) { n.occurrences.first }
 
   it "should have a message" do
-    expect(@n.message).to eq "guitar lessons"
+    expect(n.message).to eq "guitar lessons"
   end
 
   it "should be weekly" do
-    expect(@occurs.type).to eq :weekly
+    expect(occurs.type).to eq :weekly
   end
 
 
   it "should occur on tuesdays" do
-    expect(@occurs.day_of_week).to eq 1
+    expect(occurs.day_of_week).to eq 1
   end
 
   it "should occur once per week" do
-    expect(@occurs.interval).to eq 1
+    expect(occurs.interval).to eq 1
   end
 
   it "should start at 5pm" do
-    expect(@occurs.start_time.time).to eq "170000"
+    expect(occurs.start_time.time).to eq "170000"
   end
 
   it "should have a start date" do
-    expect(@occurs.start_date).to_not be_nil
+    expect(occurs.start_date).to_not be_nil
   end
 
   it "should not have an end date" do
-    expect(@occurs.end_date).to be_nil
+    expect(occurs.end_date).to be_nil
   end
 end
 
 
 describe "A day monthly occurrence" do
-  before(:all) do
-    @n = Nickel.parse "drink specials on the second thursday of every month"
-    @occurs = @n.occurrences.first
-  end
+  let(:n) { Nickel.parse "drink specials on the second thursday of every month" }
+  let(:occurs) { n.occurrences.first }
 
   it "should have a message" do
-    expect(@n.message).to eq "drink specials"
+    expect(n.message).to eq "drink specials"
   end
 
   it "should be day monthly" do
-    expect(@occurs.type).to eq :daymonthly
+    expect(occurs.type).to eq :daymonthly
   end
 
   it "should occur on second thursday of every month" do
-    expect(@occurs.week_of_month).to eq 2
-    expect(@occurs.day_of_week).to eq 3
+    expect(occurs.week_of_month).to eq 2
+    expect(occurs.day_of_week).to eq 3
   end
 
   it "should occur once per month" do
-    expect(@occurs.interval).to eq 1
+    expect(occurs.interval).to eq 1
   end
 end
 
 
 
 describe "A date monthly occurrence" do
-  before(:all) do
-    @n = Nickel.parse "pay credit card every month on the 22nd"
-    @occurs = @n.occurrences.first
-  end
+  let(:n) { Nickel.parse "pay credit card every month on the 22nd" }
+  let(:occurs) { n.occurrences.first }
 
   it "should have a message" do
-    expect(@n.message).to eq "pay credit card"
+    expect(n.message).to eq "pay credit card"
   end
 
   it "should be date monthly" do
-    expect(@occurs.type).to eq :datemonthly
+    expect(occurs.type).to eq :datemonthly
   end
 
   it "should occur on the 22nd of every month" do
-    expect(@occurs.date_of_month).to eq 22
+    expect(occurs.date_of_month).to eq 22
   end
 
   it "should occur once per month" do
-    expect(@occurs.interval).to eq 1
+    expect(occurs.interval).to eq 1
   end
 end
 
 
 describe "Multiple occurrences" do
-  before(:all) do
-    @n = Nickel.parse "band meeting every monday and wednesday at 2pm"
-  end
+  let(:n) { Nickel.parse "band meeting every monday and wednesday at 2pm" }
 
   it "should have a message" do
-    expect(@n.message).to eq "band meeting"
+    expect(n.message).to eq "band meeting"
   end
 
   it "should have two occurrences" do
-    expect(@n.occurrences.size).to eq 2
+    expect(n.occurrences.size).to eq 2
   end
 
   it "should occur on mondays and wednesdays" do
-    days = @n.occurrences.collect {|occ| occ.day_of_week}
+    days = n.occurrences.collect {|occ| occ.day_of_week}
     expect(days).to include(0)
     expect(days).to include(2)
     expect(days.size).to eq 2
   end
 
   it "should occur at 2pm on both days" do
-    expect(@n.occurrences[0].start_time.time).to eq "140000"
-    expect(@n.occurrences[1].start_time.time).to eq "140000"
+    expect(n.occurrences[0].start_time.time).to eq "140000"
+    expect(n.occurrences[1].start_time.time).to eq "140000"
   end
 end
 
