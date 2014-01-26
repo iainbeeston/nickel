@@ -138,8 +138,8 @@ describe "Multiple occurrences" do
 
   it "should occur on mondays and wednesdays" do
     days = @n.occurrences.collect {|occ| occ.day_of_week}
-    days.include?(0).should be_true
-    days.include?(2).should be_true
+    days.include?(0).should == true
+    days.include?(2).should == true
     days.size.should == 2
   end
 
