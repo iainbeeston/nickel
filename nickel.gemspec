@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'rubysl-test-unit'
     s.add_development_dependency 'rubysl-rake'
     s.add_development_dependency 'rubysl-bundler'
-    s.add_development_dependency 'rubysl-json'
+    s.add_development_dependency 'json'
   end
 
   s.add_development_dependency "bundler"
