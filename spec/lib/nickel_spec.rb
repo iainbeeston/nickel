@@ -1,5 +1,5 @@
 require "spec_helper.rb"
-require_relative "../../../lib/nickel"
+require_relative "../../lib/nickel"
 
 describe "Nickel#parse" do
   context "passed a single date" do
