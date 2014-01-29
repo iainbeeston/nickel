@@ -20,9 +20,11 @@ Gem::Specification.new do |s|
   if RUBY_ENGINE == 'rbx'
     s.add_dependency 'rubysl-logger'
     s.add_dependency 'rubysl-date'
+    s.add_development_dependency 'rubinius-coverage'
     s.add_development_dependency 'rubysl-test-unit'
     s.add_development_dependency 'rubysl-rake'
     s.add_development_dependency 'rubysl-bundler'
+    s.add_development_dependency 'rubysl-coverage'
     s.add_development_dependency 'json'
   end
 
