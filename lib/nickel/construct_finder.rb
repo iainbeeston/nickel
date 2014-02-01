@@ -2,6 +2,10 @@
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
+require_relative 'construct'
+require_relative 'zdate'
+require_relative 'ruby_ext/calling_method'
+
 module Nickel
 
   class ConstructFinder

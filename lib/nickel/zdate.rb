@@ -3,6 +3,7 @@
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
 require 'date'
+require_relative 'ruby_ext/to_s2'
 
 module Nickel
 

@@ -1,5 +1,6 @@
 require "spec_helper"
 require_relative "../../../lib/nickel/occurrence"
+require_relative "../../../lib/nickel/zdate"
 
 describe Nickel::Occurrence do
   describe "#==" do
