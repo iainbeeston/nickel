@@ -5,10 +5,10 @@
 function run_specs_one_by_one {
   for file in `find spec -iname '*_spec.rb'`; do
     echo "rspec $file"
-    rspec -b $file
+    rspec --backtrace $file
   done
 }
 
 run_specs_one_by_one
 
-COVERALLS=true rspec
+COVERALLS=true rspec --warnings
