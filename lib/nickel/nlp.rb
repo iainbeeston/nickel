@@ -76,6 +76,6 @@ module Nickel
     def message
       "You must pass in a ruby DateTime or Time class object"
     end
-   end
+  end
 end
 

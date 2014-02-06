@@ -64,7 +64,7 @@ module Nickel
         else
           # We only have wrappers. It doesn't matter which user style we choose.
           @user_input_style = :datetime
-        end
+      end
     end
 
     def initialize_arrays_of_construct_indices
