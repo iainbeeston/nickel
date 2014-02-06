@@ -1126,7 +1126,8 @@ module Nickel
 
     def found_time
       @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
-      match = true
+      # FIXME ConstructFinder#found_time should probably return @constructs (just like every other method in ConstructFinder)
+      true
     end
 
     def match_date

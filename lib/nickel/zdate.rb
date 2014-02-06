@@ -407,8 +407,6 @@ module Nickel
 
       # Now we have the number of days FROM THE START OF THE CURRENT MONTH; if we are not past that date, then we have found the first occurrence
       if (total_diff_in_days + 1) >= self.day
-        # Create occ_date_str and make sure it has two digits
-        occ_date_str = (total_diff_in_days + 1).to_s.gsub(/^(\d)$/,'0\1')
         return self.beginning_of_month.add_days(total_diff_in_days)
       else # We have already past the date; calculate the occurrence next month!
         # Get the index of the first day next month
@@ -435,8 +433,6 @@ module Nickel
           total_diff_in_days += 7
         end
 
-        # Now we have the number of days FROM THE START OF THE NEXT MONTH;
-        # Create occ_date_str and make sure it has two digits
         return self.add_months(1).beginning_of_month.add_days(total_diff_in_days)
       end # END if (total_diff_in_days + 1) ...
     end
