@@ -2,6 +2,9 @@
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
+require_relative 'occurrence'
+require_relative 'construct'
+
 module Nickel
 
   class ConstructInterpreter
@@ -61,7 +64,7 @@ module Nickel
         else
           # We only have wrappers. It doesn't matter which user style we choose.
           @user_input_style = :datetime
-        end
+      end
     end
 
     def initialize_arrays_of_construct_indices

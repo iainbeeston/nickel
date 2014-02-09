@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
     s.add_dependency 'rubysl-logger'
     s.add_dependency 'rubysl-date'
     s.add_development_dependency 'rubinius-coverage'
-    s.add_development_dependency 'rubysl-test-unit'
     s.add_development_dependency 'rubysl-rake'
     s.add_development_dependency 'rubysl-bundler'
     s.add_development_dependency 'rubysl-coverage'
@@ -30,7 +29,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "3.0.0.beta1"
   s.add_development_dependency "coveralls"
   s.add_development_dependency "yard"
   s.add_development_dependency "kramdown"

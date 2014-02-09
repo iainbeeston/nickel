@@ -2,6 +2,10 @@
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
+require_relative 'construct'
+require_relative 'zdate'
+require_relative 'ruby_ext/calling_method'
+
 module Nickel
 
   class ConstructFinder
@@ -1122,7 +1126,8 @@ module Nickel
 
     def found_time
       @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
-      match = true
+      # FIXME ConstructFinder#found_time should probably return @constructs (just like every other method in ConstructFinder)
+      true
     end
 
     def match_date

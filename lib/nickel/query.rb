@@ -3,6 +3,8 @@
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
 require 'logger'
+require_relative 'query_constants'
+require_relative 'ruby_ext/calling_method'
 
 module Nickel
 
