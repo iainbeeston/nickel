@@ -1,4 +1,4 @@
-if ENV['TRAVIS'] && ENV['COVERALLS']
+if ENV['TRAVIS'] && ENV['COVERALLS'] && RUBY_ENGINE == 'ruby'
   require 'coveralls'
   Coveralls.wear!
 end
