@@ -3,6 +3,8 @@
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
 require 'logger'
+require_relative 'zdate'
+require_relative 'ztime'
 require_relative 'query_constants'
 require_relative 'ruby_ext/calling_method'
 
@@ -411,6 +413,7 @@ module Nickel
     def valid_dd?
       self =~ %r{^(0?[1-9]|[12][0-9]|3[01])(?:st|nd|rd|th)?$}
     end
+
     def valid_hour?
       validity = false
       if (self.length == 1) && (self =~ /^(1|2|3|4|5|6|7|8|9)/)
@@ -430,6 +433,7 @@ module Nickel
       end
       return validity
     end # END valid_hour?
+
     def valid_24_hour?
       validity = false
       if (self.length == 1) && (self =~ /^(0|1|2|3|4|5|6|7|8|9)/)
@@ -449,6 +453,7 @@ module Nickel
       end
       return validity
     end # END valid_hour?
+
     def valid_minute?
       validity = false
       if self.length <= 2
@@ -460,6 +465,7 @@ module Nickel
       end
       return validity
     end # END valid_minute?
+
     def digits_only?
       self =~ /^\d+$/ #no characters other than digits
     end
@@ -477,23 +483,30 @@ module Nickel
       c_d_e = /^(\d{1,2}):(\d{1,2})(am|pm)?$/           # handles cases (c), (d), and (e)
       if mdata = match(a_b)
         am_pm = mdata[2]
-        case mdata[1].length                            # this may look a bit confusing, but all we are doing is interpreting
-          when 1 then hstr = "0" + mdata[1]                 # what the user meant based on the number of digits they provided
-          when 2 then hstr = mdata[1]                                       # e.g. "11" means 11:00
-          when 3 then hstr = "0" + mdata[1][0..0]; mstr = mdata[1][1..2]    # e.g. "530" means 5:30
-          when 4 then hstr = mdata[1][0..1]; mstr = mdata[1][2..3]          # e.g. "1215" means 12:15
+        # this may look a bit confusing, but all we are doing is interpreting
+        # what the user meant based on the number of digits they provided
+        if mdata[1].length <= 2
+          # e.g. "11" means 11:00
+          hstr = mdata[1]
+          mstr = "0"
+        elsif mdata[1].length == 3
+          # e.g. "530" means 5:30
+          hstr = mdata[1][0..0]
+          mstr = mdata[1][1..2]
+        elsif mdata[1].length == 4
+          # e.g. "1215" means 12:15
+          hstr = mdata[1][0..1]
+          mstr = mdata[1][2..3]
         end
       elsif mdata = match(c_d_e)
         am_pm = mdata[3]
         hstr = mdata[1]
         mstr = mdata[2]
-        hstr.length == 1 && hstr.insert(0,"0")
-        mstr.length == 1 && mstr << "0"
       else
         return nil
       end
       # in this case we do not care if time fails validation, if it does, it just means we haven't found a valid time, return nil
-      begin ZTime.new("#{hstr}#{mstr}", am_pm) rescue return nil end
+      begin ZTime.new(ZTime.format_time(hstr, mstr), am_pm) rescue return nil end
     end
 
     # Interpret Date is equally as important, our goals:
@@ -537,20 +550,20 @@ module Nickel
 
       if mdata = match(a_d)
         ambiguous[:month] = true
-        day_str = mdata[1].to_s2
+        day_str = mdata[1]
       elsif mdata = match(b)
         ambiguous[:year] = true
-        month_str = mdata[1].to_s2
-        day_str = mdata[2].to_s2
+        month_str = mdata[1]
+        day_str = mdata[2]
       elsif mdata = match(c)
-        month_str = mdata[1].to_s2
-        day_str = mdata[2].to_s2
-        year_str = mdata[3].sub(/^(\d\d)$/,'20\1')    # if there were only two digits, prepend 20 (e.g. "08" should be "2008")
+        month_str = mdata[1]
+        day_str = mdata[2]
+        year_str = mdata[3]
       else
         return nil
       end
 
-      inst_str = (year_str || current_date.year_str) + (month_str || current_date.month_str) + (day_str || current_date.day_str)
+      inst_str = ZDate.format_date(year_str || current_date.year_str, month_str || current_date.month_str, day_str || current_date.day_str)
       # in this case we do not care if date fails validation, if it does, it just means we haven't found a valid date, return nil
       date = ZDate.new(inst_str) rescue nil
       if date && NLP::use_date_correction

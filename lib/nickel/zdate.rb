@@ -3,7 +3,6 @@
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
 require 'date'
-require_relative 'ruby_ext/to_s2'
 
 module Nickel
 
@@ -116,7 +115,7 @@ module Nickel
     # for example, "1st friday", uses self as the reference month
     def ordinal_dayindex(num, day_index)
       # create a date object at the first occurrence of day_index
-      first_occ_date = ZDate.new(year_str + month_str + "01").this(day_index)
+      first_occ_date = ZDate.new(ZDate.format_date(year_str, month_str)).this(day_index)
       # if num is 1 through 4, we can just add (num-1) weeks
       if num <= 4
         d = first_occ_date.add_weeks(num - 1)
@@ -164,7 +163,7 @@ module Nickel
       # Let's see what month we are going to end in
       while number > 0
         if o.days_left_in_month >= number
-          o.date = o.year_str + o.month_str + (o.day + number).to_s2
+          o.date = ZDate.format_date(o.year_str, o.month_str, o.day + number)
           number = 0
         else
           number = number - 1 - o.days_left_in_month  #it costs 1 day to increment the month
@@ -187,23 +186,23 @@ module Nickel
       end
       new_year = year + years_to_increment
       new_day = get_day_or_max_day_in_month(self.day, new_month, new_year)
-      ZDate.new(new_year.to_s + new_month.to_s2 + new_day.to_s2)
+      ZDate.new(ZDate.format_date(new_year, new_month, new_day))
     end
 
     def add_years(number)
       new_year = year + number
       new_day = get_day_or_max_day_in_month(self.day, self.month, new_year)
-      ZDate.new(new_year.to_s + self.month_str + new_day.to_s2)
+      ZDate.new(ZDate.format_date(new_year, self.month_str, new_day))
     end
 
     # DEPRECATED, change_ methods in ZTime modify self, this was confusing,
     # change_ methods return new ZDate object, they DO NOT modify self
     # def change_year_to(y)
-    #   o = ZDate.new(y.to_s + self.month_str + self.day_str)
+    #   o = ZDate.new(ZDate.format_date(y, self.month_str, self.day_str))
     #   o
     # end
     # def change_day_to(d)
-    #   o = ZDate.new(self.year_str + self.month_str + d.to_s2)
+    #   o = ZDate.new(ZDate.format_date(self.year_str, self.month_str, d))
     #   o
     # end
 
@@ -212,19 +211,19 @@ module Nickel
     def jump_to_month(month_number)
       # find difference in months
       if month_number >= self.month
-        ZDate.new(year_str + (month_number).to_s2 + "01")
+        ZDate.new(ZDate.format_date(year_str, month_number))
       else
-        ZDate.new((year + 1).to_s + (month_number).to_s2 + "01")
+        ZDate.new(ZDate.format_date(year + 1, month_number))
       end
     end
 
     # beginning and end of month both return new ZDate objects
     def beginning_of_month
-      ZDate.new(year_str + month_str + "01")
+      ZDate.new(ZDate.format_date(year_str, month_str))
     end
 
     def end_of_month
-      ZDate.new(year_str + month_str + self.days_in_month.to_s)
+      ZDate.new(ZDate.format_date(year_str, month_str, self.days_in_month))
     end
 
     def beginning_of_next_month
@@ -238,7 +237,7 @@ module Nickel
       o = self.dup
       while number > 0
         if (o.day - 1) >= number
-          o.date = o.year_str + o.month_str + (o.day - number).to_s2
+          o.date = ZDate.format_date(o.year_str, o.month_str, o.day - number)
           number = 0
         else
           number = number - o.day
@@ -274,7 +273,7 @@ module Nickel
       total = 0
       while d1.year != d2.year
         total += d1.days_left_in_year + 1 # need one extra day to push us to jan 1
-        d1 = ZDate.new((d1.year + 1).to_s + "0101")
+        d1 = ZDate.new(ZDate.format_date(d1.year + 1))
       end
       total += d2.day_of_year - d1.day_of_year
       total
@@ -291,12 +290,12 @@ module Nickel
     # We need days_in_months and diff_in_months to be available at the class level as well.
     class << self
       def new_first_day_in_month(month, year)
-        ZDate.new(year.to_s + month.to_s2 + "01")
+        ZDate.new(ZDate.format_date(year, month))
       end
 
       def new_last_day_in_month(month, year)
         day = days_in_month(month, year)
-        ZDate.new(year.to_s + month.to_s2 + day.to_s2)
+        ZDate.new(ZDate.format_date(year, month, day))
       end
 
       def days_in_month(month, year)
@@ -318,6 +317,24 @@ module Nickel
           year2 -= 1  # this makes the next line nice
         end
         diff_in_months += (year2 - year1) * 12
+      end
+
+      def format_year(y)
+        # if there were only two digits, prepend 20 (e.g. "08" should be "2008")
+        y.to_s.rjust(4, '20')
+      end
+
+      def format_month(m)
+        m.to_s.rjust(2, '0')
+      end
+
+      def format_day(d)
+        d.to_s.rjust(2, '0')
+      end
+
+      # formats the year, month, day into the format expected by the ZDate constructor
+      def format_date(year, month=1, day=1)
+        format_year(year) + format_month(month) + format_day(day)
       end
     end
 
@@ -446,7 +463,7 @@ module Nickel
         if day > date_of_month
           o.increment_month!
         end
-        ZDate.new(o.year_str + o.month_str + date_of_month.to_s2) rescue nil
+        ZDate.new(ZDate.format_date(o.year_str, o.month_str, date_of_month)) rescue nil
       end
     end
 
@@ -460,18 +477,18 @@ module Nickel
     def increment_month!
       if month != 12
         # just bump up a number
-        self.date = year_str + (month + 1).to_s2 + "01"
+        self.date = ZDate.format_date(year_str, month + 1)
       else
-        self.date = (year + 1).to_s + "0101"
+        self.date = ZDate.format_date(year + 1)
       end
     end
 
     def decrement_month!
       if month != 1
         # just bump down a number and set days to the last day in the month
-        self.date = year_str + (month - 1).to_s2 + ZDate.days_in_month(month - 1, year).to_s2
+        self.date = ZDate.format_date(year_str, month - 1, ZDate.days_in_month(month - 1, year))
       else
-        self.date = (year - 1).to_s + "1231"    # dec has 31 days
+        self.date = ZDate.format_date(year - 1, 12, 31)    # dec has 31 days
       end
     end
 
