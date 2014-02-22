@@ -4,7 +4,7 @@
 
 require_relative 'zdate'
 require_relative 'ztime'
-require_relative 'query'
+require_relative 'nlp_query'
 require_relative 'occurrence'
 require_relative 'construct_finder'
 require_relative 'construct_interpreter'
