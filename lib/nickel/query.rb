@@ -6,7 +6,6 @@ require 'logger'
 require_relative 'zdate'
 require_relative 'ztime'
 require_relative 'query_constants'
-require_relative 'ruby_ext/calling_method'
 
 module Nickel
 
@@ -53,7 +52,7 @@ module Nickel
       if m = self.match(args[0])    # m will now hold the FIRST set of backreferenced matches
         # there is at least one match
         @changed_in ||= []
-        @changed_in << calling_method
+        @changed_in << caller[1][/(\w+)\W*$/, 1]
         if block_given?
           # gsub!(args[0]) {yield(*m.to_a[1..-1])}    # There is a bug here: If gsub matches more than once,
                                                       # then the first set of referenced matches will be passed to the block
