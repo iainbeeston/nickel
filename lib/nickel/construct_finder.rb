@@ -11,8 +11,6 @@ module Nickel
     attr_reader :constructs, :components
 
     def initialize(query, curdate, curtime)
-      # If query is a string (for debug), use it to initialize NLPQuery.
-      query.class == String && query = NLPQuery.new(query)
       @curdate = curdate
       @curtime = curtime
       @components = query.split
