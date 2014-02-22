@@ -564,7 +564,7 @@ module Nickel
       inst_str = ZDate.format_date(year_str || current_date.year_str, month_str || current_date.month_str, day_str || current_date.day_str)
       # in this case we do not care if date fails validation, if it does, it just means we haven't found a valid date, return nil
       date = ZDate.new(inst_str) rescue nil
-      if date && NLP::use_date_correction
+      if date
         if ambiguous[:year]
           # say the date is 11/1 and someone enters 2/1, they probably mean next year, I pick 4 months as a threshold but that is totally arbitrary
           current_date.diff_in_months(date) < -4 and date = date.add_years(1)

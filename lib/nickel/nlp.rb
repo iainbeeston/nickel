@@ -17,10 +17,6 @@ module Nickel
     attr_reader :construct_finder, :construct_interpreter
     attr_reader :occurrences, :output
 
-    # Never, EVER change the default behavior to false;  <-- then why did I put it here?
-    @use_date_correction = true
-    class << self; attr_accessor :use_date_correction; end
-
     def initialize(query, date_time = Time.now)
       raise InvalidDateTimeError unless [DateTime, Time].include?(date_time.class)
       str_time = date_time.strftime("%Y%m%dT%H%M%S")

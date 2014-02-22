@@ -478,8 +478,7 @@ module Nickel
     end
 
     def found_this_month
-      date = NLP::use_date_correction ? @curdate : @curdate.beginning_of_month
-      @constructs << DateSpanConstruct.new(:start_date => date, :end_date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
 
@@ -838,7 +837,7 @@ module Nickel
     end
 
     def found_ordinal_this_month
-      if NLP::use_date_correction && @curdate.day > @length
+      if @curdate.day > @length
         # e.g. it is the 30th of the month and a user types "1st of the month", they mean "first of next month"
         date = @curdate.add_months(1).beginning_of_month.add_days(@length - 1)
       else
