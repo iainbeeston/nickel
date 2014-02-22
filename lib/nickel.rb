@@ -10,7 +10,6 @@
 
 path = File.expand_path(File.join(File.dirname(__FILE__), 'nickel'))
 
-require File.join(path, 'ruby_ext', 'calling_method.rb')
 require File.join(path, 'zdate.rb')
 require File.join(path, 'ztime.rb')
 require File.join(path, 'instance_from_hash')
