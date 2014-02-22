@@ -8,18 +8,7 @@
 #
 # The second term is optional.
 
-path = File.expand_path(File.join(File.dirname(__FILE__), 'nickel'))
-
-require File.join(path, 'zdate.rb')
-require File.join(path, 'ztime.rb')
-require File.join(path, 'instance_from_hash')
-require File.join(path, 'nlp_query_constants')
-require File.join(path, 'nlp_query')
-require File.join(path, 'construct')
-require File.join(path, 'construct_finder')
-require File.join(path, 'construct_interpreter')
-require File.join(path, 'occurrence')
-require File.join(path, 'nlp.rb')
+require_relative 'nickel/nlp'
 
 module Nickel
   class << self
