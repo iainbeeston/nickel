@@ -2,7 +2,6 @@
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
-require 'logger'
 require_relative 'zdate'
 require_relative 'ztime'
 require_relative 'query_constants'
@@ -578,12 +577,6 @@ module Nickel
 
 
     def extract_message(constructs)
-      @logger = Logger.new(STDOUT)
-      def @logger.blue(a)
-        #self.warn "\e[44m #{a.inspect} \e[0m"
-      end
-
-      @logger.blue self
       # message could be all components put back together (which would be @nlp_query), so start with that
       message_array = self.split
 
@@ -603,9 +596,6 @@ module Nickel
             message_array[c.comp_start - 2] = nil
           end
         end
-        @logger.blue(message_array)
-        @logger.blue(c.comp_start)
-        @logger.blue(c.comp_end)
       end
 
       # reloop and wipe out words after end of constructs, if they are followed by another construct
@@ -620,8 +610,6 @@ module Nickel
           end
         end
       end
-      @logger.blue("final:")
-      @logger.blue(message_array)
       @message = message_array.compact.join(" ")   # remove nils and join the words with spaces
       # we have the message, now run the case corrector to return cases to the users original input
       case_corrector

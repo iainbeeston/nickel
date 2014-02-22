@@ -2,7 +2,6 @@
 # Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
 # MIT License [http://www.opensource.org/licenses/mit-license.php]
 
-require 'logger'
 require_relative 'zdate'
 require_relative 'ztime'
 require_relative 'query'
@@ -29,7 +28,6 @@ module Nickel
       @query = query.dup
       @input_date = ZDate.new str_time[0..7]   # up to T, note format is already verified
       @input_time = ZTime.new str_time[9..14]  # after T
-      #setup_logger
     end
 
     def parse
@@ -45,20 +43,8 @@ module Nickel
       @occurrences
     end
 
-    def setup_logger
-      @logger = Logger.new(STDOUT)
-      def @logger.blue(a)
-        self.warn "\e[44m #{a.inspect} \e[0m"
-      end
-    end
-
     def inspect
       "message: \"#{message}\", occurrences: #{occurrences.inspect}"
-    end
-
-    # Pass :inspect or :pretty_inspect as the inspect_method
-    def debug_str(inspect_method = :inspect)
-      "Current Date: #{self.input_date.readable}\nCurrent Time: #{self.input_time.readable}\n\nQuery: #{self.query}\nStandardized Query: #{self.nlp_query}\nQuery changed in: #{self.nlp_query.changed_in.inspect}\n\nConstructs Found: #{s = "\n"; self.construct_finder.constructs.each{|x| s << x.send(inspect_method) + "\n"}; s}\n\n@construct_interpreter: #{self.construct_interpreter.send(inspect_method)}"
     end
 
     def message
