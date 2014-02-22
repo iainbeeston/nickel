@@ -94,3 +94,10 @@ To run tests, execute the `test` rake task.
 ~~~ bash
 rake test
 ~~~
+
+Credits
+-------
+
+Nickel was originally developed by [Lou Zell](https://github.com/lzell/nickel), but is now maintained by [Iain Beeston](https://github.com/iainbeeston/nickel).
+
+Copyright (c) 2008-2013 Lou Zell, lzell11@gmail.com, http://hazelmade.com

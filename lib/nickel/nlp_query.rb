@@ -1,7 +1,3 @@
-# Ruby Nickel Library
-# Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
-# MIT License [http://www.opensource.org/licenses/mit-license.php]
-
 require_relative 'zdate'
 require_relative 'ztime'
 require_relative 'nlp_query_constants'
