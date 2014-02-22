@@ -4,7 +4,6 @@
 
 require_relative 'construct'
 require_relative 'zdate'
-require_relative 'ruby_ext/calling_method'
 
 module Nickel
 
@@ -229,7 +228,7 @@ module Nickel
         day_array << ZDate.days_of_week.index(@components[@pos+j])
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :weekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :weekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_every_day
@@ -237,7 +236,7 @@ module Nickel
     end
 
     def found_every_day
-      @constructs << RecurrenceConstruct.new(:repeats => :daily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :daily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_every_other
@@ -255,7 +254,7 @@ module Nickel
         day_array << ZDate.days_of_week.index(@components[@pos+j])
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :altweekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altweekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_every_other_day
@@ -263,7 +262,7 @@ module Nickel
     end
 
     def found_every_other_day
-      @constructs << RecurrenceConstruct.new(:repeats => :altdaily, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altdaily, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_every_3rd
@@ -281,7 +280,7 @@ module Nickel
         day_array << ZDate.days_of_week.index(@components[@pos+j])
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :threeweekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :threeweekly, :repeats_on => day_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_every_3rd_day
@@ -289,7 +288,7 @@ module Nickel
     end
 
     def found_every_3rd_day
-      @constructs << RecurrenceConstruct.new(:repeats => :threedaily, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :threedaily, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_repeats
@@ -301,7 +300,7 @@ module Nickel
     end
 
     def found_repeats_daily
-      @constructs << RecurrenceConstruct.new(:repeats => :daily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :daily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_repeats_altdaily
@@ -309,7 +308,7 @@ module Nickel
     end
 
     def found_repeats_altdaily
-      @constructs << RecurrenceConstruct.new(:repeats => :altdaily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altdaily, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_repeats_weekly_vague
@@ -317,7 +316,7 @@ module Nickel
     end
 
     def found_repeats_weekly_vague
-      @constructs << RecurrenceConstruct.new(:repeats => :weekly, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :weekly, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_repeats_altweekly_vague
@@ -325,7 +324,7 @@ module Nickel
     end
 
     def found_repeats_altweekly_vague
-      @constructs << RecurrenceConstruct.new(:repeats => :altweekly, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altweekly, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_repeats_monthly
@@ -343,7 +342,7 @@ module Nickel
         rep_array << [@week_num, @day_index]
         j += 2
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :daymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :daymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_repeats_datemonthly
@@ -356,7 +355,7 @@ module Nickel
         @date_array << @components[@pos+j].to_i
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :datemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :datemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_repeats_altmonthly
@@ -374,7 +373,7 @@ module Nickel
         rep_array << [@week_num, @day_index]
         j += 2
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :altdaymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altdaymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_repeats_altmonthly_datemonthly
@@ -387,7 +386,7 @@ module Nickel
         @date_array << @components[@pos+j].to_i
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :altdatemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :altdatemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_repeats_threemonthly
@@ -405,7 +404,7 @@ module Nickel
         rep_array << [@week_num, @day_index]
         j += 2
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :threedaymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :threedaymonthly, :repeats_on => rep_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_repeats_threemonthly_datemonthly
@@ -418,7 +417,7 @@ module Nickel
         @date_array << @components[@pos+j].to_i
         j += 1
       end
-      @constructs << RecurrenceConstruct.new(:repeats => :threedatemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => method_name)
+      @constructs << RecurrenceConstruct.new(:repeats => :threedatemonthly, :repeats_on => @date_array, :comp_start => @pos, :comp_end => @pos += (j - 1), :found_in => __method__)
     end
 
     def match_for_x
@@ -430,7 +429,7 @@ module Nickel
     end
 
     def found_for_x_days
-      @constructs << WrapperConstruct.new(:wrapper_type => 2, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 2, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_for_x_weeks
@@ -438,7 +437,7 @@ module Nickel
     end
 
     def found_for_x_weeks
-      @constructs << WrapperConstruct.new(:wrapper_type => 3, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 3, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_for_x_months
@@ -446,7 +445,7 @@ module Nickel
     end
 
     def found_for_x_months
-      @constructs << WrapperConstruct.new(:wrapper_type => 4, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 4, :wrapper_length => @length, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_this
@@ -459,10 +458,10 @@ module Nickel
 
     def found_this_dayname
       day_to_add = @curdate.this(@day_index)
-      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
       while @components[@pos+1] && @day_index = ZDate.days_of_week.index(@components[@pos+1])
         # note @pos gets incremented on each pass
-        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => method_name)
+        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => __method__)
       end
     end
 
@@ -471,7 +470,7 @@ module Nickel
     end
 
     def found_this_week
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(7), :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(7), :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_this_month
@@ -480,7 +479,7 @@ module Nickel
 
     def found_this_month
       date = NLP::use_date_correction ? @curdate : @curdate.beginning_of_month
-      @constructs << DateSpanConstruct.new(:start_date => date, :end_date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => date, :end_date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
 
@@ -493,7 +492,7 @@ module Nickel
     end
 
     def found_next_weekend
-      dsc = DateSpanConstruct.new(:start_date => @curdate.next(5), :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      dsc = DateSpanConstruct.new(:start_date => @curdate.next(5), :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
       dsc.end_date = dsc.start_date.add_days(1)
       @constructs << dsc
     end
@@ -504,10 +503,10 @@ module Nickel
 
     def found_next_dayname
       day_to_add = @curdate.next(@day_index)
-      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
       while @components[@pos+1] && @day_index = ZDate.days_of_week.index(@components[@pos+1])
         # note @pos gets incremented on each pass
-        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => method_name)
+        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => __method__)
       end
     end
 
@@ -520,7 +519,7 @@ module Nickel
     end
 
     def found_next_x_days
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_next_x_weeks
@@ -528,7 +527,7 @@ module Nickel
     end
 
     def found_next_x_weeks
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_next_x_months
@@ -536,7 +535,7 @@ module Nickel
     end
 
     def found_next_x_months
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_months(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_months(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_next_x_years
@@ -544,7 +543,7 @@ module Nickel
     end
 
     def found_next_x_years
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_years(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_years(@length), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_next_week
@@ -554,7 +553,7 @@ module Nickel
     def found_next_week
       sd = @curdate.add_days(7)
       ed = sd.add_days(7)
-      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_next_month
@@ -565,7 +564,7 @@ module Nickel
     def found_next_month
       sd = @curdate.add_months(1).beginning_of_month
       ed = sd.end_of_month
-      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_week
@@ -577,7 +576,7 @@ module Nickel
     end
 
     def found_week_of_date
-      @constructs << DateSpanConstruct.new(:start_date => @date1, :end_date => @date1.add_days(7), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @date1, :end_date => @date1.add_days(7), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_week_through_date
@@ -585,7 +584,7 @@ module Nickel
     end
 
     def found_week_through_date
-      @constructs << DateSpanConstruct.new(:start_date => @date1.sub_days(7), :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @date1.sub_days(7), :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_x_weeks_from
@@ -597,7 +596,7 @@ module Nickel
     end
 
     def found_x_weeks_from_dayname
-      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     # Reduntant, preprocess out!
@@ -608,7 +607,7 @@ module Nickel
     # Reduntant, preprocess out!
     def found_x_weeks_from_this_dayname
       # this is the exact some construct as found_x_weeks_from_dayname, just position and comp_end has to increment by 1 more; pretty stupid, this should be caught in preprocessing
-      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @day_index), :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @day_index), :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_x_weeks_from_next_dayname
@@ -616,7 +615,7 @@ module Nickel
     end
 
     def found_x_weeks_from_next_dayname
-      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length + 1, @day_index), :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length + 1, @day_index), :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_x_weeks_from_tomorrow
@@ -624,7 +623,7 @@ module Nickel
     end
 
     def found_x_weeks_from_tomorrow
-      @constructs << DateConstruct.new(:date => @curdate.add_days(1).add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_days(1).add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_weeks_from_now
@@ -632,7 +631,7 @@ module Nickel
     end
 
     def found_x_weeks_from_now
-      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @curdate.dayindex), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.x_weeks_from_day(@length, @curdate.dayindex), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_weeks_from_yesterday
@@ -640,7 +639,7 @@ module Nickel
     end
 
     def found_x_weeks_from_yesterday
-      @constructs << DateConstruct.new(:date => @curdate.sub_days(1).add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.sub_days(1).add_weeks(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_months_from
@@ -652,7 +651,7 @@ module Nickel
     end
 
     def found_x_months_from_dayname
-      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_months_from_this_dayname
@@ -660,7 +659,7 @@ module Nickel
     end
 
     def found_x_months_from_this_dayname
-      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_x_months_from_next_dayname
@@ -668,7 +667,7 @@ module Nickel
     end
 
     def found_x_months_from_next_dayname
-      @constructs << DateConstruct.new(:date => @curdate.next(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.next(@day_index).add_months(@length), :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_x_months_from_tomorrow
@@ -676,7 +675,7 @@ module Nickel
     end
 
     def found_x_months_from_tomorrow
-      @constructs << DateConstruct.new(:date => @curdate.add_days(1).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_days(1).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_months_from_now
@@ -684,7 +683,7 @@ module Nickel
     end
 
     def found_x_months_from_now
-      @constructs << DateConstruct.new(:date => @curdate.add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_months_from_yesterday
@@ -692,7 +691,7 @@ module Nickel
     end
 
     def found_x_months_from_yesterday
-      @constructs << DateConstruct.new(:date => @curdate.sub_days(1).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.sub_days(1).add_months(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_days_from
@@ -704,7 +703,7 @@ module Nickel
     end
 
     def found_x_days_from_now
-      @constructs << DateConstruct.new(:date => @curdate.add_days(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_days(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_days_from_dayname
@@ -712,7 +711,7 @@ module Nickel
     end
 
     def found_x_days_from_dayname
-      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_days(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.this(@day_index).add_days(@length), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_dayname_from
@@ -726,7 +725,7 @@ module Nickel
     def found_x_dayname_from_now
       # this isn't exactly intuitive.  If someone says "two tuesday from now" and it is tuesday, they mean "in two weeks."  If it is not tuesday, they mean "next tuesday"
       d = (@days_index == @curdate.dayindex) ? @curdate.add_weeks(@length) : @curdate.x_weeks_from_day(@length - 1, @day_index)
-      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_dayname_from_tomorrow
@@ -737,7 +736,7 @@ module Nickel
       # If someone says "two tuesday from tomorrow" and tomorrow is tuesday, they mean "two weeks from tomorrow."  If it is not tuesday, this person does not make sense, but we can interpet it as "next tuesday"
       tomorrow_index = (@curdate.dayindex + 1) % 7
       d = (@days_index == tomorrow_index) ? @curdate.add_days(1).add_weeks(@length) : @curdate.x_weeks_from_day(@length - 1, @day_index)
-      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_dayname_from_yesterday
@@ -748,7 +747,7 @@ module Nickel
       # If someone says "two tuesday from yesterday" and yesterday was tuesday, they mean "two weeks from yesterday."  If it is not tuesday, this person does not make sense, but we can interpet it as "next tuesday"
       yesterday_index = (@curdate.dayindex == 0 ? 6 : @curdate.dayindex - 1)
       d = (@days_index == yesterday_index) ? @curdate.sub_days(1).add_weeks(@length) : @curdate.x_weeks_from_day(@length - 1, @day_index)
-      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => d, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_x_dayname_from_this
@@ -756,7 +755,7 @@ module Nickel
     end
 
     def found_x_dayname_from_this
-      dc = DateConstruct.new(:date => @curdate.this(@day_index).add_weeks(@length), :comp_start => @pos, :found_in => method_name)
+      dc = DateConstruct.new(:date => @curdate.this(@day_index).add_weeks(@length), :comp_start => @pos, :found_in => __method__)
       if @components[@post+4] == "one" || ZDate.days_of_week.index(@components[@pos+4])    # talk about redundant (2 tuesdays from this one, 2 tuesdays from this tuesday)
         dc.comp_end = @pos += 4
       else
@@ -770,7 +769,7 @@ module Nickel
     end
 
     def found_x_dayname_from_next
-      dc = DateConstruct.new(:date => @curdate.next(@day_index).add_weeks(@length), :comp_start => @pos, :found_in => method_name)
+      dc = DateConstruct.new(:date => @curdate.next(@day_index).add_weeks(@length), :comp_start => @pos, :found_in => __method__)
       if @components[@post+4] == "one" || ZDate.days_of_week.index(@components[@pos+4])    # talk about redundant (2 tuesdays from next one, 2 tuesdays from next tuesday)
         dc.comp_end = @pos += 4
       else
@@ -786,8 +785,8 @@ module Nickel
     def found_x_minutes_from_now
       date = nil  # define out of scope of block
       time = @curtime.add_minutes(@length) {|days_to_increment| date = @curdate.add_days(days_to_increment)}
-      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos + 4, :found_in => method_name)
-      @constructs << TimeConstruct.new(:time => time, :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos + 4, :found_in => __method__)
+      @constructs << TimeConstruct.new(:time => time, :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_x_hours_from_now
@@ -797,8 +796,8 @@ module Nickel
     def found_x_hours_from_now
       date = nil
       time = @curtime.add_hours(@length) {|days_to_increment| date = @curdate.add_days(days_to_increment)}
-      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos + 4, :found_in => method_name)
-      @constructs << TimeConstruct.new(:time => time, :comp_start => @pos, :comp_end => @pos += 4, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos + 4, :found_in => __method__)
+      @constructs << TimeConstruct.new(:time => time, :comp_start => @pos, :comp_end => @pos += 4, :found_in => __method__)
     end
 
     def match_ordinal_dayname
@@ -810,7 +809,7 @@ module Nickel
     end
 
     def found_ordinal_dayname_this_month
-      @constructs << DateConstruct.new(:date => @curdate.ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_ordinal_dayname_next_month
@@ -818,7 +817,7 @@ module Nickel
     end
 
     def found_ordinal_dayname_next_month
-      @constructs << DateConstruct.new(:date => @curdate.add_months(1).ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_months(1).ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_ordinal_dayname_monthname
@@ -826,7 +825,7 @@ module Nickel
     end
 
     def found_ordinal_dayname_monthname
-      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).ordinal_dayindex(@week_num, @day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
 
@@ -845,11 +844,11 @@ module Nickel
       else
         date = @curdate.beginning_of_month.add_days(@length - 1)
       end
-      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => date, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def found_ordinal_next_month
-      @constructs << DateConstruct.new(:date => @curdate.add_months(1).beginning_of_month.add_days(@length - 1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_months(1).beginning_of_month.add_days(@length - 1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
 
@@ -862,7 +861,7 @@ module Nickel
     end
 
     def found_first_day_this_month
-      @constructs << DateConstruct.new(:date => @curdate.beginning_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.beginning_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_first_day_next_month
@@ -870,7 +869,7 @@ module Nickel
     end
 
     def found_first_day_next_month
-      @constructs << DateConstruct.new(:date => @curdate.add_months(1).beginning_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_months(1).beginning_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_first_day_monthname
@@ -878,7 +877,7 @@ module Nickel
     end
 
     def found_first_day_monthname
-      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_last_day
@@ -890,7 +889,7 @@ module Nickel
     end
 
     def found_last_day_this_month
-      @constructs << DateConstruct.new(:date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.end_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_last_day_next_month
@@ -898,7 +897,7 @@ module Nickel
     end
 
     def found_last_day_next_month
-      @constructs << DateConstruct.new(:date => @curdate.add_months(1).end_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_months(1).end_of_month, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_last_day_monthname
@@ -906,7 +905,7 @@ module Nickel
     end
 
     def found_last_day_monthname
-      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).end_of_month, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).end_of_month, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_at
@@ -922,11 +921,11 @@ module Nickel
     end
 
     def found_at_time_through_time
-      @constructs << TimeSpanConstruct.new(:start_time => @time1, :end_time => @time2, :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << TimeSpanConstruct.new(:start_time => @time1, :end_time => @time2, :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def found_at_time
-      @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_all_day
@@ -934,7 +933,7 @@ module Nickel
     end
 
     def found_all_day
-      @constructs << TimeConstruct.new(:time => nil, :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << TimeConstruct.new(:time => nil, :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_tomorrow
@@ -950,7 +949,7 @@ module Nickel
     end
 
     def found_tomorrow_through_dayname
-      @constructs << DateSpanConstruct.new(:start_date => @curdate.add_days(1), :end_date => @curdate.add_days(1).this(@day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate.add_days(1), :end_date => @curdate.add_days(1).this(@day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_tomorrow_through_date
@@ -958,11 +957,11 @@ module Nickel
     end
 
     def found_tomorrow_through_date
-      @constructs << DateSpanConstruct.new(:start_date => @curdate.add_days(1), :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate.add_days(1), :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def found_tomorrow
-      @constructs << DateConstruct.new(:date => @curdate.add_days(1), :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate.add_days(1), :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
 
     def match_now
@@ -978,7 +977,7 @@ module Nickel
     end
 
     def found_now_through_dayname
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.this(@day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.this(@day_index), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     # redundant!! preprocess this out of here!
@@ -988,7 +987,7 @@ module Nickel
 
     # redundant!! preprocess this out of here!
     def found_now_through_following_dayname
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.this(@day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.this(@day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def match_now_through_date
@@ -996,7 +995,7 @@ module Nickel
     end
 
     def found_now_through_date
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_now_through_tomorrow
@@ -1004,7 +1003,7 @@ module Nickel
     end
 
     def found_now_through_tomorrow
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.add_days(1), :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def match_now_through_next_dayname
@@ -1012,11 +1011,11 @@ module Nickel
     end
 
     def found_now_through_next_dayname
-      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.next(@day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @curdate, :end_date => @curdate.next(@day_index), :comp_start => @pos, :comp_end => @pos += 3, :found_in => __method__)
     end
 
     def found_now
-      @constructs << DateConstruct.new(:date => @curdate, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @curdate, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
 
     def match_dayname
@@ -1030,7 +1029,7 @@ module Nickel
     def found_dayname_the_ordinal
       # user may have specified "monday the 2nd" while in the previous month, so first check if dayname matches date.dayname, if it doesn't increment by a month and check again
       if @date1.dayname == @components[@pos] || ((tmp = @date1.add_months(1)) && tmp.dayname == @components[@pos] && @date1 = tmp)
-        @constructs << DateConstruct.new(:date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+        @constructs << DateConstruct.new(:date => @date1, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
       end
     end
 
@@ -1039,7 +1038,7 @@ module Nickel
     end
 
     def found_dayname_x_weeks_from_this
-      dc = DateConstruct.new(:date => @curdate.this(@dayindex).add_weeks(@length), :comp_start => @pos, :found_in => method_name)
+      dc = DateConstruct.new(:date => @curdate.this(@dayindex).add_weeks(@length), :comp_start => @pos, :found_in => __method__)
       if ZDate.days_of_week.include?(@components[@pos+5])  #redundant
         dc.comp_end = @pos += 5
       else
@@ -1053,7 +1052,7 @@ module Nickel
     end
 
     def found_dayname_x_weeks_from_next
-      dc = DateConstruct.new(:date => @curdate.next(@dayindex).add_weeks(@length), :comp_start => @pos, :found_in => method_name)
+      dc = DateConstruct.new(:date => @curdate.next(@dayindex).add_weeks(@length), :comp_start => @pos, :found_in => __method__)
       if ZDate.days_of_week.include?(@components[@pos+5])  #redundant
         dc.comp_end = @pos += 5
       else
@@ -1065,10 +1064,10 @@ module Nickel
     # redundant, same as found_this_dayname
     def found_dayname
       day_to_add = @curdate.this(@day_index)
-      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => day_to_add, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
       while @components[@pos+1] && @day_index = ZDate.days_of_week.index(@components[@pos+1])
         # note @pos gets incremented here:
-        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => method_name)
+        @constructs << DateConstruct.new(:date => day_to_add = day_to_add.this(@day_index), :comp_start => @pos + 1, :comp_end => @pos += 1, :found_in => __method__)
       end
     end
 
@@ -1078,8 +1077,8 @@ module Nickel
 
     def found_through_monthname
       # this is really a wrapper, we don't know when the start date is, so make sure @constructs gets wrapper first, as date constructs always have to appear after wrapper
-      @constructs << WrapperConstruct.new(:wrapper_type => 1, :comp_start => @pos, :comp_end => @pos + 1, :found_in => method_name)
-      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).sub_days(1), :comp_start => @pos, :comp_end => @pos += 1, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 1, :comp_start => @pos, :comp_end => @pos + 1, :found_in => __method__)
+      @constructs << DateConstruct.new(:date => @curdate.jump_to_month(@month_index + 1).sub_days(1), :comp_start => @pos, :comp_end => @pos += 1, :found_in => __method__)
     end
 
     def match_monthname
@@ -1090,7 +1089,7 @@ module Nickel
     def found_monthname
       sd = @curdate.jump_to_month(@month_index + 1)
       ed = sd.end_of_month
-      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => sd, :end_date => ed, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
 
 
@@ -1100,7 +1099,7 @@ module Nickel
 
     def found_start
       #wrapper_type 0 is a start wrapper
-      @constructs << WrapperConstruct.new(:wrapper_type => 0, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 0, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
 
     def match_through
@@ -1109,7 +1108,7 @@ module Nickel
 
     def found_through
       #wrapper_type 1 is an end wrapper
-      @constructs << WrapperConstruct.new(:wrapper_type => 1, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << WrapperConstruct.new(:wrapper_type => 1, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
 
     def match_time
@@ -1121,11 +1120,11 @@ module Nickel
     end
 
     def found_time_through_time
-      @constructs << TimeSpanConstruct.new(:start_time => @time1, :end_time => @time2, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << TimeSpanConstruct.new(:start_time => @time1, :end_time => @time2, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def found_time
-      @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << TimeConstruct.new(:time => @time1, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
       # FIXME ConstructFinder#found_time should probably return @constructs (just like every other method in ConstructFinder)
       true
     end
@@ -1139,11 +1138,11 @@ module Nickel
     end
 
     def found_date_through_date
-      @constructs << DateSpanConstruct.new(:start_date => @date1, :end_date => @date2, :comp_start => @pos, :comp_end => @pos += 2, :found_in => method_name)
+      @constructs << DateSpanConstruct.new(:start_date => @date1, :end_date => @date2, :comp_start => @pos, :comp_end => @pos += 2, :found_in => __method__)
     end
 
     def found_date
-      @constructs << DateConstruct.new(:date => @date1, :comp_start => @pos, :comp_end => @pos, :found_in => method_name)
+      @constructs << DateConstruct.new(:date => @date1, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
     end
   end # END class ConstructFinder
 end
