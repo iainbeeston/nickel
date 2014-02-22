@@ -654,6 +654,19 @@ module Nickel
         end
       end
 
+      context "when the query is 'the last thursday of the month'" do
+        let(:query) { "the last thursday of the month" }
+        let(:run_date) { Time.local(2008, 8, 25) }
+
+        describe "#occurrences" do
+          it "is last thursday this month" do
+            expect(nlp.occurrences).to match_array [
+              Occurrence.new(type: :single, start_date: ZDate.new("20080828"))
+            ]
+          end
+        end
+      end
+
       context "when the query is 'third monday next month'" do
         let(:query) { "third monday next month" }
         let(:run_date) { Time.local(2008, 8, 25) }

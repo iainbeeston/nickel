@@ -1161,7 +1161,7 @@ module Nickel
         if self =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
           nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/) { |m1| "repeats monthly " + m1.gsub(/\b(and|the)\b/,'') }
         else
-          nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/) { |m1| m1.gsub(/\b(and|the)\b/,'').gsub(/#{day_of_week}/,'\1 this month') }
+          nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/) { |m1| m1.gsub(/\b(and|the)\b/,'').gsub(/#{DAY_OF_WEEK}/,'\1 this month') }
         end
       end
 
