@@ -10,7 +10,7 @@ module Nickel
   class DateConstruct < Construct
     attr_accessor :date
     def interpret
-      {:date => @date}
+      {:date => date}
     end
   end
 
@@ -21,7 +21,7 @@ module Nickel
   class TimeConstruct < Construct
     attr_accessor :time
     def interpret
-      {:time => @time}
+      {:time => time}
     end
   end
 
@@ -42,7 +42,7 @@ module Nickel
       elsif variant_of?(:daymonthly)  then interpret_daymonthly_variant
       elsif variant_of?(:datemonthly) then interpret_datemonthly_variant
       else
-        raise StandardError.new("self is an invalid variant, check value of self.repeats or @repeats")
+        raise StandardError.new("self is an invalid variant, check value of self.repeats")
       end
     end
 
@@ -58,18 +58,18 @@ module Nickel
     private
     def has_interval_of?(x)
       case x
-      when 1 then [:daily, :weekly, :daymonthly, :datemonthly].include?(@repeats)
-      when 2 then [:altdaily, :altweekly, :altdaymonthly, :altdatemonthly].include?(@repeats)
-      when 3 then [:threedaily, :threeweekly, :threedaymonthly, :threedatemonthly].include?(@repeats)
+      when 1 then [:daily, :weekly, :daymonthly, :datemonthly].include?(repeats)
+      when 2 then [:altdaily, :altweekly, :altdaymonthly, :altdatemonthly].include?(repeats)
+      when 3 then [:threedaily, :threeweekly, :threedaymonthly, :threedatemonthly].include?(repeats)
       end
     end
 
     def variant_of?(sym)
       case sym
-      when :daily       then [:daily, :altdaily, :threedaily].include?(@repeats)
-      when :weekly      then [:weekly, :altweekly, :threeweekly].include?(@repeats)
-      when :daymonthly  then [:daymonthly, :altdaymonthly, :threedaymonthly].include?(@repeats)
-      when :datemonthly then [:datemonthly, :altdatemonthly, :threedatemonthly].include?(@repeats)
+      when :daily       then [:daily, :altdaily, :threedaily].include?(repeats)
+      when :weekly      then [:weekly, :altweekly, :threeweekly].include?(repeats)
+      when :daymonthly  then [:daymonthly, :altdaymonthly, :threedaymonthly].include?(repeats)
+      when :datemonthly then [:datemonthly, :altdatemonthly, :threedatemonthly].include?(repeats)
       end
     end
 
@@ -78,37 +78,37 @@ module Nickel
       [hash_for_occ_base]
     end
 
-    # \@repeats_on is an array of day indices. For example,
-    # "every monday and wed" will produce @repeats_on == [0,2].
+    # repeats_on is an array of day indices. For example,
+    # "every monday and wed" will produce repeats_on == [0,2].
     def interpret_weekly_variant
       hash_for_occ_base = {:type => :weekly, :interval => get_interval}
       array_of_occurrences = []
-      @repeats_on.each do |day_of_week|
+      repeats_on.each do |day_of_week|
         array_of_occurrences << hash_for_occ_base.merge({:day_of_week => day_of_week})
       end
       array_of_occurrences
     end
 
-    # \@repeats_on is an array of arrays: Each sub array has the format
+    # repeats_on is an array of arrays: Each sub array has the format
     # [week_of_month, day_of_week].  For example,
     # "the first and second sat of every month" will produce
-    # \@repeats_on == [[1,5], [2,5]]
+    # repeats_on == [[1,5], [2,5]]
     def interpret_daymonthly_variant
       hash_for_occ_base = {:type => :daymonthly, :interval => get_interval}
       array_of_occurrences = []
-      @repeats_on.each do |on|
+      repeats_on.each do |on|
         h = {:week_of_month => on[0], :day_of_week => on[1]}
         array_of_occurrences << hash_for_occ_base.merge(h)
       end
       array_of_occurrences
     end
 
-    # \@repeats_on is an array of datemonthly indices.  For example,
-    # "the 21st and 22nd of every monthy" will produce @repeats_on == [21, 22]
+    # repeats_on is an array of datemonthly indices.  For example,
+    # "the 21st and 22nd of every monthy" will produce repeats_on == [21, 22]
     def interpret_datemonthly_variant
       hash_for_occ_base = {:type => :datemonthly, :interval => get_interval}
       array_of_occurrences = []
-      @repeats_on.each do |date_of_month|
+      repeats_on.each do |date_of_month|
         h = {:date_of_month => date_of_month}
         array_of_occurrences << hash_for_occ_base.merge(h)
       end
