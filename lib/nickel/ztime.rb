@@ -1,3 +1,5 @@
+require 'time'
+
 module Nickel
 
   class ZTime
@@ -140,6 +142,10 @@ module Nickel
       else
         0
       end
+    end
+
+    def to_time
+      Time.parse("#{hour}:#{minute}:#{second}")
     end
 
     class << self

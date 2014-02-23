@@ -86,6 +86,15 @@ n.message                       # => lunch
 n.occurrences[0].start_date     # => 20100403
 ~~~
 
+Extracting ruby date and time objects
+
+~~~ ruby
+n = Nickel.parse "dinner with friends at 8:00pm tonight"
+n.message                               # => dinner with friends
+n.occurrences[0].start_date.to_date     # => 2014-02-23
+n.occurrences[0].start_time.to_time     # => 2014-02-23 20:00:00 +0000
+~~~
+
 Running Tests
 -------------
 
