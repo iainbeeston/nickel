@@ -340,12 +340,12 @@ module Nickel
     end
 
     def match_repeats_datemonthly
-      @components[@pos+2] && @components[@pos+2].valid_dd? && @date_array = [@components[@pos+2].to_i]   # repeats monthly 22nd
+      @components[@pos+2] && ConstructFinder.ordinal_only?(@components[@pos+2]) && @date_array = [@components[@pos+2].to_i]   # repeats monthly 22nd
     end
 
     def found_repeats_datemonthly
       j = 3
-      while @components[@pos+j] && @components[@pos+j].valid_dd?
+      while @components[@pos+j] && ConstructFinder.ordinal_only?(@components[@pos+j])
         @date_array << @components[@pos+j].to_i
         j += 1
       end
@@ -371,12 +371,12 @@ module Nickel
     end
 
     def match_repeats_altmonthly_datemonthly
-      @components[@pos+2] && @components[@pos+2].valid_dd? && @date_array = [@components[@pos+2].to_i]   # repeats altmonthly 22nd
+      @components[@pos+2] && ConstructFinder.ordinal_only?(@components[@pos+2]) && @date_array = [@components[@pos+2].to_i]   # repeats altmonthly 22nd
     end
 
     def found_repeats_altmonthly_datemonthly
       j = 3
-      while @components[@pos+j] && @components[@pos+j].valid_dd?
+      while @components[@pos+j] && ConstructFinder.ordinal_only?(@components[@pos+j])
         @date_array << @components[@pos+j].to_i
         j += 1
       end
@@ -402,12 +402,12 @@ module Nickel
     end
 
     def match_repeats_threemonthly_datemonthly
-      @components[@pos+2] && @components[@pos+2].valid_dd? && @date_array = [@components[@pos+2].to_i]   # repeats threemonthly 22nd
+      @components[@pos+2] && ConstructFinder.ordinal_only?(@components[@pos+2]) && @date_array = [@components[@pos+2].to_i]   # repeats threemonthly 22nd
     end
 
     def found_repeats_threemonthly_datemonthly
       j = 3
-      while @components[@pos+j] && @components[@pos+j].valid_dd?
+      while @components[@pos+j] && ConstructFinder.ordinal_only?(@components[@pos+j])
         @date_array << @components[@pos+j].to_i
         j += 1
       end
@@ -415,7 +415,7 @@ module Nickel
     end
 
     def match_for_x
-      @components[@pos]=="for" && @components[@pos+1].digits_only? && @length = @components[@pos+1].to_i
+      @components[@pos]=="for" && ConstructFinder.digits_only?(@components[@pos+1]) && @length = @components[@pos+1].to_i
     end
 
     def match_for_x_days
@@ -504,7 +504,7 @@ module Nickel
     end
 
     def match_next_x
-      @components[@pos+1] && @components[@pos+1].digits_only? && @length = @components[@pos+1].to_i
+      @components[@pos+1] && ConstructFinder.digits_only?(@components[@pos+1]) && @length = @components[@pos+1].to_i
     end
 
     def match_next_x_days
@@ -565,7 +565,7 @@ module Nickel
     end
 
     def match_week_of_date
-      @components[@pos+1] == "of" && @date1 = @components[@pos+2].interpret_date(@curdate)
+      @components[@pos+1] == "of" && @date1 = ZDate.interpret(@components[@pos+2], @curdate)
     end
 
     def found_week_of_date
@@ -573,7 +573,7 @@ module Nickel
     end
 
     def match_week_through_date
-      @components[@pos+1] == "through" && @date1 = @components[@pos+2].interpret_date(@curdate)
+      @components[@pos+1] == "through" && @date1 = ZDate.interpret(@components[@pos+2], @curdate)
     end
 
     def found_week_through_date
@@ -581,7 +581,7 @@ module Nickel
     end
 
     def match_x_weeks_from
-      @components[@pos].digits_only? && @components[@pos+1] =~ /^weeks?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i      # if "x weeks from"
+      ConstructFinder.digits_only?(@components[@pos]) && @components[@pos+1] =~ /^weeks?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i      # if "x weeks from"
     end
 
     def match_x_weeks_from_dayname
@@ -636,7 +636,7 @@ module Nickel
     end
 
     def match_x_months_from
-      @components[@pos].digits_only? && @components[@pos+1] =~ /^months?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i       # if "x months from"
+      ConstructFinder.digits_only?(@components[@pos]) && @components[@pos+1] =~ /^months?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i       # if "x months from"
     end
 
     def match_x_months_from_dayname
@@ -688,7 +688,7 @@ module Nickel
     end
 
     def match_x_days_from
-      @components[@pos].digits_only? && @components[@pos+1] =~ /^days?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i     # 3 days from
+      ConstructFinder.digits_only?(@components[@pos]) && @components[@pos+1] =~ /^days?$/ && @components[@pos+2] == "from" && @length = @components[@pos].to_i     # 3 days from
     end
 
     def match_x_days_from_now
@@ -708,7 +708,7 @@ module Nickel
     end
 
     def match_x_dayname_from
-      @components[@pos].digits_only? && (@day_index = ZDate.days_of_week.index(@components[@pos+1])) && @components[@pos+2] == "from" && @length = @components[@pos].to_i    # "2 tuesdays from"
+      ConstructFinder.digits_only?(@components[@pos]) && (@day_index = ZDate.days_of_week.index(@components[@pos+1])) && @components[@pos+2] == "from" && @length = @components[@pos].to_i    # "2 tuesdays from"
     end
 
     def match_x_dayname_from_now
@@ -772,7 +772,7 @@ module Nickel
     end
 
     def match_x_minutes_from_now
-      @components[@pos].digits_only? && @components[@pos+1] =~ /minutes?/ && @components[@pos+2] == "from" && @components[@pos+3] =~ /^(today|now)$/ && @length = @components[@pos].to_i
+      ConstructFinder.digits_only?(@components[@pos]) && @components[@pos+1] =~ /minutes?/ && @components[@pos+2] == "from" && @components[@pos+3] =~ /^(today|now)$/ && @length = @components[@pos].to_i
     end
 
     def found_x_minutes_from_now
@@ -783,7 +783,7 @@ module Nickel
     end
 
     def match_x_hours_from_now
-      @components[@pos].digits_only? && @components[@pos+1] =~ /hours?/ && @components[@pos+2] == "from" && @components[@pos+3] =~ /^(today|now)$/ && @length = @components[@pos].to_i
+      ConstructFinder.digits_only?(@components[@pos]) && @components[@pos+1] =~ /hours?/ && @components[@pos+2] == "from" && @components[@pos+3] =~ /^(today|now)$/ && @length = @components[@pos].to_i
     end
 
     def found_x_hours_from_now
@@ -906,11 +906,11 @@ module Nickel
     end
 
     def match_at_time
-      @components[@pos+1] && @time1 = @components[@pos+1].interpret_time
+      @components[@pos+1] && @time1 = ZTime.interpret(@components[@pos+1])
     end
 
     def match_at_time_through_time
-      @components[@pos+2] =~ /^(to|until|through)$/ && @components[@pos+3] && @time2 = @components[@pos+3].interpret_time
+      @components[@pos+2] =~ /^(to|until|through)$/ && @components[@pos+3] && @time2 = ZTime.interpret(@components[@pos+3])
     end
 
     def found_at_time_through_time
@@ -946,7 +946,7 @@ module Nickel
     end
 
     def match_tomorrow_through_date
-      @date1 = @components[@pos+2].interpret_date(@curdate)       # tomorrow until 9/21
+      @date1 = ZDate.interpret(@components[@pos+2], @curdate)       # tomorrow until 9/21
     end
 
     def found_tomorrow_through_date
@@ -984,7 +984,7 @@ module Nickel
     end
 
     def match_now_through_date
-      @date1 = @components[@pos+2].interpret_date(@curdate)       # now until 9/21
+      @date1 = ZDate.interpret(@components[@pos+2], @curdate)       # now until 9/21
     end
 
     def found_now_through_date
@@ -1016,7 +1016,7 @@ module Nickel
     end
 
     def match_dayname_the_ordinal
-      @components[@pos+1] == "the" && @date1 = @components[@pos+2].interpret_date(@curdate)    # if "tue the 23rd"
+      @components[@pos+1] == "the" && @date1 = ZDate.interpret(@components[@pos+2], @curdate)    # if "tue the 23rd"
     end
 
     def found_dayname_the_ordinal
@@ -1027,7 +1027,7 @@ module Nickel
     end
 
     def match_dayname_x_weeks_from_this
-      @components[@pos+1] && @components[@pos+1].digits_only? && @components[@pos+2] =~ /\bweeks?\b/ && @components[@pos+3] =~ /\b(from)|(after)/ && @components[@pos+4] == "this" && @length = @components[@pos+1]           # "monday two weeks from this
+      @components[@pos+1] && ConstructFinder.digits_only?(@components[@pos+1]) && @components[@pos+2] =~ /\bweeks?\b/ && @components[@pos+3] =~ /\b(from)|(after)/ && @components[@pos+4] == "this" && @length = @components[@pos+1]           # "monday two weeks from this
     end
 
     def found_dayname_x_weeks_from_this
@@ -1041,7 +1041,7 @@ module Nickel
     end
 
     def match_dayname_x_weeks_from_next
-      @components[@pos+1] && @components[@pos+1].digits_only? && @components[@pos+2] =~ /\bweeks?\b/ && @components[@pos+3] =~ /\b(from)|(after)/ && @components[@pos+4] == "next" && @length = @components[@pos+1]           # "monday two weeks from this
+      @components[@pos+1] && ConstructFinder.digits_only?(@components[@pos+1]) && @components[@pos+2] =~ /\bweeks?\b/ && @components[@pos+3] =~ /\b(from)|(after)/ && @components[@pos+4] == "next" && @length = @components[@pos+1]           # "monday two weeks from this
     end
 
     def found_dayname_x_weeks_from_next
@@ -1105,11 +1105,11 @@ module Nickel
     end
 
     def match_time
-      @time1 = @components[@pos].interpret_time
+      @time1 = ZTime.interpret(@components[@pos])
     end
 
     def match_time_through_time
-      @components[@pos+1] =~ /^(to|through)$/ && @time2 = @components[@pos+2].interpret_time
+      @components[@pos+1] =~ /^(to|through)$/ && @time2 = ZTime.interpret(@components[@pos+2])
     end
 
     def found_time_through_time
@@ -1121,11 +1121,11 @@ module Nickel
     end
 
     def match_date
-      @date1 = @components[@pos].interpret_date(@curdate)
+      @date1 = ZDate.interpret(@components[@pos], @curdate)
     end
 
     def match_date_through_date
-      @components[@pos+1] =~ /^(through|to|until)$/ && @date2 = @components[@pos+2].interpret_date(@curdate)
+      @components[@pos+1] =~ /^(through|to|until)$/ && @date2 = ZDate.interpret(@components[@pos+2], @curdate)
     end
 
     def found_date_through_date
@@ -1134,6 +1134,17 @@ module Nickel
 
     def found_date
       @constructs << DateConstruct.new(:date => @date1, :comp_start => @pos, :comp_end => @pos, :found_in => __method__)
+    end
+
+    class << self
+      def digits_only?(str)
+        str =~ /^\d+$/ #no characters other than digits
+      end
+
+      # valid hour, 24hour, and minute could use some cleaning
+      def ordinal_only?(str)
+        str =~ %r{^(0?[1-9]|[12][0-9]|3[01])(?:st|nd|rd|th)?$}
+      end
     end
   end # END class ConstructFinder
 end

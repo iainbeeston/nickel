@@ -209,6 +209,45 @@ module Nickel
       def format_time(hours, minutes=0, seconds=0)
         format_hour(hours) + format_minute(minutes) + format_second(seconds)
       end
+
+      # Interpret Time is an important one, set some goals:
+      #     match all of the following
+      #     a.) 5,   12,   530,    1230,     2000
+      #     b.) 5pm, 12pm, 530am,  1230am,
+      #     c.)            5:30,   12:30,    20:00
+      #     d.)            5:3,    12:3,     20:3    ...  that's not needed but we supported it in version 1, this would be 5:30 and 12:30
+      #     e.)            5:30am, 12:30am
+      #     20:00am, 20:00pm ... ZTime will flag these as invalid, so it is ok if we match them here
+      def interpret(str)
+        a_b   = /^(\d{1,4})(am|pm)?$/                     # handles cases (a) and (b)
+        c_d_e = /^(\d{1,2}):(\d{1,2})(am|pm)?$/           # handles cases (c), (d), and (e)
+        if mdata = str.match(a_b)
+          am_pm = mdata[2]
+          # this may look a bit confusing, but all we are doing is interpreting
+          # what the user meant based on the number of digits they provided
+          if mdata[1].length <= 2
+            # e.g. "11" means 11:00
+            hstr = mdata[1]
+            mstr = "0"
+          elsif mdata[1].length == 3
+            # e.g. "530" means 5:30
+            hstr = mdata[1][0..0]
+            mstr = mdata[1][1..2]
+          elsif mdata[1].length == 4
+            # e.g. "1215" means 12:15
+            hstr = mdata[1][0..1]
+            mstr = mdata[1][2..3]
+          end
+        elsif mdata = str.match(c_d_e)
+          am_pm = mdata[3]
+          hstr = mdata[1]
+          mstr = mdata[2]
+        else
+          return nil
+        end
+        # in this case we do not care if time fails validation, if it does, it just means we haven't found a valid time, return nil
+        begin ZTime.new(ZTime.format_time(hstr, mstr), am_pm) rescue return nil end
+      end
     end
 
     # this can very easily be cleaned up

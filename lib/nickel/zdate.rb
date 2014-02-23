@@ -332,6 +332,74 @@ module Nickel
       def format_date(year, month=1, day=1)
         format_year(year) + format_month(month) + format_day(day)
       end
+
+      # Interpret Date is equally as important, our goals:
+      # First off, convention of the NLP is to not allow month names to the construct finder (unless it is implying date span), so we will not be interpreting
+      # anything such as january 2nd, 2008.  Instead all dates will be represented in this form month/day/year.  However it may not
+      # be as nice as that.  We need to match things like '5', if someone just typed in "the 5th."  Because of this, there will be
+      # overlap between interpret_date and interpret_time in matching; interpret_date should ALWAYS be found after interpret_time in
+      # the construct finder.  If the construct finder happens upon a digit on it's own, e.g. "5", it will not run interpret_time
+      # because there is no "at" preceeding it.  Therefore it will fall through to the finder with interpret_date and we will assume
+      # the user meant the 5th.  If interpret_date is before interpret_time, then .... wait... does the order actually matter?  Even if
+      # this is before interpret_time, it shouldn't get hit because the time should be picked up at the "at" construct.  This may be a bunch
+      # of useless rambling.
+      #
+      # 2/08      <------ This is not A date
+      # 2/2008    <------ Neither is this, but I can see people using these as wrappers, must support this in next version
+      # 11/08     <------ same
+      # 11/2008   <------ same
+      # 2/1/08,   2/12/08,  2/1/2008,   2/12/2008
+      # 11/1/08,  11/12/08, 11/1/2008, 11/12/2008
+      # 2/1     feb first
+      # 2/12    feb twelfth
+      # 11/1    nov first
+      # 11/12   nov twelfth
+      # 11      the 11th
+      # 2       the 2nd
+      #
+      #
+      # Match all of the following:
+      #   a.) 1   10
+      #   b.) 1/1  1/12  10/1  10/12
+      #   c.) 1/1/08 1/12/08 1/1/2008 1/12/2008 10/1/08 10/12/08 10/12/2008 10/12/2008
+      #   d.) 1st 10th
+      def interpret(str, current_date)
+        day_str, month_str, year_str = nil, nil, nil
+        ambiguous = {:month => false, :year => false}   # assume false, we use this flag if we aren't certain about the year
+
+        #appropriate matches
+        a_d = /^(\d{1,2})(rd|st|nd|th)?$/     # handles cases a and d
+        b = /^(\d{1,2})\/(\d{1,2})$/          # handles case b
+        c = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/   # handles case c
+
+        if mdata = str.match(a_d)
+          ambiguous[:month] = true
+          day_str = mdata[1]
+        elsif mdata = str.match(b)
+          ambiguous[:year] = true
+          month_str = mdata[1]
+          day_str = mdata[2]
+        elsif mdata = str.match(c)
+          month_str = mdata[1]
+          day_str = mdata[2]
+          year_str = mdata[3]
+        else
+          return nil
+        end
+
+        inst_str = ZDate.format_date(year_str || current_date.year_str, month_str || current_date.month_str, day_str || current_date.day_str)
+        # in this case we do not care if date fails validation, if it does, it just means we haven't found a valid date, return nil
+        date = ZDate.new(inst_str) rescue nil
+        if date
+          if ambiguous[:year]
+            # say the date is 11/1 and someone enters 2/1, they probably mean next year, I pick 4 months as a threshold but that is totally arbitrary
+            current_date.diff_in_months(date) < -4 and date = date.add_years(1)
+          elsif ambiguous[:month]
+            current_date.day > date.day and date = date.add_months(1)
+          end
+        end
+        date
+      end
     end
 
     # difference in months FROM self TO date2, for instance, if self is oct 1 and date2 is nov 14, will return 1
