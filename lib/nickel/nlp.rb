@@ -11,7 +11,7 @@ module Nickel
 
     attr_reader :query, :input_date, :input_time, :nlp_query
     attr_reader :construct_finder, :construct_interpreter
-    attr_reader :occurrences, :output, :message
+    attr_reader :occurrences, :message
 
     def initialize(query, date_time = Time.now)
       raise InvalidDateTimeError unless [DateTime, Time].include?(date_time.class)
@@ -35,7 +35,6 @@ module Nickel
 
       @occurrences = Occurrence.finalizer(@construct_interpreter.occurrences, @input_date)   # finds start and end dates
       @occurrences.sort! {|x,y| if x.start_date > y.start_date then 1 elsif x.start_date < y.start_date then -1 else 0 end}    # sorts occurrences by start dat
-      @output = @occurrences # legacy
       @occurrences
     end
 
