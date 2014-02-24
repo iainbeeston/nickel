@@ -1,18 +1,11 @@
-require_relative 'instance_from_hash'
-
 module Nickel
 
-  class Occurrence
-    include InstanceFromHash
-
-    ATTRS = [:type, :start_date, :end_date, :start_time, :end_time, :interval, :day_of_week, :week_of_month, :date_of_month]
-
-    # Some notes about this class, type can take the following values:
-    # :single, :daily, :weekly, :daymonthly, :datemonthly,
-    ATTRS.each {|a| attr_accessor(a) }
+  # Some notes about this class, type can take the following values:
+  # :single, :daily, :weekly, :daymonthly, :datemonthly,
+  Occurrence = Struct.new(:type, :start_date, :end_date, :start_time, :end_time, :interval, :day_of_week, :week_of_month, :date_of_month) do
 
     def initialize(h)
-      super(h)
+      h.each { |k,v| send("#{k}=", v) }
     end
 
     def inspect
@@ -83,10 +76,6 @@ module Nickel
         occurrences.each {|occ| occ.finalize(cur_date)}
         occurrences
       end
-    end
-
-    def ==(other)
-      ATTRS.all?{|a| other.respond_to?(a) && self.public_send(a) == other.public_send(a) }
     end
   end
 end

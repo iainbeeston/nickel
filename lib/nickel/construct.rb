@@ -1,10 +1,10 @@
-require_relative 'instance_from_hash'
-
 module Nickel
 
   class Construct
-    include InstanceFromHash
     attr_accessor :comp_start, :comp_end, :found_in
+    def initialize(h)
+      h.each { |k,v| send("#{k}=", v) }
+    end
   end
 
   class DateConstruct < Construct
