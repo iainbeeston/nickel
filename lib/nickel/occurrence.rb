@@ -10,10 +10,10 @@ module Nickel
 
     def inspect
       str = %(\#<Occurrence type: #{type})
-      str << %(, start_date: "#{start_date.date}")  if start_date
-      str << %(, end_date: "#{end_date.date}")      if end_date
-      str << %(, start_time: "#{start_time.time}")  if start_time
-      str << %(, end_time: "#{end_time.time}")      if end_time
+      str << %(, start_date: "#{start_date}")  if start_date
+      str << %(, end_date: "#{end_date}")      if end_date
+      str << %(, start_time: "#{start_time}")  if start_time
+      str << %(, end_time: "#{end_time}")      if end_time
       str << %(, interval: #{interval})             if interval
       str << %(, day_of_week: #{day_of_week})       if day_of_week
       str << %(, week_of_month: #{week_of_month})   if week_of_month

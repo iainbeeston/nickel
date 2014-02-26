@@ -144,6 +144,10 @@ module Nickel
       end
     end
 
+    def to_s
+      time
+    end
+
     def to_time
       Time.parse("#{hour}:#{minute}:#{second}")
     end

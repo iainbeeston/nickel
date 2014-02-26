@@ -535,6 +535,10 @@ module Nickel
       Date.new(year, month, day)
     end
 
+    def to_s
+      date
+    end
+
     protected
     # Modifies self.
     # bumps self to first day of next month
