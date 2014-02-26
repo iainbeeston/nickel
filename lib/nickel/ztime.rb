@@ -131,7 +131,7 @@ module Nickel
     end
 
     def ==(t2)
-      self.hour == t2.hour && self.minute == t2.minute && self.second == t2.second
+      t2.respond_to?(:hour) && self.hour == t2.hour && t2.respond_to?(:minute) && self.minute == t2.minute && t2.respond_to?(:second) && self.second == t2.second
     end
 
     def <=>(t2)

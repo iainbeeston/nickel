@@ -90,7 +90,7 @@ module Nickel
     end
 
     def ==(d2)
-      self.year == d2.year && self.month == d2.month && self.day == d2.day
+      d2.respond_to?(:year) && self.year == d2.year && d2.respond_to?(:month) && self.month == d2.month && d2.respond_to?(:day) && self.day == d2.day
     end
 
     def <=>(d2)
