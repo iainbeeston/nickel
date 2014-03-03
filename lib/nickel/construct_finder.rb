@@ -1,5 +1,6 @@
 require_relative 'construct'
 require_relative 'zdate'
+require_relative 'ztime'
 
 module Nickel
 
