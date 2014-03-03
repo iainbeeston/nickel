@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   if RUBY_ENGINE == 'rbx'
     s.add_dependency 'rubysl-date'
+    s.add_dependency 'rubysl-time'
     s.add_development_dependency 'rubysl-rake'
     s.add_development_dependency 'rubysl-bundler'
   end
