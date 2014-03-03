@@ -95,15 +95,6 @@ n.occurrences[0].start_date.to_date     # => 2014-02-23
 n.occurrences[0].start_time.to_time     # => 2014-02-23 20:00:00 +0000
 ~~~
 
-Running Tests
--------------
-
-To run tests, execute the `test` rake task.
-
-~~~ bash
-rake test
-~~~
-
 Credits
 -------
 
