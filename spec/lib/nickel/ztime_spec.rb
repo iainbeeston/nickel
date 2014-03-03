@@ -229,6 +229,14 @@ module Nickel
         end
       end
     end
+
+    describe "#to_time" do
+      let(:t1) { ZTime.new("161718") }
+
+      it "converts to a Time on todays date" do
+        expect(t1.to_time).to eq Time.parse("16:17:18")
+      end
+    end
   end
 end
 

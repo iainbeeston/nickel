@@ -69,7 +69,7 @@ module Nickel
       let(:d1) { ZDate.new('20090927') }
 
       it "converts to a Date" do
-        expect(d1).to eq Date.new(2009, 9, 27)
+        expect(d1.to_date).to eq Date.new(2009, 9, 27)
       end
     end
   end

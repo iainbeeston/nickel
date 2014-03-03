@@ -1,8 +1,4 @@
-# Ruby Nickel Library
-# Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
-# MIT License [http://www.opensource.org/licenses/mit-license.php]
-
-require_relative 'ruby_ext/to_s2'
+require 'time'
 
 module Nickel
 
@@ -81,17 +77,17 @@ module Nickel
 
     # NOTE: change_ methods modify self.
     def change_hour_to(h)
-      self.time = h.to_s2 + minute_str + second_str
+      self.time = ZTime.format_time(h, minute_str, second_str)
       self
     end
 
     def change_minute_to(m)
-      self.time = hour_str + m.to_s2 + second_str
+      self.time = ZTime.format_time(hour_str, m, second_str)
       self
     end
 
     def change_second_to(s)
-      self.time = hour_str + minute_str + s.to_s2
+      self.time = ZTime.format_time(hour_str, minute_str, s)
       self
     end
 
@@ -100,7 +96,7 @@ module Nickel
     end
 
     def readable_12hr
-      hour_on_12hr_clock.to_s2 + ":" + @time[2..3] + " #{am_pm}"
+      hour_on_12hr_clock + ":" + @time[2..3] + " #{am_pm}"
     end
 
     def hour_on_12hr_clock
@@ -135,7 +131,7 @@ module Nickel
     end
 
     def ==(t2)
-      self.hour == t2.hour && self.minute == t2.minute && self.second == t2.second
+      t2.respond_to?(:hour) && self.hour == t2.hour && t2.respond_to?(:minute) && self.minute == t2.minute && t2.respond_to?(:second) && self.second == t2.second
     end
 
     def <=>(t2)
@@ -146,6 +142,14 @@ module Nickel
       else
         0
       end
+    end
+
+    def to_s
+      time
+    end
+
+    def to_time
+      Time.parse("#{hour}:#{minute}:#{second}")
     end
 
     class << self
@@ -192,6 +196,62 @@ module Nickel
       def pm_to_24hr(h)
         h == 12 ? 12 : h + 12
       end
+
+      def format_hour(h)
+        h.to_s.rjust(2, '0')
+      end
+
+      def format_minute(m)
+        m.to_s.rjust(2, '0')
+      end
+
+      def format_second(s)
+        s.to_s.rjust(2, '0')
+      end
+
+      # formats the hours, minutes and seconds into the format expected by the ZTime constructor
+      def format_time(hours, minutes=0, seconds=0)
+        format_hour(hours) + format_minute(minutes) + format_second(seconds)
+      end
+
+      # Interpret Time is an important one, set some goals:
+      #     match all of the following
+      #     a.) 5,   12,   530,    1230,     2000
+      #     b.) 5pm, 12pm, 530am,  1230am,
+      #     c.)            5:30,   12:30,    20:00
+      #     d.)            5:3,    12:3,     20:3    ...  that's not needed but we supported it in version 1, this would be 5:30 and 12:30
+      #     e.)            5:30am, 12:30am
+      #     20:00am, 20:00pm ... ZTime will flag these as invalid, so it is ok if we match them here
+      def interpret(str)
+        a_b   = /^(\d{1,4})(am|pm)?$/                     # handles cases (a) and (b)
+        c_d_e = /^(\d{1,2}):(\d{1,2})(am|pm)?$/           # handles cases (c), (d), and (e)
+        if mdata = str.match(a_b)
+          am_pm = mdata[2]
+          # this may look a bit confusing, but all we are doing is interpreting
+          # what the user meant based on the number of digits they provided
+          if mdata[1].length <= 2
+            # e.g. "11" means 11:00
+            hstr = mdata[1]
+            mstr = "0"
+          elsif mdata[1].length == 3
+            # e.g. "530" means 5:30
+            hstr = mdata[1][0..0]
+            mstr = mdata[1][1..2]
+          elsif mdata[1].length == 4
+            # e.g. "1215" means 12:15
+            hstr = mdata[1][0..1]
+            mstr = mdata[1][2..3]
+          end
+        elsif mdata = str.match(c_d_e)
+          am_pm = mdata[3]
+          hstr = mdata[1]
+          mstr = mdata[2]
+        else
+          return nil
+        end
+        # in this case we do not care if time fails validation, if it does, it just means we haven't found a valid time, return nil
+        begin ZTime.new(ZTime.format_time(hstr, mstr), am_pm) rescue return nil end
+      end
     end
 
     # this can very easily be cleaned up
@@ -213,7 +273,7 @@ module Nickel
           self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
         end
       elsif self < time2
-        if time2.hour >= 12 && ZTime.new((time2.hour - 12).to_s2 + time2.minute_str + time2.second_str) > self
+        if time2.hour >= 12 && ZTime.new(ZTime.format_time(time2.hour - 12, time2.minute_str, time2.second_str)) > self
           # 4 to 5pm  or 0400 to 1700
           change_hour_to(self.hour + 12)
         else
@@ -239,14 +299,14 @@ module Nickel
       # 930am  to 5 --->  0930 to 0500
       # 930pm  to 5 --->  2130 to 0500
       if self < time1
-        unless time1.hour >= 12 && ZTime.new((time1.hour - 12).to_s2 + time1.minute_str + time1.second_str) >= self
+        unless time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.minute_str, time1.second_str)) >= self
           self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
         end
       elsif self > time1
         # # time1 to self --> time1 to self
         # # 10am  to 11   --> 1000  to 1100
         # #
-        # if time1.hour >= 12 && ZTime.new((time1.hour - 12).to_s2 + time1.minute_str + time1.second_str) > self
+        # if time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.minute_str, time1.second_str)) > self
         #   change_hour_to(self.hour + 12)
         # else
         #   # do nothing

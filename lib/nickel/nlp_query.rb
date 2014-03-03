@@ -1,29 +1,28 @@
-# Ruby Nickel Library
-# Copyright (c) 2008-2011 Lou Zell, lzell11@gmail.com, http://hazelmade.com
-# MIT License [http://www.opensource.org/licenses/mit-license.php]
-
-require 'logger'
-require_relative 'query_constants'
-require_relative 'ruby_ext/calling_method'
+require_relative 'zdate'
+require_relative 'ztime'
+require_relative 'nlp_query_constants'
 
 module Nickel
 
-  class NLPQuery < String
+  class NLPQuery
     include NLPQueryConstants
 
-    # Note there is no initialize here, it is inherited from string class.
-    attr_reader :after_formatting, :changed_in, :message
+    def initialize(query_str)
+      @query_str = query_str.dup
+    end
+
+    attr_reader :after_formatting, :changed_in
 
     def standardize
-      @query = self.dup # needed for case correcting after extract_message has been called
+      @query = query_str.dup # needed for case correcting after extract_message has been called
       query_formatting  # easy text manipulation, no regex involved here
       query_pre_processing  # puts query in the form that construct_finder understands, lots of manipulation here
-      self
+      query_str.dup
     end
 
     def query_formatting
-      gsub!(/\n/,'')
-      downcase!
+      query_str.gsub!(/\n/,'')
+      query_str.downcase!
       remove_unused_punctuation
       replace_backslashes
       run_spell_check
@@ -35,7 +34,7 @@ module Nickel
       replace_hyphens
       insert_repeats_before_words_indicating_recurrence_lame
       insert_space_at_end_of_string_lame
-      @after_formatting = self.dup    # save current state
+      @after_formatting = query_str.dup    # save current state
     end
 
     # Usage:
@@ -48,21 +47,21 @@ module Nickel
     # I wrote this because I was having problems overriding gsub and passing
     # a block from the new gsub to super.
     def nsub!(*args)
-      if m = self.match(args[0])    # m will now hold the FIRST set of backreferenced matches
+      if m = query_str.match(args[0])    # m will now hold the FIRST set of backreferenced matches
         # there is at least one match
         @changed_in ||= []
-        @changed_in << calling_method
+        @changed_in << caller[1][/(\w+)\W*$/, 1]
         if block_given?
-          # gsub!(args[0]) {yield(*m.to_a[1..-1])}    # There is a bug here: If gsub matches more than once,
+          # query_str.gsub!(args[0]) {yield(*m.to_a[1..-1])}    # There is a bug here: If gsub matches more than once,
                                                       # then the first set of referenced matches will be passed to the block
           ret_str = m.pre_match + m[0].sub(args[0]) {yield(*m.to_a[1..-1])}   # this will take care of the first set of matches
           while (m_old = m.dup) && (m = m.post_match.match(args[0]))
             ret_str << m.pre_match + m[0].sub(args[0]) {yield(*m.to_a[1..-1])}
           end
           ret_str << m_old.post_match
-          self.sub!(/.*/,ret_str)
+          query_str.sub!(/.*/,ret_str)
         else
-          gsub!(args[0],args[1])
+          query_str.gsub!(args[0],args[1])
         end
       end
     end
@@ -392,243 +391,27 @@ module Nickel
     end
 
     def insert_repeats_before_words_indicating_recurrence_lame
-      comps = self.split
+      comps = query_str.split
       (daily_index = comps.index("daily")) && comps[daily_index - 1] != "repeats" && comps[daily_index] = "repeats daily"
       (weekly_index = comps.index("weekly")) && comps[weekly_index - 1] != "repeats" && comps[weekly_index] = "repeats weekly"
       (monthly_index = comps.index("monthly")) && comps[monthly_index - 1] != "repeats" && comps[monthly_index] = "repeats monthly"
-      if (rejoin = comps.join(' ')) != self
+      if (rejoin = comps.join(' ')) != query_str
         nsub!(/.+/,rejoin)
       end
     end
 
     def insert_space_at_end_of_string_lame
   #      nsub!(/(.+)/,'\1 ')  # I don't really want to be notified about this
-      gsub!(/(.+)/,'\1 ')
+      query_str.gsub!(/(.+)/,'\1 ')
     end
 
-    # These are possible because: NLPQuery.new("hi there").split[0].class ==> Nickel::NLPQuery!!
-    # valid hour, 24hour, and minute could use some cleaning
-    def valid_dd?
-      self =~ %r{^(0?[1-9]|[12][0-9]|3[01])(?:st|nd|rd|th)?$}
+    def to_s
+      query_str
     end
-    def valid_hour?
-      validity = false
-      if (self.length == 1) && (self =~ /^(1|2|3|4|5|6|7|8|9)/)
-        validity = true
-      end
-      if self.length == 2
-        if self =~ /^0/
-          if self =~ /(1|2|3|4|5|6|7|8|9)$/
-            validity = true
-          end
-        end
-        if self =~ /^1/
-          if self =~ /(0|1|2)$/
-            validity = true
-          end
-        end
-      end
-      return validity
-    end # END valid_hour?
-    def valid_24_hour?
-      validity = false
-      if (self.length == 1) && (self =~ /^(0|1|2|3|4|5|6|7|8|9)/)
-        validity = true
-      end
-      if self.length == 2
-        if self =~ /^(0|1)/
-          if self =~ /(0|1|2|3|4|5|6|7|8|9)$/
-            validity = true
-          end
-        end
-        if self =~ /^2/
-          if self =~ /(0|1|2|3)$/
-            validity = true
-          end
-        end
-      end
-      return validity
-    end # END valid_hour?
-    def valid_minute?
-      validity = false
-      if self.length <= 2
-        if self =~ /^(0|1|2|3|4|5)/
-          if self =~ /(0|1|2|3|4|5|6|7|8|9)$/
-            validity = true
-          end
-        end
-      end
-      return validity
-    end # END valid_minute?
-    def digits_only?
-      self =~ /^\d+$/ #no characters other than digits
-    end
-
-    # Interpret Time is an important one, set some goals:
-    #     match all of the following
-    #     a.) 5,   12,   530,    1230,     2000
-    #     b.) 5pm, 12pm, 530am,  1230am,
-    #     c.)            5:30,   12:30,    20:00
-    #     d.)            5:3,    12:3,     20:3    ...  that's not needed but we supported it in version 1, this would be 5:30 and 12:30
-    #     e.)            5:30am, 12:30am
-    #     20:00am, 20:00pm ... ZTime will flag these as invalid, so it is ok if we match them here
-    def interpret_time
-      a_b   = /^(\d{1,4})(am|pm)?$/                     # handles cases (a) and (b)
-      c_d_e = /^(\d{1,2}):(\d{1,2})(am|pm)?$/           # handles cases (c), (d), and (e)
-      if mdata = match(a_b)
-        am_pm = mdata[2]
-        case mdata[1].length                            # this may look a bit confusing, but all we are doing is interpreting
-          when 1 then hstr = "0" + mdata[1]                 # what the user meant based on the number of digits they provided
-          when 2 then hstr = mdata[1]                                       # e.g. "11" means 11:00
-          when 3 then hstr = "0" + mdata[1][0..0]; mstr = mdata[1][1..2]    # e.g. "530" means 5:30
-          when 4 then hstr = mdata[1][0..1]; mstr = mdata[1][2..3]          # e.g. "1215" means 12:15
-        end
-      elsif mdata = match(c_d_e)
-        am_pm = mdata[3]
-        hstr = mdata[1]
-        mstr = mdata[2]
-        hstr.length == 1 && hstr.insert(0,"0")
-        mstr.length == 1 && mstr << "0"
-      else
-        return nil
-      end
-      # in this case we do not care if time fails validation, if it does, it just means we haven't found a valid time, return nil
-      begin ZTime.new("#{hstr}#{mstr}", am_pm) rescue return nil end
-    end
-
-    # Interpret Date is equally as important, our goals:
-    # First off, convention of the NLP is to not allow month names to the construct finder (unless it is implying date span), so we will not be interpreting
-    # anything such as january 2nd, 2008.  Instead all dates will be represented in this form month/day/year.  However it may not
-    # be as nice as that.  We need to match things like '5', if someone just typed in "the 5th."  Because of this, there will be
-    # overlap between interpret_date and interpret_time in matching; interpret_date should ALWAYS be found after interpret_time in
-    # the construct finder.  If the construct finder happens upon a digit on it's own, e.g. "5", it will not run interpret_time
-    # because there is no "at" preceeding it.  Therefore it will fall through to the finder with interpret_date and we will assume
-    # the user meant the 5th.  If interpret_date is before interpret_time, then .... wait... does the order actually matter?  Even if
-    # this is before interpret_time, it shouldn't get hit because the time should be picked up at the "at" construct.  This may be a bunch
-    # of useless rambling.
-    #
-    # 2/08      <------ This is not A date
-    # 2/2008    <------ Neither is this, but I can see people using these as wrappers, must support this in next version
-    # 11/08     <------ same
-    # 11/2008   <------ same
-    # 2/1/08,   2/12/08,  2/1/2008,   2/12/2008
-    # 11/1/08,  11/12/08, 11/1/2008, 11/12/2008
-    # 2/1     feb first
-    # 2/12    feb twelfth
-    # 11/1    nov first
-    # 11/12   nov twelfth
-    # 11      the 11th
-    # 2       the 2nd
-    #
-    #
-    # Match all of the following:
-    #   a.) 1   10
-    #   b.) 1/1  1/12  10/1  10/12
-    #   c.) 1/1/08 1/12/08 1/1/2008 1/12/2008 10/1/08 10/12/08 10/12/2008 10/12/2008
-    #   d.) 1st 10th
-    def interpret_date(current_date)
-      day_str, month_str, year_str = nil, nil, nil
-      ambiguous = {:month => false, :year => false}   # assume false, we use this flag if we aren't certain about the year
-
-      #appropriate matches
-      a_d = /^(\d{1,2})(rd|st|nd|th)?$/     # handles cases a and d
-      b = /^(\d{1,2})\/(\d{1,2})$/          # handles case b
-      c = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/   # handles case c
-
-      if mdata = match(a_d)
-        ambiguous[:month] = true
-        day_str = mdata[1].to_s2
-      elsif mdata = match(b)
-        ambiguous[:year] = true
-        month_str = mdata[1].to_s2
-        day_str = mdata[2].to_s2
-      elsif mdata = match(c)
-        month_str = mdata[1].to_s2
-        day_str = mdata[2].to_s2
-        year_str = mdata[3].sub(/^(\d\d)$/,'20\1')    # if there were only two digits, prepend 20 (e.g. "08" should be "2008")
-      else
-        return nil
-      end
-
-      inst_str = (year_str || current_date.year_str) + (month_str || current_date.month_str) + (day_str || current_date.day_str)
-      # in this case we do not care if date fails validation, if it does, it just means we haven't found a valid date, return nil
-      date = ZDate.new(inst_str) rescue nil
-      if date && NLP::use_date_correction
-        if ambiguous[:year]
-          # say the date is 11/1 and someone enters 2/1, they probably mean next year, I pick 4 months as a threshold but that is totally arbitrary
-          current_date.diff_in_months(date) < -4 and date = date.add_years(1)
-        elsif ambiguous[:month]
-          current_date.day > date.day and date = date.add_months(1)
-        end
-      end
-      date
-    end
-
-
-    def extract_message(constructs)
-      @logger = Logger.new(STDOUT)
-      def @logger.blue(a)
-        #self.warn "\e[44m #{a.inspect} \e[0m"
-      end
-
-      @logger.blue self
-      # message could be all components put back together (which would be @nlp_query), so start with that
-      message_array = self.split
-
-      # now iterate through constructs, blow away any words between positions comp_start and comp_end
-      constructs.each do |c|
-        # create a range between comp_start and comp_end, iterate through it and wipe out words between them
-        (c.comp_start..c.comp_end).each {|x| message_array[x] = nil}
-        # also wipe out words before comp start if it is something like in, at, on, or the
-        if c.comp_start - 1 >= 0 && message_array[c.comp_start - 1] =~ /\b(from|in|at|on|the|are|is|for)\b/
-          message_array[c.comp_start - 1] = nil
-          if $1 == "the" && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(for|on)\b/    # for the next three days;  on the 27th;
-            message_array[c.comp_start - 2] = nil
-            if $1 == "on" && c.comp_start - 3 >= 0 && message_array[c.comp_start - 3] =~ /\b(is|are)\b/         # is on the 28th;  are on the 21st and 22nd;
-              message_array[c.comp_start - 3] = nil
-            end
-          elsif $1 == "on" && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(is|are)\b/      # is on tuesday; are on tuesday and wed;
-            message_array[c.comp_start - 2] = nil
-          end
-        end
-        @logger.blue(message_array)
-        @logger.blue(c.comp_start)
-        @logger.blue(c.comp_end)
-      end
-
-      # reloop and wipe out words after end of constructs, if they are followed by another construct
-      # note we already wiped out terms ahead of the constructs, so be sure to check for nil values, these indicate that a construct is followed by the nil
-      constructs.each_with_index do |c, i|
-        if message_array[c.comp_end+1] && message_array[c.comp_end + 1] == "and"    # do something tomorrow and on friday
-          if message_array[c.comp_end + 2].nil? || (constructs[i+1] && constructs[i+1].comp_start == c.comp_end + 2)
-            message_array[c.comp_end + 1] = nil
-          elsif message_array[c.comp_end + 2] == "also" && message_array[c.comp_end + 3].nil? || (constructs[i+1] && constructs[i+1].comp_start == c.comp_end + 3)    # do something tomorrow and also on friday
-            message_array[c.comp_end + 1] = nil
-            message_array[c.comp_end + 2] = nil
-          end
-        end
-      end
-      @logger.blue("final:")
-      @logger.blue(message_array)
-      @message = message_array.compact.join(" ")   # remove nils and join the words with spaces
-      # we have the message, now run the case corrector to return cases to the users original input
-      case_corrector
-    end
-
-    # returns any words in the query that appeared as input to their original case
-    def case_corrector
-      orig = @query.split
-      latest = @message.split
-      orig.each_with_index do |original_word,j|
-        if i = latest.index(original_word.downcase)
-          latest[i] = original_word
-        end
-      end
-      @message = latest.join(" ")
-    end
-
 
     private
+    attr_accessor :query_str
+
     def standardize_input
       nsub!(/last\s+#{DAY_OF_WEEK}/,'5th \1')     # last dayname  =>  5th dayname
       nsub!(/\ba\s+(week|month|day)/, '1 \1')     # a month|week|day  =>  1 month|week|day
@@ -1139,8 +922,8 @@ module Nickel
       # 'the' cases; what this is all about is if someone enters "first sunday of the month" they mean one date.  But if someone enters "first sunday of the month until december 2nd" they mean recurring
       # Do these actually do ANYTHING anymore?
       # "on the 3rd sat and sunday of the month" --> "repeats monthly 3rd sat 3rd sun"  OR  "3rd sat this month 3rd sun this month"
-      if self =~ /(?:\bon\s+)?(?:the\s+)?(1st|2nd|3rd|4th|5th)\s+((?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){2,7})(?:of\s+)?(?:the)\s+month/
-        if self =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
+      if query_str =~ /(?:\bon\s+)?(?:the\s+)?(1st|2nd|3rd|4th|5th)\s+((?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){2,7})(?:of\s+)?(?:the)\s+month/
+        if query_str =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
           nsub!(/(?:\bon\s+)?(?:the\s+)?(1st|2nd|3rd|4th|5th)\s+((?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){2,7})(?:of\s+)?(?:the)\s+month/) {|m1,m2| "repeats monthly " + m2.gsub(/\band\b/,'').gsub(/#{DAY_OF_WEEK}/, m1 + ' \1') }
         else
           nsub!(/(?:\bon\s+)?(?:the\s+)?(1st|2nd|3rd|4th|5th)\s+((?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){2,7})(?:of\s+)?(?:the)\s+month/) {|m1,m2| m2.gsub(/\band\b/,'').gsub(/#{DAY_OF_WEEK}/, m1 + ' \1 this month') }
@@ -1148,8 +931,8 @@ module Nickel
       end
 
       # "on the 2nd and 3rd sat of this month" --> "repeats monthly 2nd sat 3rd sat"  OR  "2nd sat this month 3rd sat this month"
-      if self =~ /(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+(?:and\s+)?(?:the\s+)?){2,7})#{DAY_OF_WEEK}\s+(?:of\s+)?(?:the)\s+month/
-        if self =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
+      if query_str =~ /(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+(?:and\s+)?(?:the\s+)?){2,7})#{DAY_OF_WEEK}\s+(?:of\s+)?(?:the)\s+month/
+        if query_str =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
           nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+(?:and\s+)?(?:the\s+)?){2,7})#{DAY_OF_WEEK}\s+(?:of\s+)?(?:the)\s+month/) {|m1,m2| "repeats monthly " + m1.gsub(/\b(and|the)\b/,'').gsub(/(1st|2nd|3rd|4th|5th)/, '\1 ' + m2) }
         else
           nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+(?:and\s+)?(?:the\s+)?){2,7})#{DAY_OF_WEEK}\s+(?:of\s+)?(?:the)\s+month/) {|m1,m2| m1.gsub(/\b(and|the)\b/,'').gsub(/(1st|2nd|3rd|4th|5th)/, '\1 ' + m2 + ' this month') }
@@ -1157,8 +940,8 @@ module Nickel
       end
 
       # "on the 3rd sat and 5th tuesday of this month" --> "repeats monthly 3rd sat 5th tue" OR "3rd sat this month 5th tuesday this month"
-      if self =~ /(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/
-        if self =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
+      if query_str =~ /(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/
+        if query_str =~ /(start|through)\s+#{DATE_MM_SLASH_DD}/
           nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/) { |m1| "repeats monthly " + m1.gsub(/\b(and|the)\b/,'') }
         else
           nsub!(/(?:\bon\s+)?(?:the\s+)?((?:(?:1st|2nd|3rd|4th|5th)\s+#{DAY_OF_WEEK_NB}\s+(?:and\s+)?(?:the\s+)?){1,10})(?:of\s+)?(?:the)\s+month/) { |m1| m1.gsub(/\b(and|the)\b/,'').gsub(/#{DAY_OF_WEEK}/,'\1 this month') }

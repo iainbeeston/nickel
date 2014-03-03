@@ -86,6 +86,15 @@ n.message                       # => lunch
 n.occurrences[0].start_date     # => 20100403
 ~~~
 
+Extracting ruby date and time objects
+
+~~~ ruby
+n = Nickel.parse "dinner with friends at 8:00pm tonight"
+n.message                               # => dinner with friends
+n.occurrences[0].start_date.to_date     # => 2014-02-23
+n.occurrences[0].start_time.to_time     # => 2014-02-23 20:00:00 +0000
+~~~
+
 Running Tests
 -------------
 
@@ -94,3 +103,10 @@ To run tests, execute the `test` rake task.
 ~~~ bash
 rake test
 ~~~
+
+Credits
+-------
+
+Nickel was originally developed by [Lou Zell](https://github.com/lzell/nickel), but is now maintained by [Iain Beeston](https://github.com/iainbeeston/nickel).
+
+Copyright (c) 2008-2013 Lou Zell, lzell11@gmail.com, http://hazelmade.com
