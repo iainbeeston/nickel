@@ -19,7 +19,7 @@ Usage
 A single occurrence
 
 ~~~ ruby
-n = Nickel.parse("use the force on july 1st at 9am", Time.now)
+n = Nickel.parse "use the force on july 1st at 9am"
 n.message                       #=> "use the force"
 n.occurrences.first.start_date  #=> "20110701"
 ~~~
@@ -76,6 +76,13 @@ n.occurrences[0].start_time     # => 14:00:00
 n.occurrences[1].type           # => weekly
 n.occurrences[1].day_of_week    # => 2
 n.occurrences[1].start_time     # => 14:00:00
+~~~
+
+Occurrences without any message
+
+~~~ ruby
+n = Nickel.parse "a week from tomorrow"
+n.occurrences[0].start_date     # => 20140320
 ~~~
 
 Setting current time
