@@ -4,6 +4,7 @@
 #
 # The second term is optional.
 
+require_relative 'nickel/version'
 require_relative 'nickel/nlp'
 
 module Nickel
