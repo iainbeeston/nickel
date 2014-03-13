@@ -70,12 +70,5 @@ module Nickel
       end
 
     end
-
-    class << self
-      def finalizer(occurrences, cur_date)
-        occurrences.each {|occ| occ.finalize(cur_date)}
-        occurrences
-      end
-    end
   end
 end

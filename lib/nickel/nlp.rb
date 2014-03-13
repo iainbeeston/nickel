@@ -33,7 +33,7 @@ module Nickel
       @construct_interpreter = ConstructInterpreter.new(@construct_finder.constructs, @input_date)  # input_date only needed for wrappers
       @construct_interpreter.run
 
-      @occurrences = Occurrence.finalizer(@construct_interpreter.occurrences, @input_date)   # finds start and end dates
+      @occurrences = @construct_interpreter.occurrences.each {|occ| occ.finalize(@input_date) }   # finds start and end dates
       @occurrences.sort! {|x,y| if x.start_date > y.start_date then 1 elsif x.start_date < y.start_date then -1 else 0 end}    # sorts occurrences by start dat
       @occurrences
     end
