@@ -9,17 +9,7 @@ module Nickel
     end
 
     def inspect
-      str = %(\#<Occurrence type: #{type})
-      str << %(, start_date: "#{start_date}")  if start_date
-      str << %(, end_date: "#{end_date}")      if end_date
-      str << %(, start_time: "#{start_time}")  if start_time
-      str << %(, end_time: "#{end_time}")      if end_time
-      str << %(, interval: #{interval})             if interval
-      str << %(, day_of_week: #{day_of_week})       if day_of_week
-      str << %(, week_of_month: #{week_of_month})   if week_of_month
-      str << %(, date_of_month: #{date_of_month})   if date_of_month
-      str << ">"
-      str
+      "#<Occurrence " + members.select{|m| self[m]}.map{|m| %(#{m}: #{self[m]})}.join(", ") + ">"
     end
 
     def finalize(cur_date)

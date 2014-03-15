@@ -35,6 +35,14 @@ module Nickel
         expect(occ).to eq Occurrence.new(type: :daily, start_date: ZDate.new("20140128"))
       end
     end
+
+    describe "#inspect" do
+      let(:occ) { Occurrence.new(type: :daily, start_date: ZDate.new("20140128"), end_date: ZDate.new("20140209"), interval: 2) }
+
+      it "shows only members that have been set" do
+        expect(occ.inspect).to eq '#<Occurrence type: daily, start_date: 20140128, end_date: 20140209, interval: 2>'
+      end
+    end
   end
 end
 
