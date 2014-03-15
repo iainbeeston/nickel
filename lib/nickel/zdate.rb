@@ -4,6 +4,8 @@ module Nickel
 
   # TODO: get methods should accept dayname or dayindex
   class ZDate
+    include Comparable
+
     @days_of_week               = ["mon","tue","wed","thu","fri","sat","sun"]
     @full_days_of_week          = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
     @months_of_year             = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
@@ -73,30 +75,22 @@ module Nickel
       txt.gsub!(/%d/, self.day_str)
     end
 
-    def <(d2)
-      (self.year < d2.year) || (self.year == d2.year && (self.month < d2.month || (self.month == d2.month && self.day < d2.day)))
+    def before(d2)
+      d2.respond_to?(:year) && (year < d2.year) ||
+        d2.respond_to?(:month) && (year == d2.year && (month < d2.month ||
+          d2.respond_to?(:day) && (month == d2.month && day < d2.day)))
     end
 
-    def <=(d2)
-      (self.year < d2.year) || (self.year == d2.year && (self.month < d2.month || (self.month == d2.month && self.day <= d2.day)))
-    end
-
-    def >(d2)
-      (self.year > d2.year) || (self.year == d2.year && (self.month > d2.month || (self.month == d2.month && self.day > d2.day)))
-    end
-
-    def >=(d2)
-      (self.year > d2.year) || (self.year == d2.year && (self.month > d2.month || (self.month == d2.month && self.day >= d2.day)))
-    end
-
-    def ==(d2)
-      d2.respond_to?(:year) && self.year == d2.year && d2.respond_to?(:month) && self.month == d2.month && d2.respond_to?(:day) && self.day == d2.day
+    def after(d2)
+      d2.respond_to?(:year) && (year > d2.year) ||
+        d2.respond_to?(:month) && (year == d2.year && (month > d2.month ||
+          d2.respond_to?(:day) && (month == d2.month && day > d2.day)))
     end
 
     def <=>(d2)
-      if self < d2
+      if before(d2)
         -1
-      elsif self > d2
+      elsif after(d2)
         1
       else
         0

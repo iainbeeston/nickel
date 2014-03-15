@@ -3,6 +3,8 @@ require 'time'
 module Nickel
 
   class ZTime
+    include Comparable
+
     # \@firm will be used to indicate user provided am/pm
     attr_accessor :firm
 
@@ -138,30 +140,22 @@ module Nickel
     end
 
 
-    def <(t2)
-      (self.hour < t2.hour) || (self.hour == t2.hour && (self.min < t2.min || (self.min == t2.min && self.sec < t2.sec)))
+    def before(t2)
+      (t2.respond_to? :hour) && (hour < t2.hour) ||
+        (t2.respond_to? :min) && (hour == t2.hour && (min < t2.min ||
+          (t2.respond_to? :sec) && (min == t2.min && sec < t2.sec)))
     end
 
-    def <=(t2)
-      (self.hour < t2.hour) || (self.hour == t2.hour && (self.min < t2.min || (self.min == t2.min && self.sec <= t2.sec)))
-    end
-
-    def >(t2)
-      (self.hour > t2.hour) || (self.hour == t2.hour && (self.min > t2.min || (self.min == t2.min && self.sec > t2.sec)))
-    end
-
-    def >=(t2)
-      (self.hour > t2.hour) || (self.hour == t2.hour && (self.min > t2.min || (self.min == t2.min && self.sec >= t2.sec)))
-    end
-
-    def ==(t2)
-      t2.respond_to?(:hour) && self.hour == t2.hour && t2.respond_to?(:min) && self.min == t2.min && t2.respond_to?(:sec) && self.sec == t2.sec
+    def after(t2)
+      (t2.respond_to? :hour) && (hour > t2.hour) ||
+        (t2.respond_to? :min) && (hour == t2.hour && (min > t2.min ||
+          (t2.respond_to? :sec) && (min == t2.min && sec > t2.sec)))
     end
 
     def <=>(t2)
-      if self < t2
+      if before(t2)
         -1
-      elsif self > t2
+      elsif after(t2)
         1
       else
         0
