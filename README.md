@@ -3,10 +3,10 @@ Nickel
 
 Nickel extracts date, time, and message information from naturally worded text.
 
-[![Gem Version](https://badge.fury.io/rb/nickel.png)](http://badge.fury.io/rb/nickel)
-[![Code Climate](https://codeclimate.com/github/iainbeeston/nickel.png)](https://codeclimate.com/github/iainbeeston/nickel)
-[![Build Status](https://travis-ci.org/iainbeeston/nickel.png?branch=master)](https://travis-ci.org/iainbeeston/nickel)
-[![Coverage Status](https://coveralls.io/repos/iainbeeston/nickel/badge.png?branch=master)](https://coveralls.io/r/iainbeeston/nickel)
+[![Gem Version](http://img.shields.io/gem/v/nickel.svg)](http://rubygems.org/gems/nickel)
+[![Build Status](http://img.shields.io/travis/iainbeeston/nickel/master.svg)](https://travis-ci.org/iainbeeston/nickel)
+[![Coverage Status](http://img.shields.io/coveralls/iainbeeston/nickel/master.svg)](https://coveralls.io/r/iainbeeston/nickel)
+[![Code Climate](http://img.shields.io/codeclimate/github/iainbeeston/nickel.svg)](https://codeclimate.com/github/iainbeeston/nickel)
 
 Install
 -------
