@@ -258,73 +258,61 @@ module Nickel
 
     describe "#hour_str" do
       it "is the hour in the day as a string" do
-        expect(ZTime.new("161718").hour_str).to eql("16")
+        expect(ZTime.new("161718").hour_str).to eq("16")
       end
     end
 
     describe "#min_str" do
       it "is the minutes past the hour as a string" do
-        expect(ZTime.new("161718").min_str).to eql("17")
+        expect(ZTime.new("161718").min_str).to eq("17")
       end
     end
 
     describe "#sec_str" do
       it "is the seconds into the minute as a string" do
-        expect(ZTime.new("161718").sec_str).to eql("18")
+        expect(ZTime.new("161718").sec_str).to eq("18")
       end
     end
 
     describe "#minute_str", :deprecated do
-      let(:t1) { ZTime.new("161718") }
-
-      it "delegates to #min_str" do
-        expect(t1).to receive(:min_str)
-        t1.minute_str
+      it "is the minutes past the hour as a string" do
+        expect(ZTime.new("161718").min_str).to eq("17")
       end
     end
 
     describe "#second_str", :deprecated do
-      let(:t1) { ZTime.new("161718") }
-
-      it "delegates to #sec_str" do
-        expect(t1).to receive(:sec_str)
-        t1.second_str
+      it "is the seconds into the minute as a string" do
+        expect(ZTime.new("161718").sec_str).to eq("18")
       end
     end
 
     describe "#hour" do
       it "is the hour in the day" do
-        expect(ZTime.new("161718").hour).to eql(16)
+        expect(ZTime.new("161718").hour).to eq(16)
       end
     end
 
     describe "#min" do
       it "is the minutes past the hour" do
-        expect(ZTime.new("161718").min).to eql(17)
+        expect(ZTime.new("161718").min).to eq(17)
       end
     end
 
     describe "#sec" do
       it "is the seconds into the minute" do
-        expect(ZTime.new("161718").sec).to eql(18)
+        expect(ZTime.new("161718").sec).to eq(18)
       end
     end
 
     describe "#minute", :deprecated do
-      let(:t1) { ZTime.new("161718") }
-
-      it "delegates to #min" do
-        expect(t1).to receive(:min)
-        t1.minute
+      it "is the minutes past the hour" do
+        expect(ZTime.new("161718").min).to eq(17)
       end
     end
 
     describe "#second", :deprecated do
-      let(:t1) { ZTime.new("161718") }
-
-      it "delegates to #sec" do
-        expect(t1).to receive(:sec)
-        t1.second
+      it "is the seconds into the minute" do
+        expect(ZTime.new("161718").sec).to eq(18)
       end
     end
   end
