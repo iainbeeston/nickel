@@ -23,6 +23,7 @@ module Nickel
     end
 
     def finalize(cur_date)
+      cur_date = start_date unless start_date.nil?
       case type
         when :daily then finalize_daily(cur_date)
         when :weekly then finalize_weekly(cur_date)
@@ -34,19 +35,13 @@ module Nickel
     private
 
     def finalize_daily(cur_date)
-      if start_date.nil?
-        self.start_date = cur_date
-      end
+      self.start_date = cur_date
     end
 
     def finalize_weekly(cur_date)
-      if start_date.nil?
-        self.start_date = cur_date.this(day_of_week)
-      else
-        # this is needed in case someone said "every monday and wed
-        # starting DATE"; we want to find the first occurrence after DATE
-        self.start_date = start_date.this(day_of_week)
-      end
+      # this is needed in case someone said "every monday and wed
+      # starting DATE"; we want to find the first occurrence after DATE
+      self.start_date = cur_date.this(day_of_week)
 
       if !end_date.nil?
         # find the real end date, if someone says "every monday until
@@ -56,18 +51,10 @@ module Nickel
     end
 
     def finalize_datemonthly(cur_date)
-      if start_date.nil?
-        if cur_date.day <= date_of_month
-          self.start_date = cur_date.add_days(date_of_month - cur_date.day)
-        else
-          self.start_date = cur_date.add_months(1).beginning_of_month.add_days(date_of_month - 1)
-        end
+      if cur_date.day <= date_of_month
+        self.start_date = cur_date.add_days(date_of_month - cur_date.day)
       else
-        if start_date.day <= date_of_month
-          self.start_date = start_date.add_days(date_of_month - start_date.day)
-        else
-          self.start_date = start_date.add_months(1).beginning_of_month.add_days(date_of_month - 1)
-        end
+        self.start_date = cur_date.add_months(1).beginning_of_month.add_days(date_of_month - 1)
       end
     end
 
@@ -77,11 +64,8 @@ module Nickel
       # previous version of the parser, but a more standard format is
       # to use -1
       self.week_of_month = -1 if week_of_month == 5
-      if start_date.nil?
-        self.start_date = cur_date.get_date_from_day_and_week_of_month(day_of_week, week_of_month)
-      else
-        self.start_date = start_date.get_date_from_day_and_week_of_month(day_of_week, week_of_month)
-      end
+
+      self.start_date = cur_date.get_date_from_day_and_week_of_month(day_of_week, week_of_month)
     end
   end
 end
