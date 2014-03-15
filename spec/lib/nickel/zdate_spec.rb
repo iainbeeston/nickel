@@ -66,10 +66,28 @@ module Nickel
     end
 
     describe "#to_date" do
+      it "converts to a Date" do
+        expect(ZDate.new('20090927').to_date).to eq Date.new(2009, 9, 27)
+      end
+    end
+
+    describe "#==" do
       let(:d1) { ZDate.new('20090927') }
 
-      it "converts to a Date" do
-        expect(d1.to_date).to eq Date.new(2009, 9, 27)
+      it "is true when the other ZDate is for the very same day" do
+        expect(d1).to eq ZDate.new('20090927')
+      end
+
+      it "is false when the other ZDate is for any other day" do
+        expect(d1).to_not eq ZDate.new('20100927')
+      end
+
+      it "is true when the other object a Date for the same day" do
+        expect(d1).to eq Date.new(2009, 9, 27)
+      end
+
+      it "is false when the other object is a Date for any other day" do
+        expect(d1).to_not eq Date.new(2010, 9, 27)
       end
     end
   end

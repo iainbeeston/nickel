@@ -231,12 +231,101 @@ module Nickel
     end
 
     describe "#to_time" do
+      it "converts to a Time on todays date" do
+        expect(ZTime.new("161718").to_time).to eq Time.parse("16:17:18")
+      end
+    end
+
+    describe "#==" do
       let(:t1) { ZTime.new("161718") }
 
-      it "converts to a Time on todays date" do
-        expect(t1.to_time).to eq Time.parse("16:17:18")
+      it "is true when the other ZTime is for the very same time of day" do
+        expect(t1).to eq ZTime.new('161718')
+      end
+
+      it "is false when the other ZTime is for any other time" do
+        expect(t1).to_not eq ZTime.new('171819')
+      end
+
+      it "is true when the other object is a Time for the same time of day" do
+        expect(t1).to eq Time.parse("16:17:18")
+      end
+
+      it "is false when the other object is a Time for any other time" do
+        expect(t1).to_not eq Time.parse("17:18:19")
+      end
+    end
+
+    describe "#hour_str" do
+      it "is the hour in the day as a string" do
+        expect(ZTime.new("161718").hour_str).to eql("16")
+      end
+    end
+
+    describe "#min_str" do
+      it "is the minutes past the hour as a string" do
+        expect(ZTime.new("161718").min_str).to eql("17")
+      end
+    end
+
+    describe "#sec_str" do
+      it "is the seconds into the minute as a string" do
+        expect(ZTime.new("161718").sec_str).to eql("18")
+      end
+    end
+
+    describe "#minute_str", :deprecated do
+      let(:t1) { ZTime.new("161718") }
+
+      it "delegates to #min_str" do
+        expect(t1).to receive(:min_str)
+        t1.minute_str
+      end
+    end
+
+    describe "#second_str", :deprecated do
+      let(:t1) { ZTime.new("161718") }
+
+      it "delegates to #sec_str" do
+        expect(t1).to receive(:sec_str)
+        t1.second_str
+      end
+    end
+
+    describe "#hour" do
+      it "is the hour in the day" do
+        expect(ZTime.new("161718").hour).to eql(16)
+      end
+    end
+
+    describe "#min" do
+      it "is the minutes past the hour" do
+        expect(ZTime.new("161718").min).to eql(17)
+      end
+    end
+
+    describe "#sec" do
+      it "is the seconds into the minute" do
+        expect(ZTime.new("161718").sec).to eql(18)
+      end
+    end
+
+    describe "#minute", :deprecated do
+      let(:t1) { ZTime.new("161718") }
+
+      it "delegates to #min" do
+        expect(t1).to receive(:min)
+        t1.minute
+      end
+    end
+
+    describe "#second", :deprecated do
+      let(:t1) { ZTime.new("161718") }
+
+      it "delegates to #sec" do
+        expect(t1).to receive(:sec)
+        t1.second
       end
     end
   end
 end
-

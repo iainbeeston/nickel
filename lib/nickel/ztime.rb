@@ -29,11 +29,23 @@ module Nickel
       @time[0..1]
     end
 
+    # @deprecated Please use {#min_str} instead
     def minute_str
+      warn "[DEPRECATION] `minute_str` is deprecated.  Please use `min_str` instead."
+      min_str
+    end
+
+    def min_str
       @time[2..3]
     end
 
+    # @deprecated Please use {#sec_str} instead
     def second_str
+      warn "[DEPRECATION] `second_str` is deprecated.  Please use `sec_str` instead."
+      sec_str
+    end
+
+    def sec_str
       @time[4..5]
     end
 
@@ -41,12 +53,24 @@ module Nickel
       hour_str.to_i
     end
 
+    # @deprecated Please use {#min} instead
     def minute
-      minute_str.to_i
+      warn "[DEPRECATION] `minute` is deprecated.  Please use `min` instead."
+      min
     end
 
+    def min
+      min_str.to_i
+    end
+
+    # @deprecated Please use {#sec} instead
     def second
-      second_str.to_i
+      warn "[DEPRECATION] `second` is deprecated.  Please use `sec` instead."
+      sec
+    end
+
+    def sec
+      sec_str.to_i
     end
 
     # add\_ methods return new ZTime object
@@ -56,14 +80,14 @@ module Nickel
     def add_minutes(number, &block)
       # new minute is going to be (current minute + number) % 60
       # number of hours to add is (current minute + number) / 60
-      hours_to_add = (self.minute + number) / 60
+      hours_to_add = (self.min + number) / 60
       # note add_hours returns a new time object
       if block_given?
         o = self.add_hours(hours_to_add, &block)
       else
         o = self.add_hours(hours_to_add)
       end
-      o.change_minute_to((o.minute + number) % 60)  # modifies self
+      o.change_minute_to((o.min + number) % 60)  # modifies self
     end
 
     def add_hours(number, &block)
@@ -77,17 +101,17 @@ module Nickel
 
     # NOTE: change_ methods modify self.
     def change_hour_to(h)
-      self.time = ZTime.format_time(h, minute_str, second_str)
+      self.time = ZTime.format_time(h, min_str, sec_str)
       self
     end
 
     def change_minute_to(m)
-      self.time = ZTime.format_time(hour_str, m, second_str)
+      self.time = ZTime.format_time(hour_str, m, sec_str)
       self
     end
 
     def change_second_to(s)
-      self.time = ZTime.format_time(hour_str, minute_str, s)
+      self.time = ZTime.format_time(hour_str, min_str, s)
       self
     end
 
@@ -115,23 +139,23 @@ module Nickel
 
 
     def <(t2)
-      (self.hour < t2.hour) || (self.hour == t2.hour && (self.minute < t2.minute || (self.minute == t2.minute && self.second < t2.second)))
+      (self.hour < t2.hour) || (self.hour == t2.hour && (self.min < t2.min || (self.min == t2.min && self.sec < t2.sec)))
     end
 
     def <=(t2)
-      (self.hour < t2.hour) || (self.hour == t2.hour && (self.minute < t2.minute || (self.minute == t2.minute && self.second <= t2.second)))
+      (self.hour < t2.hour) || (self.hour == t2.hour && (self.min < t2.min || (self.min == t2.min && self.sec <= t2.sec)))
     end
 
     def >(t2)
-      (self.hour > t2.hour) || (self.hour == t2.hour && (self.minute > t2.minute || (self.minute == t2.minute && self.second > t2.second)))
+      (self.hour > t2.hour) || (self.hour == t2.hour && (self.min > t2.min || (self.min == t2.min && self.sec > t2.sec)))
     end
 
     def >=(t2)
-      (self.hour > t2.hour) || (self.hour == t2.hour && (self.minute > t2.minute || (self.minute == t2.minute && self.second >= t2.second)))
+      (self.hour > t2.hour) || (self.hour == t2.hour && (self.min > t2.min || (self.min == t2.min && self.sec >= t2.sec)))
     end
 
     def ==(t2)
-      t2.respond_to?(:hour) && self.hour == t2.hour && t2.respond_to?(:minute) && self.minute == t2.minute && t2.respond_to?(:second) && self.second == t2.second
+      t2.respond_to?(:hour) && self.hour == t2.hour && t2.respond_to?(:min) && self.min == t2.min && t2.respond_to?(:sec) && self.sec == t2.sec
     end
 
     def <=>(t2)
@@ -149,7 +173,7 @@ module Nickel
     end
 
     def to_time
-      Time.parse("#{hour}:#{minute}:#{second}")
+      Time.parse("#{hour}:#{min}:#{sec}")
     end
 
     class << self
@@ -273,7 +297,7 @@ module Nickel
           self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
         end
       elsif self < time2
-        if time2.hour >= 12 && ZTime.new(ZTime.format_time(time2.hour - 12, time2.minute_str, time2.second_str)) > self
+        if time2.hour >= 12 && ZTime.new(ZTime.format_time(time2.hour - 12, time2.min_str, time2.sec_str)) > self
           # 4 to 5pm  or 0400 to 1700
           change_hour_to(self.hour + 12)
         else
@@ -299,14 +323,14 @@ module Nickel
       # 930am  to 5 --->  0930 to 0500
       # 930pm  to 5 --->  2130 to 0500
       if self < time1
-        unless time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.minute_str, time1.second_str)) >= self
+        unless time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.min_str, time1.sec_str)) >= self
           self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
         end
       elsif self > time1
         # # time1 to self --> time1 to self
         # # 10am  to 11   --> 1000  to 1100
         # #
-        # if time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.minute_str, time1.second_str)) > self
+        # if time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.min_str, time1.sec_str)) > self
         #   change_hour_to(self.hour + 12)
         # else
         #   # do nothing
@@ -363,11 +387,11 @@ module Nickel
     end
 
     def valid_minute
-      minute >= 0 and minute < 60
+      min >= 0 and min < 60
     end
 
     def valid_second
-      second >= 0 and second < 60
+      sec >= 0 and sec < 60
     end
 
     def lazy(s)
