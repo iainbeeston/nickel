@@ -254,6 +254,10 @@ module Nickel
       it "is false when the other object is a Time for any other time" do
         expect(t1).to_not eq Time.parse("17:18:19")
       end
+
+      it "is false when the other object is a String" do
+        expect(t1).to_not eq "161718"
+      end
     end
 
     describe "#hour_str" do

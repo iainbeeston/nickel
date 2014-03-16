@@ -89,6 +89,10 @@ module Nickel
       it "is false when the other object is a Date for any other day" do
         expect(d1).to_not eq Date.new(2010, 9, 27)
       end
+
+      it "is false when the other object is a String" do
+        expect(d1).to_not eq '20090927'
+      end
     end
   end
 end

@@ -139,23 +139,12 @@ module Nickel
       is_am? ? "am" : "pm"
     end
 
-
-    def before(t2)
-      (t2.respond_to? :hour) && (hour < t2.hour) ||
-        (t2.respond_to? :min) && (hour == t2.hour && (min < t2.min ||
-          (t2.respond_to? :sec) && (min == t2.min && sec < t2.sec)))
-    end
-
-    def after(t2)
-      (t2.respond_to? :hour) && (hour > t2.hour) ||
-        (t2.respond_to? :min) && (hour == t2.hour && (min > t2.min ||
-          (t2.respond_to? :sec) && (min == t2.min && sec > t2.sec)))
-    end
-
     def <=>(t2)
-      if before(t2)
+      return nil unless [:hour, :min, :sec].all?{|m| t2.respond_to?(m)}
+
+      if before?(t2)
         -1
-      elsif after(t2)
+      elsif after?(t2)
         1
       else
         0
@@ -351,6 +340,14 @@ module Nickel
     end
 
     private
+
+    def before?(t2)
+      (hour < t2.hour) || (hour == t2.hour && (min < t2.min || (min == t2.min && sec < t2.sec)))
+    end
+
+    def after?(t2)
+      (hour > t2.hour) || (hour == t2.hour && (min > t2.min || (min == t2.min && sec > t2.sec)))
+    end
 
     def adjust_for(am_pm)
       # how does validation work?  Well, we already know that @time is valid, and once we modify we call time= which will
