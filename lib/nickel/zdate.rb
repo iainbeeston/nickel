@@ -75,22 +75,10 @@ module Nickel
       txt.gsub!(/%d/, self.day_str)
     end
 
-    def before(d2)
-      d2.respond_to?(:year) && (year < d2.year) ||
-        d2.respond_to?(:month) && (year == d2.year && (month < d2.month ||
-          d2.respond_to?(:day) && (month == d2.month && day < d2.day)))
-    end
-
-    def after(d2)
-      d2.respond_to?(:year) && (year > d2.year) ||
-        d2.respond_to?(:month) && (year == d2.year && (month > d2.month ||
-          d2.respond_to?(:day) && (month == d2.month && day > d2.day)))
-    end
-
     def <=>(d2)
-      if before(d2)
+      if before?(d2)
         -1
-      elsif after(d2)
+      elsif after?(d2)
         1
       else
         0
@@ -555,6 +543,19 @@ module Nickel
     end
 
     private
+
+    def before?(d2)
+      d2.respond_to?(:year) && (year < d2.year) ||
+        d2.respond_to?(:month) && (year == d2.year && (month < d2.month ||
+          d2.respond_to?(:day) && (month == d2.month && day < d2.day)))
+    end
+
+    def after?(d2)
+      d2.respond_to?(:year) && (year > d2.year) ||
+        d2.respond_to?(:month) && (year == d2.year && (month > d2.month ||
+          d2.respond_to?(:day) && (month == d2.month && day > d2.day)))
+    end
+
     def validate
       raise "ZDate says: invalid date" if !valid
     end
