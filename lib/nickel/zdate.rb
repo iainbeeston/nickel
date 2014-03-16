@@ -76,6 +76,8 @@ module Nickel
     end
 
     def <=>(d2)
+      return nil unless [:year, :month, :day].all?{|m| d2.respond_to?(m)}
+
       if before?(d2)
         -1
       elsif after?(d2)
@@ -545,15 +547,11 @@ module Nickel
     private
 
     def before?(d2)
-      d2.respond_to?(:year) && (year < d2.year) ||
-        d2.respond_to?(:month) && (year == d2.year && (month < d2.month ||
-          d2.respond_to?(:day) && (month == d2.month && day < d2.day)))
+      (year < d2.year) || (year == d2.year && (month < d2.month || (month == d2.month && day < d2.day)))
     end
 
     def after?(d2)
-      d2.respond_to?(:year) && (year > d2.year) ||
-        d2.respond_to?(:month) && (year == d2.year && (month > d2.month ||
-          d2.respond_to?(:day) && (month == d2.month && day > d2.day)))
+      (year > d2.year) || (year == d2.year && (month > d2.month || (month == d2.month && day > d2.day)))
     end
 
     def validate
