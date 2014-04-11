@@ -968,6 +968,19 @@ describe Nickel do
       end
     end
 
+    context "when the query is '6 days from tomorrow'", broken: true do
+      let(:query) { "6 days from tomorrow" }
+      let(:run_date) { Time.local(2014, 2, 12) }
+
+      describe "#occurrences" do
+        it "is 7 days from now" do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new("20140218"))
+          ]
+        end
+      end
+    end
+
     context "when the query is '5 days from now'" do
       let(:query) { "5 days from now" }
       let(:run_date) { Time.local(2008, 9, 11) }
@@ -1587,6 +1600,19 @@ describe Nickel do
       end
     end
 
+    context "when the query is 'for five weeks'" do
+      let(:query) { "for five weeks" }
+      let(:run_date) { Time.local(2014, 2, 12) }
+
+      describe "#occurrences" do
+        it "is every day for the next 35 days" do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :daily, interval: 1, start_date: Nickel::ZDate.new("20140212"), end_date: Nickel::ZDate.new("20140319"))
+          ]
+        end
+      end
+    end
+
     context "when the query is 'all month'" do
       let(:query) { "all month" }
       let(:run_date) { Time.local(2008, 10, 5) }
@@ -1852,6 +1878,58 @@ describe Nickel do
           expect(n.occurrences).to match_array [
             Nickel::Occurrence.new(type: :daily, start_date: Nickel::ZDate.new("20081231"), start_time: Nickel::ZTime.new("0245"), interval: 2)
           ]
+        end
+      end
+
+      context "when the query is 'every third monday starting on this monday'" do
+        let(:query) { "every third monday starting on this monday" }
+        let(:run_date) { Time.local(2014, 2, 14) }
+
+        describe "#occurrences" do
+          it "is every third monday starting from the following monday" do
+            expect(n.occurrences).to match_array [
+              Nickel::Occurrence.new(type: :weekly, start_date: Nickel::ZDate.new("20140217"), interval: 3, day_of_week: 0)
+            ]
+          end
+        end
+      end
+
+      context "when the query is 'every third day starting today'" do
+        let(:query) { "every third day starting today" }
+        let(:run_date) { Time.local(2014, 2, 14) }
+
+        describe "#occurrences" do
+          it "is every third day starting from today" do
+            expect(n.occurrences).to match_array [
+              Nickel::Occurrence.new(type: :daily, start_date: Nickel::ZDate.new("20140214"), interval: 3)
+            ]
+          end
+        end
+      end
+
+      context "when the query is 'the last monday of each month for six months'" do
+        let(:query) { "the last monday of each month for six months" }
+        let(:run_date) { Time.local(2014, 2, 12) }
+
+        describe "#occurrences" do
+          it "is the last monday of every month for the next six months" do
+            expect(n.occurrences).to match_array [
+              Nickel::Occurrence.new(type: :daymonthly, interval: 1, day_of_week: 0, week_of_month: -1, start_date: Nickel::ZDate.new("20140224"), end_date: Nickel::ZDate.new("20140812"))
+            ]
+          end
+        end
+      end
+
+      context "when the query is '2 weeks from yesterday'" do
+        let(:query) { "2 weeks from yesterday" }
+        let(:run_date) { Time.local(2014, 2, 12) }
+
+        describe "#occurrences" do
+          it "is 13 days from today" do
+            expect(n.occurrences).to match_array [
+              Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new("20140225"))
+            ]
+          end
         end
       end
     end
