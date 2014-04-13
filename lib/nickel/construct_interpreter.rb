@@ -2,9 +2,7 @@ require_relative 'occurrence'
 require_relative 'construct'
 
 module Nickel
-
   class ConstructInterpreter
-
     attr_reader :occurrences, :constructs, :curdate
 
     def initialize(constructs, curdate)
@@ -35,14 +33,14 @@ module Nickel
       # The @index_to_type_map hash looks like this: {0 => :date, 1 => :timespan, ...}
       # Each key represents the index in @constructs and the value represents that constructs class.
       @index_to_type_map = {}
-      @constructs.each_with_index do |c,i|
+      @constructs.each_with_index do |c, i|
         @index_to_type_map[i] = case c.class.name
-          when "Nickel::DateConstruct"         then :date
-          when "Nickel::TimeConstruct"         then :time
-          when "Nickel::DateSpanConstruct"     then :datespan
-          when "Nickel::TimeSpanConstruct"     then :timespan
-          when "Nickel::RecurrenceConstruct"   then :recurrence
-          when "Nickel::WrapperConstruct"      then :wrapper
+          when 'Nickel::DateConstruct'         then :date
+          when 'Nickel::TimeConstruct'         then :time
+          when 'Nickel::DateSpanConstruct'     then :datespan
+          when 'Nickel::TimeSpanConstruct'     then :timespan
+          when 'Nickel::RecurrenceConstruct'   then :recurrence
+          when 'Nickel::WrapperConstruct'      then :wrapper
         end
       end
     end
@@ -64,7 +62,7 @@ module Nickel
     end
 
     def initialize_arrays_of_construct_indices
-      @dci,@tci,@dsci,@tsci,@rci,@wci = [],[],[],[],[],[]
+      @dci, @tci, @dsci, @tsci, @rci, @wci = [], [], [], [], [], []
       @index_to_type_map.each do |i, type|
         case type
           when :date        then @dci  << i
@@ -127,7 +125,7 @@ module Nickel
       # meaning move forward.
       if @user_input_style == :datetime     then index + 1
       elsif @user_input_style == :timedate  then index - 1
-      else raise "ConstructInterpreter#move_time_map_index says: @user_input_style is not valid"
+      else fail 'ConstructInterpreter#move_time_map_index says: @user_input_style is not valid'
       end
     end
 
@@ -138,7 +136,7 @@ module Nickel
       else
         # There are times for this date, use them for any indices marked as inherit_on.
         # Then clear the inherit_on array.
-        inherit_on.each {|k| @sorted_time_map[k] = @sorted_time_map[date_index]}
+        inherit_on.each { |k| @sorted_time_map[k] = @sorted_time_map[date_index] }
         inherit_on = []
       end
       inherit_on
@@ -169,7 +167,7 @@ module Nickel
       elsif index_references_timespan(tindex)
         return @constructs[tindex].start_time
       else
-        raise "ConstructInterpreter#start_time_from_tindex says: tindex does not reference a time or time span"
+        fail 'ConstructInterpreter#start_time_from_tindex says: tindex does not reference a time or time span'
       end
     end
 
@@ -193,7 +191,6 @@ module Nickel
     # One of this methods functions will be to assign proper am/pm values to time
     # and timespan constructs if they were not specified.
     def finalize_constructs
-
       # First assign am/pm values to timespan constructs independent of
       # other times in timemap.
       finalize_timespan_constructs
@@ -205,7 +202,7 @@ module Nickel
         # The time_indices array holds TimeConstruct and TimeSpanConstruct indices.
         # The time_array will hold an array of ZTime objects to modify (potentially)
         time_array = []
-        time_indices.each {|tindex| time_array << start_time_from_tindex(tindex)}
+        time_indices.each { |tindex| time_array << start_time_from_tindex(tindex) }
         ZTime.am_pm_modifier(*time_array)
       end
 
@@ -247,8 +244,8 @@ module Nickel
 
     def occurrences_from_dates
       @dci.each do |dindex|
-        occ_base = Occurrence.new(:type => :single, :start_date => @constructs[dindex].date)
-        create_occurrence_for_each_time_in_time_map(occ_base, dindex) {|occ| @occurrences << occ}
+        occ_base = Occurrence.new(type: :single, start_date: @constructs[dindex].date)
+        create_occurrence_for_each_time_in_time_map(occ_base, dindex) { |occ| @occurrences << occ }
       end
     end
 
@@ -257,11 +254,11 @@ module Nickel
     end
 
     def occurrences_from_one_date_span
-      occ_base = Occurrence.new(:type => :daily,
-                                :start_date => @constructs[@dsci[0]].start_date,
-                                :end_date => @constructs[@dsci[0]].end_date,
-                                :interval => 1)
-      create_occurrence_for_each_time_in_time_map(occ_base, @dsci[0]) {|occ| @occurrences << occ}
+      occ_base = Occurrence.new(type: :daily,
+                                start_date: @constructs[@dsci[0]].start_date,
+                                end_date: @constructs[@dsci[0]].end_date,
+                                interval: 1)
+      create_occurrence_for_each_time_in_time_map(occ_base, @dsci[0]) { |occ| @occurrences << occ }
     end
 
     def found_recurrences_and_optional_date_span
@@ -271,7 +268,7 @@ module Nickel
     def occurrences_from_recurrences_and_optional_date_span
       if @dsci.size == 1
         # If a date span exists, it functions as wrapper.
-        occ_base_opts = {:start_date => @constructs[@dsci[0]].start_date, :end_date => @constructs[@dsci[0]].end_date}
+        occ_base_opts = { start_date: @constructs[@dsci[0]].start_date, end_date: @constructs[@dsci[0]].end_date }
       else
         # Perhaps there are type 0 or type 1 wrappers to provide start/end dates.
         occ_base_opts = occ_base_opts_from_wrappers
@@ -284,7 +281,7 @@ module Nickel
           # but they must be merged with start/end dates, if supplied.
           occ_base = Occurrence.new(rec_occ_base_opts.merge(occ_base_opts))
           # Attach times:
-          create_occurrence_for_each_time_in_time_map(occ_base, rcindex) {|occ| @occurrences << occ}
+          create_occurrence_for_each_time_in_time_map(occ_base, rcindex) { |occ| @occurrences << occ }
         end
       end
     end
@@ -296,7 +293,7 @@ module Nickel
     end
 
     def occurrences_from_wrappers_only
-      occ_base = {:type => :daily, :interval => 1}
+      occ_base = { type: :daily, interval: 1 }
       @occurrences << Occurrence.new(occ_base.merge(occ_base_opts_from_wrappers))
     end
 
