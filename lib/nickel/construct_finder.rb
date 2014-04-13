@@ -37,172 +37,260 @@ module Nickel
       reset_instance_vars
 
       if match_every
-        if match_every_dayname                          then  found_every_dayname                           # every tue
-        elsif match_every_day                           then  found_every_day                               # every day
+        if match_every_dayname
+          found_every_dayname                             # every tue
+        elsif match_every_day
+          found_every_day                                 # every day
         elsif match_every_other
-          if    match_every_other_dayname               then  found_every_other_dayname                     # every other fri
-          elsif match_every_other_day                   then  found_every_other_day                         # every other day
+          if match_every_other_dayname
+            found_every_other_dayname                     # every other fri
+          elsif match_every_other_day
+            found_every_other_day                         # every other day
           end
         elsif match_every_3rd
-          if    match_every_3rd_dayname                 then  found_every_3rd_dayname                       # every third fri
-          elsif match_every_3rd_day                     then  found_every_3rd_day                           # every third day
+          if match_every_3rd_dayname
+            found_every_3rd_dayname                       # every third fri
+          elsif match_every_3rd_day
+            found_every_3rd_day                           # every third day
           end
         end
 
       elsif match_repeats
-        if match_repeats_daily                          then  found_repeats_daily                           # repeats daily
-        elsif match_repeats_altdaily                    then  found_repeats_altdaily                        # repeats altdaily
-        elsif match_repeats_weekly_vague                then  found_repeats_weekly_vague                    # repeats weekly
-        elsif match_repeats_altweekly_vague             then  found_repeats_altweekly_vague                 # repeats altweekly
+        if match_repeats_daily
+          found_repeats_daily                             # repeats daily
+        elsif match_repeats_altdaily
+          found_repeats_altdaily                          # repeats altdaily
+        elsif match_repeats_weekly_vague
+          found_repeats_weekly_vague                      # repeats weekly
+        elsif match_repeats_altweekly_vague
+          found_repeats_altweekly_vague                   # repeats altweekly
         elsif match_repeats_monthly
-          if match_repeats_daymonthly                   then  found_repeats_daymonthly                      # repeats monthly 1st fri
-          elsif match_repeats_datemonthly               then  found_repeats_datemonthly                     # repeats monthly 22nd
+          if match_repeats_daymonthly
+            found_repeats_daymonthly                      # repeats monthly 1st fri
+          elsif match_repeats_datemonthly
+            found_repeats_datemonthly                     # repeats monthly 22nd
           end
         elsif match_repeats_altmonthly
-          if match_repeats_altmonthly_daymonthly        then  found_repeats_altmonthly_daymonthly           # repeats altmonthly 1st fri
-          elsif match_repeats_altmonthly_datemonthly    then  found_repeats_altmonthly_datemonthly          # repeats altmonthly 22nd
+          if match_repeats_altmonthly_daymonthly
+            found_repeats_altmonthly_daymonthly           # repeats altmonthly 1st fri
+          elsif match_repeats_altmonthly_datemonthly
+            found_repeats_altmonthly_datemonthly          # repeats altmonthly 22nd
           end
         elsif match_repeats_threemonthly
-          if match_repeats_threemonthly_daymonthly      then  found_repeats_threemonthly_daymonthly         # repeats threemonthly 1st fri
-          elsif match_repeats_threemonthly_datemonthly  then  found_repeats_threemonthly_datemonthly        # repeats threemonthly 22nd
+          if match_repeats_threemonthly_daymonthly
+            found_repeats_threemonthly_daymonthly         # repeats threemonthly 1st fri
+          elsif match_repeats_threemonthly_datemonthly
+            found_repeats_threemonthly_datemonthly        # repeats threemonthly 22nd
           end
         end
 
       elsif match_for_x
-        if match_for_x_days                             then  found_for_x_days                              # for 10 days
-        elsif match_for_x_weeks                         then  found_for_x_weeks                             # for 10 weeks
-        elsif match_for_x_months                        then  found_for_x_months                            # for 10 months
+        if match_for_x_days
+          found_for_x_days                                # for 10 days
+        elsif match_for_x_weeks
+          found_for_x_weeks                               # for 10 weeks
+        elsif match_for_x_months
+          found_for_x_months                              # for 10 months
         end
 
       elsif match_this
-        if match_this_dayname                           then  found_this_dayname                            # this fri
-        elsif match_this_week                           then  found_this_week                               # this week
-        elsif match_this_month                          then  found_this_month                              # this month (implies 9/1 to 9/30)
+        if match_this_dayname
+          found_this_dayname                              # this fri
+        elsif match_this_week
+          found_this_week                                 # this week
+        elsif match_this_month
+          found_this_month                                # this month (implies 9/1 to 9/30)
         end                                                                                                 # SHOULDN'T "this" HAVE "this weekend" ???
 
       elsif match_next
-        if match_next_weekend                           then  found_next_weekend                            # next weekend --- never hit?
-        elsif match_next_dayname                        then  found_next_dayname                            # next tuesday
+        if match_next_weekend
+          found_next_weekend                              # next weekend --- never hit?
+        elsif match_next_dayname
+          found_next_dayname                              # next tuesday
         elsif match_next_x
-          if    match_next_x_days                       then  found_next_x_days                             # next 5 days   --- shouldn't this be a wrapper?
-          elsif match_next_x_weeks                      then  found_next_x_weeks                            # next 5 weeks  --- shouldn't this be a wrapper?
-          elsif match_next_x_months                     then  found_next_x_months                           # next 5 months --- shouldn't this be a wrapper?
-          elsif match_next_x_years                      then  found_next_x_years                            # next 5 years  --- shouldn't this be a wrapper?
+          if match_next_x_days
+            found_next_x_days                             # next 5 days   --- shouldn't this be a wrapper?
+          elsif match_next_x_weeks
+            found_next_x_weeks                            # next 5 weeks  --- shouldn't this be a wrapper?
+          elsif match_next_x_months
+            found_next_x_months                           # next 5 months --- shouldn't this be a wrapper?
+          elsif match_next_x_years
+            found_next_x_years                            # next 5 years  --- shouldn't this be a wrapper?
           end
-        elsif match_next_week                           then  found_next_week
-        elsif match_next_month                          then  found_next_month                              # next month (implies 10/1 to 10/31)
+        elsif match_next_week
+          found_next_week
+        elsif match_next_month
+          found_next_month                                # next month (implies 10/1 to 10/31)
         end
 
       elsif match_week
-        if match_week_of_date                           then  found_week_of_date                            # week of 1/2
-        elsif match_week_through_date                   then  found_week_through_date                       # week through 1/2  (as in, week ending 1/2)
+        if match_week_of_date
+          found_week_of_date                              # week of 1/2
+        elsif match_week_through_date
+          found_week_through_date                         # week through 1/2  (as in, week ending 1/2)
         end
 
       elsif match_x_weeks_from
-        if match_x_weeks_from_dayname                   then  found_x_weeks_from_dayname                    # 5 weeks from tuesday
-        elsif match_x_weeks_from_this_dayname           then  found_x_weeks_from_this_dayname               # 5 weeks from this tuesday
-        elsif match_x_weeks_from_next_dayname           then  found_x_weeks_from_next_dayname               # 5 weeks from next tuesday
-        elsif match_x_weeks_from_tomorrow               then  found_x_weeks_from_tomorrow                   # 5 weeks from tomorrow
-        elsif match_x_weeks_from_now                    then  found_x_weeks_from_now                        # 5 weeks from now
-        elsif match_x_weeks_from_yesterday              then  found_x_weeks_from_yesterday                  # 5 weeks from yesterday
+        if match_x_weeks_from_dayname
+          found_x_weeks_from_dayname                      # 5 weeks from tuesday
+        elsif match_x_weeks_from_this_dayname
+          found_x_weeks_from_this_dayname                 # 5 weeks from this tuesday
+        elsif match_x_weeks_from_next_dayname
+          found_x_weeks_from_next_dayname                 # 5 weeks from next tuesday
+        elsif match_x_weeks_from_tomorrow
+          found_x_weeks_from_tomorrow                     # 5 weeks from tomorrow
+        elsif match_x_weeks_from_now
+          found_x_weeks_from_now                          # 5 weeks from now
+        elsif match_x_weeks_from_yesterday
+          found_x_weeks_from_yesterday                    # 5 weeks from yesterday
         end
 
       elsif match_x_months_from
-        if match_x_months_from_dayname                  then  found_x_months_from_dayname                   # 2 months from wed
-        elsif match_x_months_from_this_dayname          then  found_x_months_from_this_dayname              # 2 months from this wed
-        elsif match_x_months_from_next_dayname          then  found_x_months_from_next_dayname              # 2 months from next wed
-        elsif match_x_months_from_tomorrow              then  found_x_months_from_tomorrow                  # 2 months from tomorrow
-        elsif match_x_months_from_now                   then  found_x_months_from_now                       # 2 months from now
-        elsif match_x_months_from_yesterday             then  found_x_months_from_yesterday                 # 2 months from yesterday
+        if match_x_months_from_dayname
+          found_x_months_from_dayname                   # 2 months from wed
+        elsif match_x_months_from_this_dayname
+          found_x_months_from_this_dayname              # 2 months from this wed
+        elsif match_x_months_from_next_dayname
+          found_x_months_from_next_dayname              # 2 months from next wed
+        elsif match_x_months_from_tomorrow
+          found_x_months_from_tomorrow                  # 2 months from tomorrow
+        elsif match_x_months_from_now
+          found_x_months_from_now                       # 2 months from now
+        elsif match_x_months_from_yesterday
+          found_x_months_from_yesterday                 # 2 months from yesterday
         end
 
       elsif match_x_days_from
-        if match_x_days_from_now                        then  found_x_days_from_now                         # 5 days from now
-        elsif match_x_days_from_dayname                 then  found_x_days_from_dayname                     # 5 days from monday
+        if match_x_days_from_now
+          found_x_days_from_now                         # 5 days from now
+        elsif match_x_days_from_dayname
+          found_x_days_from_dayname                     # 5 days from monday
         end
 
       elsif match_x_dayname_from
-        if match_x_dayname_from_now                     then  found_x_dayname_from_now                      # 2 fridays from now
-        elsif match_x_dayname_from_tomorrow             then  found_x_dayname_from_tomorrow                 # 2 fridays from tomorrow
-        elsif match_x_dayname_from_yesterday            then  found_x_dayname_from_yesterday                # 2 fridays from yesterday
-        elsif match_x_dayname_from_this                 then  found_x_dayname_from_this                     # 2 fridays from this one
-        elsif match_x_dayname_from_next                 then  found_x_dayname_from_next                     # 2 fridays from next friday
+        if match_x_dayname_from_now
+          found_x_dayname_from_now                      # 2 fridays from now
+        elsif match_x_dayname_from_tomorrow
+          found_x_dayname_from_tomorrow                 # 2 fridays from tomorrow
+        elsif match_x_dayname_from_yesterday
+          found_x_dayname_from_yesterday                # 2 fridays from yesterday
+        elsif match_x_dayname_from_this
+          found_x_dayname_from_this                     # 2 fridays from this one
+        elsif match_x_dayname_from_next
+          found_x_dayname_from_next                     # 2 fridays from next friday
         end
 
-      elsif match_x_minutes_from_now                      then  found_x_minutes_from_now                      # 5 minutes from now
-      elsif match_x_hours_from_now                        then  found_x_hours_from_now                        # 5 hours from now
+      elsif match_x_minutes_from_now
+        found_x_minutes_from_now                        # 5 minutes from now
+      elsif match_x_hours_from_now
+        found_x_hours_from_now                          # 5 hours from now
 
       elsif match_ordinal_dayname
-        if match_ordinal_dayname_this_month             then  found_ordinal_dayname_this_month              # 2nd friday this month
-        elsif match_ordinal_dayname_next_month          then  found_ordinal_dayname_next_month              # 2nd friday next month
-        elsif match_ordinal_dayname_monthname           then  found_ordinal_dayname_monthname               # 2nd friday december
+        if match_ordinal_dayname_this_month
+          found_ordinal_dayname_this_month              # 2nd friday this month
+        elsif match_ordinal_dayname_next_month
+          found_ordinal_dayname_next_month              # 2nd friday next month
+        elsif match_ordinal_dayname_monthname
+          found_ordinal_dayname_monthname               # 2nd friday december
         end
 
-      elsif match_ordinal_this_month                      then  found_ordinal_this_month                      # 28th this month
-      elsif match_ordinal_next_month                      then  found_ordinal_next_month                      # 28th next month
+      elsif match_ordinal_this_month
+        found_ordinal_this_month                        # 28th this month
+      elsif match_ordinal_next_month
+        found_ordinal_next_month                        # 28th next month
 
       elsif match_first_day
-        if match_first_day_this_month                   then  found_first_day_this_month                    # first day this month
-        elsif match_first_day_next_month                then  found_first_day_next_month                    # first day next month
-        elsif match_first_day_monthname                 then  found_first_day_monthname                     # first day january (well this is stupid, "first day of january" gets preprocessed into "1/1", so what is the point of this?)
+        if match_first_day_this_month
+          found_first_day_this_month                    # first day this month
+        elsif match_first_day_next_month
+          found_first_day_next_month                    # first day next month
+        elsif match_first_day_monthname
+          found_first_day_monthname                     # first day january (well this is stupid, "first day of january" gets preprocessed into "1/1", so what is the point of this?)
         end
 
       elsif match_last_day
-        if match_last_day_this_month                    then  found_last_day_this_month                     # last day this month
-        elsif match_last_day_next_month                 then  found_last_day_next_month                     # last day next month
-        elsif match_last_day_monthname                  then  found_last_day_monthname                      # last day november
+        if match_last_day_this_month
+          found_last_day_this_month                     # last day this month
+        elsif match_last_day_next_month
+          found_last_day_next_month                     # last day next month
+        elsif match_last_day_monthname
+          found_last_day_monthname                      # last day november
         end
 
       elsif match_at
         if match_at_time
-          if match_at_time_through_time                 then  found_at_time_through_time                    # at 2 through 5pm
-          else                                                found_at_time                                 # at 2
+          if match_at_time_through_time
+            found_at_time_through_time                  # at 2 through 5pm
+          else
+            found_at_time                               # at 2
           end
         end
 
-      elsif match_all_day                                 then  found_all_day                                 # all day
+      elsif match_all_day
+        found_all_day                                   # all day
 
       elsif match_tomorrow
         if match_tomorrow_through
-          if match_tomorrow_through_dayname             then  found_tomorrow_through_dayname                # tomorrow through friday
-          elsif match_tomorrow_through_date             then  found_tomorrow_through_date                   # tomorrow through august 20th
+          if match_tomorrow_through_dayname
+            found_tomorrow_through_dayname              # tomorrow through friday
+          elsif match_tomorrow_through_date
+            found_tomorrow_through_date                 # tomorrow through august 20th
           end
-        else                                                  found_tomorrow                                # tomorrow
+        else
+          found_tomorrow                                # tomorrow
         end
 
       elsif match_now
         if match_now_through
-          if match_now_through_dayname                  then  found_now_through_dayname                     # today through friday
-          elsif match_now_through_following_dayname     then  found_now_through_following_dayname           # REDUNDANT, PREPROCESS THIS OUT
-          elsif match_now_through_date                  then  found_now_through_date                        # today through 10/1
-          elsif match_now_through_tomorrow              then  found_now_through_tomorrow                    # today through tomorrow
-          elsif match_now_through_next_dayname          then  found_now_through_next_dayname                # today through next friday
+          if match_now_through_dayname
+            found_now_through_dayname                   # today through friday
+          elsif match_now_through_following_dayname
+            found_now_through_following_dayname         # REDUNDANT, PREPROCESS THIS OUT
+          elsif match_now_through_date
+            found_now_through_date                      # today through 10/1
+          elsif match_now_through_tomorrow
+            found_now_through_tomorrow                  # today through tomorrow
+          elsif match_now_through_next_dayname
+            found_now_through_next_dayname              # today through next friday
           end
-        else                                                  found_now                                     # today
+        else
+          found_now                                     # today
         end
 
       elsif match_dayname
-        if match_dayname_the_ordinal                    then  found_dayname_the_ordinal                     # monday the 21st
-        elsif match_dayname_x_weeks_from_next           then  found_dayname_x_weeks_from_next               # monday 2 weeks from next
-        elsif match_dayname_x_weeks_from_this           then  found_dayname_x_weeks_from_this               # monday 2 weeks from this
-        else                                                  found_dayname                                 # monday (also monday tuesday wed...)
+        if match_dayname_the_ordinal
+          found_dayname_the_ordinal                     # monday the 21st
+        elsif match_dayname_x_weeks_from_next
+          found_dayname_x_weeks_from_next               # monday 2 weeks from next
+        elsif match_dayname_x_weeks_from_this
+          found_dayname_x_weeks_from_this               # monday 2 weeks from this
+        else
+          found_dayname                                 # monday (also monday tuesday wed...)
         end
 
-      elsif match_through_monthname                       then  found_through_monthname                       # through december (implies through 11/30)
-      elsif match_monthname                               then  found_monthname                               # december (implies 12/1 to 12/31)
+      elsif match_through_monthname
+        found_through_monthname                         # through december (implies through 11/30)
+      elsif match_monthname
+        found_monthname                                 # december (implies 12/1 to 12/31)
 
       # 5th constructor
-      elsif match_start                                   then  found_start
-      elsif match_through                                 then  found_through
+      elsif match_start
+        found_start
+      elsif match_through
+        found_through
 
-      elsif match_time                                    # match time second to last
-        if match_time_through_time                      then  found_time_through_time                       # 10 to 4
-        else                                                  found_time                                    # 10
+      elsif match_time                                  # match time second to last
+        if match_time_through_time
+          found_time_through_time                       # 10 to 4
+        else
+          found_time                                    # 10
         end
 
-      elsif match_date                                    # match date last
-        if match_date_through_date                      then  found_date_through_date                       # 5th through the 16th
-        else                                                  found_date                                    # 5th
+      elsif match_date                                  # match date last
+        if match_date_through_date
+          found_date_through_date                       # 5th through the 16th
+        else
+          found_date                                    # 5th
         end
       end
     end # end def big_if_on_current_word
