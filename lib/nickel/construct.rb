@@ -51,22 +51,18 @@ module Nickel
     end
 
     def interval
-      if    has_interval_of?(1)  then 1
-      elsif has_interval_of?(2)  then 2
-      elsif has_interval_of?(3)  then 3
+      if [:daily, :weekly, :daymonthly, :datemonthly].include?(repeats)
+        1
+      elsif [:altdaily, :altweekly, :altdaymonthly, :altdatemonthly].include?(repeats)
+        2
+      elsif [:threedaily, :threeweekly, :threedaymonthly, :threedatemonthly].include?(repeats)
+        3
       else
-        fail StandardError.new('self.repeats is invalid!!')
+        fail StandardError, 'self.repeats is invalid!!'
       end
     end
 
     private
-    def has_interval_of?(x)
-      case x
-      when 1 then [:daily, :weekly, :daymonthly, :datemonthly].include?(repeats)
-      when 2 then [:altdaily, :altweekly, :altdaymonthly, :altdatemonthly].include?(repeats)
-      when 3 then [:threedaily, :threeweekly, :threedaymonthly, :threedatemonthly].include?(repeats)
-      end
-    end
 
     def variant_of?(sym)
       case sym

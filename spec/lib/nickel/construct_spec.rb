@@ -57,6 +57,10 @@ module Nickel
       it 'is 3 when the recurrence is on a specific date every three months' do
         expect(RecurrenceConstruct.new(repeats: :threedatemonthly).interval).to eq(3)
       end
+
+      it 'raises a StandardError if the recurrence is not recognised' do
+        expect{ RecurrenceConstruct.new(repeats: :fortnightly).interval }.to raise_error(StandardError)
+      end
     end
   end
 end
