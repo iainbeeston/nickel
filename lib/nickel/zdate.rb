@@ -385,9 +385,9 @@ module Nickel
         if date
           if ambiguous[:year]
             # say the date is 11/1 and someone enters 2/1, they probably mean next year, I pick 4 months as a threshold but that is totally arbitrary
-            current_date.diff_in_months(date) < -4 and date = date.add_years(1)
+            current_date.diff_in_months(date) < -4 && date = date.add_years(1)
           elsif ambiguous[:month]
-            current_date.day > date.day and date = date.add_months(1)
+            current_date.day > date.day && date = date.add_months(1)
           end
         end
         date
