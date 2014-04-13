@@ -36,10 +36,14 @@ module Nickel
     attr_accessor :repeats, :repeats_on
 
     def interpret
-      if    variant_of?(:daily)       then interpret_daily_variant
-      elsif variant_of?(:weekly)      then interpret_weekly_variant
-      elsif variant_of?(:daymonthly)  then interpret_daymonthly_variant
-      elsif variant_of?(:datemonthly) then interpret_datemonthly_variant
+      if [:daily, :altdaily, :threedaily].include?(repeats)
+        interpret_daily_variant
+      elsif [:weekly, :altweekly, :threeweekly].include?(repeats)
+        interpret_weekly_variant
+      elsif [:daymonthly, :altdaymonthly, :threedaymonthly].include?(repeats)
+        interpret_daymonthly_variant
+      elsif [:datemonthly, :altdatemonthly, :threedatemonthly].include?(repeats)
+        interpret_datemonthly_variant
       else
         fail StandardError, 'self is an invalid variant, check value of self.repeats'
       end
@@ -63,15 +67,6 @@ module Nickel
     end
 
     private
-
-    def variant_of?(sym)
-      case sym
-      when :daily       then [:daily, :altdaily, :threedaily].include?(repeats)
-      when :weekly      then [:weekly, :altweekly, :threeweekly].include?(repeats)
-      when :daymonthly  then [:daymonthly, :altdaymonthly, :threedaymonthly].include?(repeats)
-      when :datemonthly then [:datemonthly, :altdatemonthly, :threedatemonthly].include?(repeats)
-      end
-    end
 
     def interpret_daily_variant
       hash_for_occ_base = { type: :daily, interval: interval }
