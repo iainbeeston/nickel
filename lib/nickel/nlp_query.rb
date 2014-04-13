@@ -636,10 +636,11 @@ module Nickel
             i += 1
           end
         elsif index2 < index1
-          begin
+          loop do
             ret_string << ZDate.days_of_week[i] + ' '
             i = (i + 1) % 7
-          end while i != index2 + 1     # wrap until it hits index2
+            break if i != index2 + 1     # wrap until it hits index2
+          end
         else
           # indices are the same, one week event
           8.times do
