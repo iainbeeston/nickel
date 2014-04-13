@@ -86,8 +86,13 @@ module Nickel
       end
     end
 
-    # returns true if self is today
     def is_today?
+      warn '[DEPRECATION] `is_today?` is deprecated.  Please use `today?` instead.'
+      today?
+    end
+
+    # returns true if self is today
+    def today?
       self == ZDate.new
     end
 

@@ -319,5 +319,21 @@ module Nickel
         expect(ZTime.new('161718').sec).to eq(18)
       end
     end
+
+    describe '#is_am?', :deprecated do
+      it 'is true when the ZTime is before 12:00' do
+        expect(ZTime.new('110000').is_am?).to eq(true)
+      end
+    end
+
+    describe '#am?' do
+      it 'is true when the ZTime is before 12:00' do
+        expect(ZTime.new('110000').am?).to eq(true)
+      end
+
+      it 'is false when the ZTime is on or after 12:00' do
+        expect(ZTime.new('120000').am?).to eq(false)
+      end
+    end
   end
 end

@@ -94,5 +94,25 @@ module Nickel
         expect(d1).to_not eq '20090927'
       end
     end
+
+    describe '#is_today?', :deprecated do
+      it "is true when the ZDate is today's date" do
+        expect(ZDate.new.is_today?).to eq true
+      end
+    end
+
+    describe '#today?' do
+      it "is true when the ZDate is today's date" do
+        expect(ZDate.new.today?).to eq true
+      end
+
+      it 'is false when the ZDate is in the past' do
+        expect(ZDate.new('20090927').today?).to eq false
+      end
+
+      it 'is false when the ZDate is in the future' do
+        expect(ZDate.new('21000927').today?).to eq false
+      end
+    end
   end
 end

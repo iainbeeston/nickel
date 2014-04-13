@@ -1,3 +1,7 @@
+0.1.2
+-----
+* Deprecated ZDate#is_today?, ZTime#is_am? and RecurrenceConstruct#get_interval
+
 0.1.1
 -----
 * Made ZDate#before?, ZDate#after?, ZTime#before? and ZTime#after? private methods

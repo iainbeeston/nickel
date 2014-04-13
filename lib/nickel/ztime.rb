@@ -130,11 +130,16 @@ module Nickel
     end
 
     def is_am?
+      warn '[DEPRECATION] `is_am?` is deprecated.  Please use `am?` instead.'
+      am?
+    end
+
+    def am?
       hour < 12   # 0 through 11 on 24hr clock
     end
 
     def am_pm
-      is_am? ? 'am' : 'pm'
+      am? ? 'am' : 'pm'
     end
 
     def <=>(other)

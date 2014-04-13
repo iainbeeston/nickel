@@ -46,6 +46,11 @@ module Nickel
     end
 
     def get_interval
+      warn '[DEPRECATION] `get_interval` is deprecated.  Please use `interval` instead.'
+      interval
+    end
+
+    def interval
       if    has_interval_of?(1)  then 1
       elsif has_interval_of?(2)  then 2
       elsif has_interval_of?(3)  then 3
@@ -73,14 +78,14 @@ module Nickel
     end
 
     def interpret_daily_variant
-      hash_for_occ_base = { type: :daily, interval: get_interval }
+      hash_for_occ_base = { type: :daily, interval: interval }
       [hash_for_occ_base]
     end
 
     # repeats_on is an array of day indices. For example,
     # "every monday and wed" will produce repeats_on == [0,2].
     def interpret_weekly_variant
-      hash_for_occ_base = { type: :weekly, interval: get_interval }
+      hash_for_occ_base = { type: :weekly, interval: interval }
       array_of_occurrences = []
       repeats_on.each do |day_of_week|
         array_of_occurrences << hash_for_occ_base.merge(day_of_week: day_of_week)
@@ -93,7 +98,7 @@ module Nickel
     # "the first and second sat of every month" will produce
     # repeats_on == [[1,5], [2,5]]
     def interpret_daymonthly_variant
-      hash_for_occ_base = { type: :daymonthly, interval: get_interval }
+      hash_for_occ_base = { type: :daymonthly, interval: interval }
       array_of_occurrences = []
       repeats_on.each do |on|
         h = { week_of_month: on[0], day_of_week: on[1] }
@@ -105,7 +110,7 @@ module Nickel
     # repeats_on is an array of datemonthly indices.  For example,
     # "the 21st and 22nd of every monthy" will produce repeats_on == [21, 22]
     def interpret_datemonthly_variant
-      hash_for_occ_base = { type: :datemonthly, interval: get_interval }
+      hash_for_occ_base = { type: :datemonthly, interval: interval }
       array_of_occurrences = []
       repeats_on.each do |date_of_month|
         h = { date_of_month: date_of_month }
