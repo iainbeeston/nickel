@@ -14,10 +14,10 @@ module Nickel
     def finalize(cur_date)
       cur_date = start_date unless start_date.nil?
       case type
-        when :daily then finalize_daily(cur_date)
-        when :weekly then finalize_weekly(cur_date)
-        when :datemonthly then finalize_datemonthly(cur_date)
-        when :daymonthly then finalize_daymonthly(cur_date)
+      when :daily then finalize_daily(cur_date)
+      when :weekly then finalize_weekly(cur_date)
+      when :datemonthly then finalize_datemonthly(cur_date)
+      when :daymonthly then finalize_daymonthly(cur_date)
       end
     end
 
