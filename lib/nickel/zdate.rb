@@ -228,7 +228,7 @@ module Nickel
           o.date = ZDate.format_date(o.year_str, o.month_str, o.day - number)
           number = 0
         else
-          number = number - o.day
+          number -= o.day
           o.decrement_month!
         end
       end
