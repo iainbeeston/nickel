@@ -29,19 +29,20 @@ module Nickel
     end
 
     private
+
     def initialize_index_to_type_map
       # The @index_to_type_map hash looks like this: {0 => :date, 1 => :timespan, ...}
       # Each key represents the index in @constructs and the value represents that constructs class.
       @index_to_type_map = {}
       @constructs.each_with_index do |c, i|
         @index_to_type_map[i] = case c.class.name
-          when 'Nickel::DateConstruct'         then :date
-          when 'Nickel::TimeConstruct'         then :time
-          when 'Nickel::DateSpanConstruct'     then :datespan
-          when 'Nickel::TimeSpanConstruct'     then :timespan
-          when 'Nickel::RecurrenceConstruct'   then :recurrence
-          when 'Nickel::WrapperConstruct'      then :wrapper
-        end
+                                when 'Nickel::DateConstruct'         then :date
+                                when 'Nickel::TimeConstruct'         then :time
+                                when 'Nickel::DateSpanConstruct'     then :datespan
+                                when 'Nickel::TimeSpanConstruct'     then :timespan
+                                when 'Nickel::RecurrenceConstruct'   then :recurrence
+                                when 'Nickel::WrapperConstruct'      then :wrapper
+                                end
       end
     end
 
@@ -50,14 +51,14 @@ module Nickel
       # Determine user input style, i.e. "DATE TIME DATE TIME"  OR "TIME DATE TIME DATE".
       # Determine user input style, i.e. "DATE TIME DATE TIME"  OR "TIME DATE TIME DATE".
       case (@index_to_type_map[0] == :wrapper ? @index_to_type_map[1] : @index_to_type_map[0])
-        when :date        then @user_input_style = :datetime
-        when :time        then @user_input_style = :timedate
-        when :datespan    then @user_input_style = :datetime
-        when :timespan    then @user_input_style = :timedate
-        when :recurrence  then @user_input_style = :datetime
-        else
-          # We only have wrappers. It doesn't matter which user style we choose.
-          @user_input_style = :datetime
+      when :date        then @user_input_style = :datetime
+      when :time        then @user_input_style = :timedate
+      when :datespan    then @user_input_style = :datetime
+      when :timespan    then @user_input_style = :timedate
+      when :recurrence  then @user_input_style = :datetime
+      else
+        # We only have wrappers. It doesn't matter which user style we choose.
+        @user_input_style = :datetime
       end
     end
 
@@ -65,12 +66,12 @@ module Nickel
       @dci, @tci, @dsci, @tsci, @rci, @wci = [], [], [], [], [], []
       @index_to_type_map.each do |i, type|
         case type
-          when :date        then @dci  << i
-          when :time        then @tci  << i
-          when :datespan    then @dsci << i
-          when :timespan    then @tsci << i
-          when :recurrence  then @rci  << i
-          when :wrapper     then @wci  << i
+        when :date        then @dci  << i
+        when :time        then @tci  << i
+        when :datespan    then @dsci << i
+        when :timespan    then @tsci << i
+        when :recurrence  then @rci  << i
+        when :wrapper     then @wci  << i
         end
       end
     end
@@ -316,22 +317,22 @@ module Nickel
           if base_opts[:start_date].nil? && base_opts[:end_date].nil?   # span must start today
             base_opts[:start_date] = @curdate.dup
             base_opts[:end_date] = case @constructs[wi].wrapper_type
-              when 2 then @curdate.add_days(@constructs[wi].wrapper_length)
-              when 3 then @curdate.add_weeks(@constructs[wi].wrapper_length)
-              when 4 then @curdate.add_months(@constructs[wi].wrapper_length)
-            end
+                                   when 2 then @curdate.add_days(@constructs[wi].wrapper_length)
+                                   when 3 then @curdate.add_weeks(@constructs[wi].wrapper_length)
+                                   when 4 then @curdate.add_months(@constructs[wi].wrapper_length)
+                                   end
           elsif base_opts[:start_date] && base_opts[:end_date].nil?
             base_opts[:end_date] = case @constructs[wi].wrapper_type
-              when 2 then base_opts[:start_date].add_days(@constructs[wi].wrapper_length)
-              when 3 then base_opts[:start_date].add_weeks(@constructs[wi].wrapper_length)
-              when 4 then base_opts[:start_date].add_months(@constructs[wi].wrapper_length)
-            end
+                                   when 2 then base_opts[:start_date].add_days(@constructs[wi].wrapper_length)
+                                   when 3 then base_opts[:start_date].add_weeks(@constructs[wi].wrapper_length)
+                                   when 4 then base_opts[:start_date].add_months(@constructs[wi].wrapper_length)
+                                   end
           elsif base_opts[:start_date].nil? && base_opts[:end_date]    # for 6 months until jan 3rd
             base_opts[:start_date] = case @constructs[wi].wrapper_type
-              when 2 then base_opts[:end_date].sub_days(@constructs[wi].wrapper_length)
-              when 3 then base_opts[:end_date].sub_weeks(@constructs[wi].wrapper_length)
-              when 4 then base_opts[:end_date].sub_months(@constructs[wi].wrapper_length)
-            end
+                                     when 2 then base_opts[:end_date].sub_days(@constructs[wi].wrapper_length)
+                                     when 3 then base_opts[:end_date].sub_weeks(@constructs[wi].wrapper_length)
+                                     when 4 then base_opts[:end_date].sub_months(@constructs[wi].wrapper_length)
+                                     end
           end
         end
       end
