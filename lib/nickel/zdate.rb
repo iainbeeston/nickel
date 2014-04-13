@@ -304,7 +304,7 @@ module Nickel
           diff_in_months = 12 - (month1 - month2)
           year2 -= 1  # this makes the next line nice
         end
-        diff_in_months += (year2 - year1) * 12
+        diff_in_months + (year2 - year1) * 12
       end
 
       def format_year(y)
@@ -447,9 +447,9 @@ module Nickel
       doy = day
       # iterate through days in months arrays, summing up the days
       if leap_year?
-        doy = (1...month).to_a.reduce(doy) { |sum, n| sum += ZDate.days_in_leap_year_months[n - 1] }
+        doy = (1...month).to_a.reduce(doy) { |sum, n| sum + ZDate.days_in_leap_year_months[n - 1] }
       else
-        doy = (1...month).to_a.reduce(doy) { |sum, n| sum += ZDate.days_in_common_year_months[n - 1] }
+        doy = (1...month).to_a.reduce(doy) { |sum, n| sum + ZDate.days_in_common_year_months[n - 1] }
       end
       doy
     end
