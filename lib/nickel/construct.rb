@@ -41,7 +41,7 @@ module Nickel
       elsif variant_of?(:daymonthly)  then interpret_daymonthly_variant
       elsif variant_of?(:datemonthly) then interpret_datemonthly_variant
       else
-        fail StandardError.new('self is an invalid variant, check value of self.repeats')
+        fail StandardError, 'self is an invalid variant, check value of self.repeats'
       end
     end
 
