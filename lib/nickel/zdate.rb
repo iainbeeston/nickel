@@ -107,7 +107,9 @@ module Nickel
         # we want the last occurrence of this month
         # add 4 weeks to first occurrence, see if we are in the same month, subtract 1 week if we are not
         d = first_occ_date.add_weeks(4)
-        if d.month != month then d = d.sub_weeks(1) end
+        if d.month != month
+          d = d.sub_weeks(1)
+        end
       end
       d
     end
@@ -142,7 +144,9 @@ module Nickel
 
     # add_ methods return new ZDate object, they DO NOT modify self
     def add_days(number)
-      if number < 0 then return sub_days(number.abs) end
+      if number < 0
+        return sub_days(number.abs)
+      end
       o = dup  # new ZDate object
       # Let's see what month we are going to end in
       while number > 0
@@ -528,6 +532,7 @@ module Nickel
     end
 
     protected
+
     # Modifies self.
     # bumps self to first day of next month
     def increment_month!
