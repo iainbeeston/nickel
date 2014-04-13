@@ -409,6 +409,7 @@ module Nickel
     end
 
     private
+
     attr_accessor :query_str
 
     def standardize_input
@@ -528,7 +529,7 @@ module Nickel
       # Note: dec 5 9 to 5 will give an error, need to find these and convert to dec 5 from 9 to 5; also dec 3,4, 9 to|through 5 --> dec 3, 4 from 9 through 5
       nsub!(/(?:(?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){1,7})?#{MONTH_OF_YEAR}\s+(?:the\s+)?((?:#{DATE_DD_WITH_SUFFIX_NB}\s+(?:and\s+)?(?:the\s+)?){1,31})/) do |m1, m2|
         month_str = (ZDate.months_of_year.index(m1) + 1).to_s
-        m2.gsub(/(and|the)/, '').gsub(/#{DATE_DD_NB_ON_SUFFIX}/) { month_str + '/' + $1 }  # that $1 is from the nested match!
+        m2.gsub(/(and|the)/, '').gsub(/#{DATE_DD_NB_ON_SUFFIX}/) { month_str + '/' + Regexp.last_match(1) }  # last match is from the nested match!
       end
 
       # Apr 29, 5 - 8pm
@@ -545,7 +546,7 @@ module Nickel
       nsub!(/(#{MONTH_OF_YEAR_NB}\s+(?:the\s+)?(?:(?:#{DATE_DD_WITHOUT_SUFFIX_NB}\s+(?:and\s+)?(?:the\s+)?){1,31})(?:to|through|until)\s+#{DATE_DD_WITHOUT_SUFFIX_NB})/) { |m1| m1.gsub(/#{DATE_DD_WITHOUT_SUFFIX}\s+(to|through|until)/, 'from \1 through ') }
       nsub!(/(?:(?:#{DAY_OF_WEEK_NB}\s+(?:and\s+)?){1,7})?#{MONTH_OF_YEAR}\s+(?:the\s+)?((?:#{DATE_DD_WITHOUT_SUFFIX_NB}\s+(?:and\s+)?(?:the\s+)?){1,31})/) do |m1, m2|
         month_str = (ZDate.months_of_year.index(m1) + 1).to_s
-        m2.gsub(/(and|the)/, '').gsub(/#{DATE_DD_NB_ON_SUFFIX}/) { month_str + '/' + $1 }  # $1 from nested match
+        m2.gsub(/(and|the)/, '').gsub(/#{DATE_DD_NB_ON_SUFFIX}/) { month_str + '/' + Regexp.last_match(1) }  # last match is from nested match
       end
 
       # "monday 12/6" --> 12/6

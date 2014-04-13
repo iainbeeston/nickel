@@ -63,12 +63,12 @@ module Nickel
         # also wipe out words before comp start if it is something like in, at, on, or the
         if c.comp_start - 1 >= 0 && message_array[c.comp_start - 1] =~ /\b(from|in|at|on|the|are|is|for)\b/
           message_array[c.comp_start - 1] = nil
-          if $1 == 'the' && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(for|on)\b/    # for the next three days;  on the 27th;
+          if Regexp.last_match(1) == 'the' && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(for|on)\b/    # for the next three days;  on the 27th;
             message_array[c.comp_start - 2] = nil
-            if $1 == 'on' && c.comp_start - 3 >= 0 && message_array[c.comp_start - 3] =~ /\b(is|are)\b/         # is on the 28th;  are on the 21st and 22nd;
+            if Regexp.last_match(1) == 'on' && c.comp_start - 3 >= 0 && message_array[c.comp_start - 3] =~ /\b(is|are)\b/         # is on the 28th;  are on the 21st and 22nd;
               message_array[c.comp_start - 3] = nil
             end
-          elsif $1 == 'on' && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(is|are)\b/      # is on tuesday; are on tuesday and wed;
+          elsif Regexp.last_match(1) == 'on' && c.comp_start - 2 >= 0 && message_array[c.comp_start - 2] =~ /\b(is|are)\b/      # is on tuesday; are on tuesday and wed;
             message_array[c.comp_start - 2] = nil
           end
         end
