@@ -137,12 +137,12 @@ module Nickel
       is_am? ? 'am' : 'pm'
     end
 
-    def <=>(t2)
-      return nil unless [:hour, :min, :sec].all? { |m| t2.respond_to?(m) }
+    def <=>(other)
+      return nil unless [:hour, :min, :sec].all? { |m| other.respond_to?(m) }
 
-      if before?(t2)
+      if before?(other)
         -1
-      elsif after?(t2)
+      elsif after?(other)
         1
       else
         0
@@ -338,12 +338,12 @@ module Nickel
 
     private
 
-    def before?(t2)
-      (hour < t2.hour) || (hour == t2.hour && (min < t2.min || (min == t2.min && sec < t2.sec)))
+    def before?(other)
+      (hour < other.hour) || (hour == other.hour && (min < other.min || (min == other.min && sec < other.sec)))
     end
 
-    def after?(t2)
-      (hour > t2.hour) || (hour == t2.hour && (min > t2.min || (min == t2.min && sec > t2.sec)))
+    def after?(other)
+      (hour > other.hour) || (hour == other.hour && (min > other.min || (min == other.min && sec > other.sec)))
     end
 
     def adjust_for(am_pm)

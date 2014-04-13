@@ -74,12 +74,12 @@ module Nickel
       txt.gsub!(/%d/, day_str)
     end
 
-    def <=>(d2)
-      return nil unless [:year, :month, :day].all? { |m| d2.respond_to?(m) }
+    def <=>(other)
+      return nil unless [:year, :month, :day].all? { |m| other.respond_to?(m) }
 
-      if before?(d2)
+      if before?(other)
         -1
-      elsif after?(d2)
+      elsif after?(other)
         1
       else
         0
@@ -545,12 +545,12 @@ module Nickel
 
     private
 
-    def before?(d2)
-      (year < d2.year) || (year == d2.year && (month < d2.month || (month == d2.month && day < d2.day)))
+    def before?(other)
+      (year < other.year) || (year == other.year && (month < other.month || (month == other.month && day < other.day)))
     end
 
-    def after?(d2)
-      (year > d2.year) || (year == d2.year && (month > d2.month || (month == d2.month && day > d2.day)))
+    def after?(other)
+      (year > other.year) || (year == other.year && (month > other.month || (month == other.month && day > other.day)))
     end
 
     def validate
