@@ -252,7 +252,7 @@ module Nickel
     end
 
     def match_every_other_day
-      @components[@pos + 2] == 'day'       ##  if "every other day"
+      @components[@pos + 2] == 'day'       #  if "every other day"
     end
 
     def found_every_other_day
@@ -278,7 +278,7 @@ module Nickel
     end
 
     def match_every_3rd_day
-      @components[@pos + 2] == 'day'       ##  if "every 3rd day"
+      @components[@pos + 2] == 'day'       #  if "every 3rd day"
     end
 
     def found_every_3rd_day
@@ -480,7 +480,7 @@ module Nickel
     end
 
     def match_next_weekend
-      @components[@pos + 1] == 'weekend'   ## "next weekend"
+      @components[@pos + 1] == 'weekend'   # "next weekend"
     end
 
     def found_next_weekend
@@ -490,7 +490,7 @@ module Nickel
     end
 
     def match_next_dayname
-      @day_index = ZDate.days_of_week.index(@components[@pos + 1])  ## if "next [day]"
+      @day_index = ZDate.days_of_week.index(@components[@pos + 1])  # if "next [day]"
     end
 
     def found_next_dayname
@@ -507,7 +507,7 @@ module Nickel
     end
 
     def match_next_x_days
-      @components[@pos + 2] =~ /days?/                              ## "next x days"
+      @components[@pos + 2] =~ /days?/                              # "next x days"
     end
 
     def found_next_x_days
@@ -515,7 +515,7 @@ module Nickel
     end
 
     def match_next_x_weeks
-      @components[@pos + 2] =~ /weeks?/                             ## "next x weeks"
+      @components[@pos + 2] =~ /weeks?/                             # "next x weeks"
     end
 
     def found_next_x_weeks
@@ -523,7 +523,7 @@ module Nickel
     end
 
     def match_next_x_months
-      @components[@pos + 2] =~ /months?/                             ## "next x months"
+      @components[@pos + 2] =~ /months?/                             # "next x months"
     end
 
     def found_next_x_months
@@ -531,7 +531,7 @@ module Nickel
     end
 
     def match_next_x_years
-      @components[@pos + 2] =~ /years?/                          ## "next x years"
+      @components[@pos + 2] =~ /years?/                          # "next x years"
     end
 
     def found_next_x_years
