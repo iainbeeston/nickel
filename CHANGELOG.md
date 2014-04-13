@@ -1,3 +1,7 @@
+0.1.1
+-----
+* Made ZDate#before?, ZDate#after?, ZTime#before? and ZTime#after? private methods
+
 0.1.0
 -----
 
