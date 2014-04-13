@@ -32,7 +32,16 @@ module Nickel
       @construct_interpreter.run
 
       @occurrences = @construct_interpreter.occurrences.each { |occ| occ.finalize(@input_date) }   # finds start and end dates
-      @occurrences.sort! { |x, y| if x.start_date > y.start_date then 1 elsif x.start_date < y.start_date then -1 else 0 end }    # sorts occurrences by start dat
+      # sorts occurrences by start date
+      @occurrences.sort! do |x, y|
+        if x.start_date > y.start_date
+          1
+        elsif x.start_date < y.start_date
+          -1
+        else
+          0
+        end
+      end
       @occurrences
     end
 
