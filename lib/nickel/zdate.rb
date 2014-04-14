@@ -1,15 +1,14 @@
 require 'date'
 
 module Nickel
-
   # TODO: get methods should accept dayname or dayindex
   class ZDate
     include Comparable
 
-    @days_of_week               = ["mon","tue","wed","thu","fri","sat","sun"]
-    @full_days_of_week          = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-    @months_of_year             = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"]
-    @full_months_of_year        = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+    @days_of_week               = %w(mon tue wed thu fri sat sun)
+    @full_days_of_week          = %w(monday tuesday wednesday thursday friday saturday sunday)
+    @months_of_year             = %w(jan feb mar apr may jun jul aug sep oct nov dec)
+    @full_months_of_year        = %w(january february march april may june july august september october november december)
     @days_in_common_year_months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     @days_in_leap_year_months   = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -27,8 +26,8 @@ module Nickel
 
     # Don't use attr_accessor for date, year, month, day; we want to validate on change.
     def initialize(yyyymmdd = nil)
-      d = yyyymmdd ? yyyymmdd.dup : ::Time.new.strftime("%Y%m%d")
-      d.gsub!(/-/,'') # remove any hyphens, so a user can initialize with something like "2008-10-23"
+      d = yyyymmdd ? yyyymmdd.dup : ::Time.new.strftime('%Y%m%d')
+      d.gsub!(/-/, '') # remove any hyphens, so a user can initialize with something like "2008-10-23"
       self.date = d
     end
 
@@ -70,25 +69,30 @@ module Nickel
     end
 
     def fmt(txt)
-      txt.gsub!(/%Y/, self.year_str)
-      txt.gsub!(/%m/, self.month_str)
-      txt.gsub!(/%d/, self.day_str)
+      txt.gsub!(/%Y/, year_str)
+      txt.gsub!(/%m/, month_str)
+      txt.gsub!(/%d/, day_str)
     end
 
-    def <=>(d2)
-      return nil unless [:year, :month, :day].all?{|m| d2.respond_to?(m)}
+    def <=>(other)
+      return nil unless [:year, :month, :day].all? { |m| other.respond_to?(m) }
 
-      if before?(d2)
+      if before?(other)
         -1
-      elsif after?(d2)
+      elsif after?(other)
         1
       else
         0
       end
     end
 
-    # returns true if self is today
     def is_today?
+      warn '[DEPRECATION] `is_today?` is deprecated.  Please use `today?` instead.'
+      today?
+    end
+
+    # returns true if self is today
+    def today?
       self == ZDate.new
     end
 
@@ -103,7 +107,9 @@ module Nickel
         # we want the last occurrence of this month
         # add 4 weeks to first occurrence, see if we are in the same month, subtract 1 week if we are not
         d = first_occ_date.add_weeks(4)
-        if d.month != self.month then d = d.sub_weeks(1) end
+        if d.month != month
+          d = d.sub_weeks(1)
+        end
       end
       d
     end
@@ -120,12 +126,12 @@ module Nickel
 
     # for example, "previous friday"
     def prev(day)
-      (self.dayindex == day) ? self.dup : x_weeks_from_day(-1,day)
+      (dayindex == day) ? dup : x_weeks_from_day(-1, day)
     end
 
     # returns a new date object
     def x_weeks_from_day(weeks_away, day2index)
-      day1index = self.dayindex
+      day1index = dayindex
       if day1index > day2index
         days_away = 7 * (weeks_away + 1) - (day1index - day2index)
       elsif day1index < day2index
@@ -133,20 +139,22 @@ module Nickel
       elsif day1index == day2index
         days_away = 7 * weeks_away
       end
-      self.add_days(days_away)  # returns a new date object
+      add_days(days_away)  # returns a new date object
     end
 
     # add_ methods return new ZDate object, they DO NOT modify self
     def add_days(number)
-      if number < 0 then return sub_days(number.abs) end
-      o = self.dup  # new ZDate object
+      if number < 0
+        return sub_days(number.abs)
+      end
+      o = dup  # new ZDate object
       # Let's see what month we are going to end in
       while number > 0
         if o.days_left_in_month >= number
           o.date = ZDate.format_date(o.year_str, o.month_str, o.day + number)
           number = 0
         else
-          number = number - 1 - o.days_left_in_month  #it costs 1 day to increment the month
+          number = number - 1 - o.days_left_in_month  # it costs 1 day to increment the month
           o.increment_month!
         end
       end
@@ -154,7 +162,7 @@ module Nickel
     end
 
     def add_weeks(number)
-      self.add_days(7*number)
+      add_days(7 * number)
     end
 
     def add_months(number)
@@ -165,14 +173,14 @@ module Nickel
         years_to_increment = 0
       end
       new_year = year + years_to_increment
-      new_day = get_day_or_max_day_in_month(self.day, new_month, new_year)
+      new_day = get_day_or_max_day_in_month(day, new_month, new_year)
       ZDate.new(ZDate.format_date(new_year, new_month, new_day))
     end
 
     def add_years(number)
       new_year = year + number
-      new_day = get_day_or_max_day_in_month(self.day, self.month, new_year)
-      ZDate.new(ZDate.format_date(new_year, self.month_str, new_day))
+      new_day = get_day_or_max_day_in_month(day, month, new_year)
+      ZDate.new(ZDate.format_date(new_year, month_str, new_day))
     end
 
     # DEPRECATED, change_ methods in ZTime modify self, this was confusing,
@@ -190,7 +198,7 @@ module Nickel
     # returns the first day of the month
     def jump_to_month(month_number)
       # find difference in months
-      if month_number >= self.month
+      if month_number >= month
         ZDate.new(ZDate.format_date(year_str, month_number))
       else
         ZDate.new(ZDate.format_date(year + 1, month_number))
@@ -203,24 +211,24 @@ module Nickel
     end
 
     def end_of_month
-      ZDate.new(ZDate.format_date(year_str, month_str, self.days_in_month))
+      ZDate.new(ZDate.format_date(year_str, month_str, days_in_month))
     end
 
     def beginning_of_next_month
-      o = self.dup
+      o = dup
       o.increment_month!
       o
     end
 
     # sub_ methods return new ZDate object, they do not modify self.
     def sub_days(number)
-      o = self.dup
+      o = dup
       while number > 0
         if (o.day - 1) >= number
           o.date = ZDate.format_date(o.year_str, o.month_str, o.day - number)
           number = 0
         else
-          number = number - o.day
+          number -= o.day
           o.decrement_month!
         end
       end
@@ -228,11 +236,11 @@ module Nickel
     end
 
     def sub_weeks(number)
-      self.sub_days(7 * number)
+      sub_days(7 * number)
     end
 
     def sub_months(number)
-      o = self.dup
+      o = dup
       number.times do
         o.decrement_month!
       end
@@ -243,9 +251,9 @@ module Nickel
     def diff_in_days(date_to_compare)
       # d1 will be the earlier date, d2 the later
       if date_to_compare > self
-        d1, d2 = self.dup, date_to_compare.dup
+        d1, d2 = dup, date_to_compare.dup
       elsif self > date_to_compare
-        d1, d2 = date_to_compare.dup, self.dup
+        d1, d2 = date_to_compare.dup, dup
       else
         return 0  # same date
       end
@@ -260,11 +268,11 @@ module Nickel
     end
 
     def diff_in_days_to_this(closest_day_index)
-       if closest_day_index >= self.dayindex
-         closest_day_index - self.dayindex  # could be 0
-       else   # day_num < self.dayindex
-         7 - (self.dayindex - closest_day_index)
-       end
+      if closest_day_index >= dayindex
+        closest_day_index - dayindex  # could be 0
+      else   # day_num < self.dayindex
+        7 - (dayindex - closest_day_index)
+      end
     end
 
     # We need days_in_months and diff_in_months to be available at the class level as well.
@@ -296,7 +304,7 @@ module Nickel
           diff_in_months = 12 - (month1 - month2)
           year2 -= 1  # this makes the next line nice
         end
-        diff_in_months += (year2 - year1) * 12
+        diff_in_months + (year2 - year1) * 12
       end
 
       def format_year(y)
@@ -313,7 +321,7 @@ module Nickel
       end
 
       # formats the year, month, day into the format expected by the ZDate constructor
-      def format_date(year, month=1, day=1)
+      def format_date(year, month = 1, day = 1)
         format_year(year) + format_month(month) + format_day(day)
       end
 
@@ -349,9 +357,9 @@ module Nickel
       #   d.) 1st 10th
       def interpret(str, current_date)
         day_str, month_str, year_str = nil, nil, nil
-        ambiguous = {:month => false, :year => false}   # assume false, we use this flag if we aren't certain about the year
+        ambiguous = { month: false, year: false }   # assume false, we use this flag if we aren't certain about the year
 
-        #appropriate matches
+        # appropriate matches
         a_d = /^(\d{1,2})(rd|st|nd|th)?$/     # handles cases a and d
         b = /^(\d{1,2})\/(\d{1,2})$/          # handles case b
         c = /^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/   # handles case c
@@ -377,9 +385,9 @@ module Nickel
         if date
           if ambiguous[:year]
             # say the date is 11/1 and someone enters 2/1, they probably mean next year, I pick 4 months as a threshold but that is totally arbitrary
-            current_date.diff_in_months(date) < -4 and date = date.add_years(1)
+            current_date.diff_in_months(date) < -4 && date = date.add_years(1)
           elsif ambiguous[:month]
-            current_date.day > date.day and date = date.add_months(1)
+            current_date.day > date.day && date = date.add_months(1)
           end
         end
         date
@@ -390,70 +398,70 @@ module Nickel
     # if self is nov 14 and date2 is oct 1, will return -1
     def diff_in_months(date2)
       if date2 > self
-        ZDate.diff_in_months(self.month, self.year, date2.month, date2.year)
+        ZDate.diff_in_months(month, year, date2.month, date2.year)
       else
-        ZDate.diff_in_months(date2.month, date2.year, self.month, self.year) * -1
+        ZDate.diff_in_months(date2.month, date2.year, month, year) * -1
       end
     end
 
     def days_in_month
       if leap_year?
-        ZDate.days_in_leap_year_months[self.month - 1]
+        ZDate.days_in_leap_year_months[month - 1]
       else
-        ZDate.days_in_common_year_months[self.month - 1]
+        ZDate.days_in_common_year_months[month - 1]
       end
     end
 
     def days_left_in_month
-      self.days_in_month - self.day
+      days_in_month - day
     end
 
     def months_left_in_year
-      12 - self.month
+      12 - month
     end
 
     def dayname
       # well this is going to be a hack, I need an algo for finding the day
       # Ruby's Time.local is the fastest way to create a Ruby Time object
-      t = ::Time.local(self.year, ZDate.months_of_year[self.month - 1], self.day)
-      t.strftime("%a").downcase
+      t = ::Time.local(year, ZDate.months_of_year[month - 1], day)
+      t.strftime('%a').downcase
     end
 
     def dayindex
-      ZDate.days_of_week.index(self.dayname)
+      ZDate.days_of_week.index(dayname)
     end
 
     def full_dayname
-      ZDate.full_days_of_week[self.dayindex]
+      ZDate.full_days_of_week[dayindex]
     end
 
     def full_monthname
-      Z.full_months_of_year[self.month - 1]
+      Z.full_months_of_year[month - 1]
     end
 
     def leap_year?
-      self.year % 400 == 0 || self.year % 4 == 0 && self.year % 100 != 0
+      year % 400 == 0 || year % 4 == 0 && year % 100 != 0
     end
 
     def day_of_year
-      doy = self.day
+      doy = day
       # iterate through days in months arrays, summing up the days
       if leap_year?
-        doy = (1...self.month).to_a.inject(doy) {|sum, n| sum += ZDate.days_in_leap_year_months[n-1]}
+        doy = (1...month).to_a.reduce(doy) { |sum, n| sum + ZDate.days_in_leap_year_months[n - 1] }
       else
-        doy = (1...self.month).to_a.inject(doy) {|sum, n| sum += ZDate.days_in_common_year_months[n-1]}
+        doy = (1...month).to_a.reduce(doy) { |sum, n| sum + ZDate.days_in_common_year_months[n - 1] }
       end
       doy
     end
 
     def days_left_in_year
-      leap_year? ? 366 - self.day_of_year : 365 - self.day_of_year
+      leap_year? ? 366 - day_of_year : 365 - day_of_year
     end
 
     def get_date_from_day_and_week_of_month(day_num, week_num)
       # This method is extremely sloppy, clean it up
       # Get the index of the first day of this month
-      first_day_of_month = self.beginning_of_month
+      first_day_of_month = beginning_of_month
       first_day_index = first_day_of_month.dayindex
 
       diff_in_days_to_first_occ = first_day_of_month.diff_in_days_to_this(day_num)
@@ -466,16 +474,16 @@ module Nickel
       end
 
       # there is a chance that the last occurrence is not the 4th week of the month; if that is the case, add an extra 7 days
-      if (week_num == -1) && (self.month == self.beginning_of_month.add_days(total_diff_in_days + 7).month)
+      if (week_num == -1) && (month == beginning_of_month.add_days(total_diff_in_days + 7).month)
         total_diff_in_days += 7
       end
 
       # Now we have the number of days FROM THE START OF THE CURRENT MONTH; if we are not past that date, then we have found the first occurrence
-      if (total_diff_in_days + 1) >= self.day
-        return self.beginning_of_month.add_days(total_diff_in_days)
+      if (total_diff_in_days + 1) >= day
+        return beginning_of_month.add_days(total_diff_in_days)
       else # We have already past the date; calculate the occurrence next month!
         # Get the index of the first day next month
-        first_day_index = self.add_months(1).beginning_of_month.dayindex
+        first_day_index = add_months(1).beginning_of_month.dayindex
 
         # Find the number of days away to the day of interest (NOT the week)
         if day_num > first_day_index
@@ -494,17 +502,17 @@ module Nickel
         end
 
         # there is a chance that the last occurrence is not the 4th week of the month; if that is the case, add an extra 7 days
-        if (week_num == -1) && (self.add_months(1).month == self.add_months(1).beginning_of_month.add_days(total_diff_in_days + 7).month)
+        if (week_num == -1) && (add_months(1).month == add_months(1).beginning_of_month.add_days(total_diff_in_days + 7).month)
           total_diff_in_days += 7
         end
 
-        return self.add_months(1).beginning_of_month.add_days(total_diff_in_days)
+        return add_months(1).beginning_of_month.add_days(total_diff_in_days)
       end # END if (total_diff_in_days + 1) ...
     end
 
     # returns a new ZDate object, NOTE! this returns nil if that date does not exist (sept 31st)
     def get_next_date_from_date_of_month(date_of_month)
-      o = self.dup
+      o = dup
       if day == date_of_month
         o
       else
@@ -524,6 +532,7 @@ module Nickel
     end
 
     protected
+
     # Modifies self.
     # bumps self to first day of next month
     def increment_month!
@@ -546,16 +555,16 @@ module Nickel
 
     private
 
-    def before?(d2)
-      (year < d2.year) || (year == d2.year && (month < d2.month || (month == d2.month && day < d2.day)))
+    def before?(other)
+      (year < other.year) || (year == other.year && (month < other.month || (month == other.month && day < other.day)))
     end
 
-    def after?(d2)
-      (year > d2.year) || (year == d2.year && (month > d2.month || (month == d2.month && day > d2.day)))
+    def after?(other)
+      (year > other.year) || (year == other.year && (month > other.month || (month == other.month && day > other.day)))
     end
 
     def validate
-      raise "ZDate says: invalid date" if !valid
+      fail 'ZDate says: invalid date' unless valid
     end
 
     def valid
@@ -568,11 +577,11 @@ module Nickel
     end
 
     def valid_month
-      month >= 1 and month <= 12
+      month >= 1 && month <= 12
     end
 
     def valid_day
-      day >= 1 and day <= days_in_month
+      day >= 1 && day <= days_in_month
     end
 
     def get_day_or_max_day_in_month(day, month, year)

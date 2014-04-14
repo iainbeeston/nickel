@@ -1,7 +1,6 @@
 require 'time'
 
 module Nickel
-
   class ZTime
     include Comparable
 
@@ -11,10 +10,12 @@ module Nickel
     # \@time is always stored on 24 hour clock, but we could initialize a Time object with ZTime.new("1020", :pm)
     # we will convert this to 24 hour clock and set \@firm = true
     def initialize(hhmmss = nil, am_pm = nil)
-      t = hhmmss ? hhmmss : ::Time.new.strftime("%H%M%S")
-      t.gsub!(/:/,'') # remove any hyphens, so a user can initialize with something like "2008-10-23"
+      t = hhmmss ? hhmmss : ::Time.new.strftime('%H%M%S')
+      t.gsub!(/:/, '') # remove any hyphens, so a user can initialize with something like "2008-10-23"
       self.time = t
-      if am_pm then adjust_for(am_pm) end
+      if am_pm
+        adjust_for(am_pm)
+      end
     end
 
     def time
@@ -33,7 +34,7 @@ module Nickel
 
     # @deprecated Please use {#min_str} instead
     def minute_str
-      warn "[DEPRECATION] `minute_str` is deprecated.  Please use `min_str` instead."
+      warn '[DEPRECATION] `minute_str` is deprecated.  Please use `min_str` instead.'
       min_str
     end
 
@@ -43,7 +44,7 @@ module Nickel
 
     # @deprecated Please use {#sec_str} instead
     def second_str
-      warn "[DEPRECATION] `second_str` is deprecated.  Please use `sec_str` instead."
+      warn '[DEPRECATION] `second_str` is deprecated.  Please use `sec_str` instead.'
       sec_str
     end
 
@@ -57,7 +58,7 @@ module Nickel
 
     # @deprecated Please use {#min} instead
     def minute
-      warn "[DEPRECATION] `minute` is deprecated.  Please use `min` instead."
+      warn '[DEPRECATION] `minute` is deprecated.  Please use `min` instead.'
       min
     end
 
@@ -67,7 +68,7 @@ module Nickel
 
     # @deprecated Please use {#sec} instead
     def second
-      warn "[DEPRECATION] `second` is deprecated.  Please use `sec` instead."
+      warn '[DEPRECATION] `second` is deprecated.  Please use `sec` instead.'
       sec
     end
 
@@ -82,24 +83,23 @@ module Nickel
     def add_minutes(number, &block)
       # new minute is going to be (current minute + number) % 60
       # number of hours to add is (current minute + number) / 60
-      hours_to_add = (self.min + number) / 60
+      hours_to_add = (min + number) / 60
       # note add_hours returns a new time object
       if block_given?
-        o = self.add_hours(hours_to_add, &block)
+        o = add_hours(hours_to_add, &block)
       else
-        o = self.add_hours(hours_to_add)
+        o = add_hours(hours_to_add)
       end
       o.change_minute_to((o.min + number) % 60)  # modifies self
     end
 
     def add_hours(number, &block)
-      o = self.dup
+      o = dup
       if block_given?
         yield((o.hour + number) / 24)
       end
       o.change_hour_to((o.hour + number) % 24)
     end
-
 
     # NOTE: change_ methods modify self.
     def change_hour_to(h)
@@ -118,11 +118,11 @@ module Nickel
     end
 
     def readable
-      @time[0..1] + ":" + @time[2..3] + ":" + @time[4..5]
+      @time[0..1] + ':' + @time[2..3] + ':' + @time[4..5]
     end
 
     def readable_12hr
-      hour_on_12hr_clock + ":" + @time[2..3] + " #{am_pm}"
+      hour_on_12hr_clock + ':' + @time[2..3] + " #{am_pm}"
     end
 
     def hour_on_12hr_clock
@@ -132,19 +132,24 @@ module Nickel
     end
 
     def is_am?
+      warn '[DEPRECATION] `is_am?` is deprecated.  Please use `am?` instead.'
+      am?
+    end
+
+    def am?
       hour < 12   # 0 through 11 on 24hr clock
     end
 
     def am_pm
-      is_am? ? "am" : "pm"
+      am? ? 'am' : 'pm'
     end
 
-    def <=>(t2)
-      return nil unless [:hour, :min, :sec].all?{|m| t2.respond_to?(m)}
+    def <=>(other)
+      return nil unless [:hour, :min, :sec].all? { |m| other.respond_to?(m) }
 
-      if before?(t2)
+      if before?(other)
         -1
-      elsif after?(t2)
+      elsif after?(other)
         1
       else
         0
@@ -160,13 +165,12 @@ module Nickel
     end
 
     class << self
-
       # send an array of ZTime objects, this will make a guess at whether they should be am/pm if the user did not specify
       # NOTE ORDER IS IMPORTANT: times[0] is assumed to be BEFORE times[1]
       def am_pm_modifier(*time_array)
         # find firm time indices
         firm_time_indices = []
-        time_array.each_with_index {|t,i| firm_time_indices << i if t.firm}
+        time_array.each_with_index { |t, i| firm_time_indices << i if t.firm }
 
         if firm_time_indices.empty?
           # pure guess
@@ -174,22 +178,22 @@ module Nickel
           time_array.each_index do |i|
             # user gave us nothing
             next if i == 0
-            time_array[i].guess_modify_such_that_is_after(time_array[i-1])
+            time_array[i].guess_modify_such_that_is_after(time_array[i - 1])
           end
         else
           # first handle soft times up to first firm time
           min_boundary = 0
           max_boundary = firm_time_indices[0]
           (min_boundary...max_boundary).to_a.reverse.each do |i|      # this says, iterate backwards starting from max_boundary, but not including it, until the min boundary
-            time_array[i].modify_such_that_is_before(time_array[i+1])
+            time_array[i].modify_such_that_is_before(time_array[i + 1])
           end
 
           firm_time_indices.each_index do |j|
             # now handle all times after first firm time until the next firm time
             min_boundary = firm_time_indices[j]
-            max_boundary = firm_time_indices[j+1] || time_array.size
+            max_boundary = firm_time_indices[j + 1] || time_array.size
             (min_boundary + 1...max_boundary).each do |i|     # any boundary problems here? What if there is only 1 time?  Nope.
-              time_array[i].modify_such_that_is_after(time_array[i-1])
+              time_array[i].modify_such_that_is_after(time_array[i - 1])
             end
           end
         end
@@ -217,7 +221,7 @@ module Nickel
       end
 
       # formats the hours, minutes and seconds into the format expected by the ZTime constructor
-      def format_time(hours, minutes=0, seconds=0)
+      def format_time(hours, minutes = 0, seconds = 0)
         format_hour(hours) + format_minute(minutes) + format_second(seconds)
       end
 
@@ -239,7 +243,7 @@ module Nickel
           if mdata[1].length <= 2
             # e.g. "11" means 11:00
             hstr = mdata[1]
-            mstr = "0"
+            mstr = '0'
           elsif mdata[1].length == 3
             # e.g. "530" means 5:30
             hstr = mdata[1][0..0]
@@ -263,8 +267,8 @@ module Nickel
 
     # this can very easily be cleaned up
     def modify_such_that_is_before(time2)
-      raise "ZTime#modify_such_that_is_before says: trying to modify time that has @firm set" if @firm
-      raise "ZTime#modify_such_that_is_before says: time2 does not have @firm set" if !time2.firm
+      fail 'ZTime#modify_such_that_is_before says: trying to modify time that has @firm set' if @firm
+      fail 'ZTime#modify_such_that_is_before says: time2 does not have @firm set' unless time2.firm
       # self cannot have @firm set, so all hours will be between 1 and 12
       # time2 is an end time, self could be its current setting, or off by 12 hours
 
@@ -274,30 +278,30 @@ module Nickel
       # 1220 to 12am  --> 1220 to 0000
       # 11 to 2am  or 1100 to 0200
       if self > time2
-        if self.hour == 12 && time2.hour == 0
+        if hour == 12 && time2.hour == 0
           # do nothing
         else
-          self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
+          hour == 12 ? change_hour_to(0) : change_hour_to(hour + 12)
         end
       elsif self < time2
         if time2.hour >= 12 && ZTime.new(ZTime.format_time(time2.hour - 12, time2.min_str, time2.sec_str)) > self
           # 4 to 5pm  or 0400 to 1700
-          change_hour_to(self.hour + 12)
+          change_hour_to(hour + 12)
         else
           # 4 to 1pm  or 0400 to 1300
           # do nothing
         end
       else
         # the times are equal, and self can only be between 0100 and 1200, so move self forward 12 hours, unless hour is 12
-        self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
+        hour == 12 ? change_hour_to(0) : change_hour_to(hour + 12)
       end
       self.firm = true
       self
     end
 
     def modify_such_that_is_after(time1)
-      raise "ZTime#modify_such_that_is_after says: trying to modify time that has @firm set" if @firm
-      raise "ZTime#modify_such_that_is_after says: time1 does not have @firm set" if !time1.firm
+      fail 'ZTime#modify_such_that_is_after says: trying to modify time that has @firm set' if @firm
+      fail 'ZTime#modify_such_that_is_after says: time1 does not have @firm set' unless time1.firm
       # time1 to self --> time1 to self
       # 8pm   to 835  --> 2000 to 835
       # 835pm to 835  --> 2035 to 835
@@ -307,7 +311,7 @@ module Nickel
       # 930pm  to 5 --->  2130 to 0500
       if self < time1
         unless time1.hour >= 12 && ZTime.new(ZTime.format_time(time1.hour - 12, time1.min_str, time1.sec_str)) >= self
-          self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
+          hour == 12 ? change_hour_to(0) : change_hour_to(hour + 12)
         end
       elsif self > time1
         # # time1 to self --> time1 to self
@@ -320,7 +324,7 @@ module Nickel
         # end
       else
         # the times are equal, and self can only be between 0100 and 1200, so move self forward 12 hours, unless hour is 12
-        self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
+        hour == 12 ? change_hour_to(0) : change_hour_to(hour + 12)
       end
       self.firm = true
       self
@@ -335,18 +339,18 @@ module Nickel
       # 12 to 6   --->   1200 to 0600
       if time1 >= self
         # crossed boundary at noon
-        self.hour == 12 ? change_hour_to(0) : change_hour_to(self.hour + 12)
+        hour == 12 ? change_hour_to(0) : change_hour_to(hour + 12)
       end
     end
 
     private
 
-    def before?(t2)
-      (hour < t2.hour) || (hour == t2.hour && (min < t2.min || (min == t2.min && sec < t2.sec)))
+    def before?(other)
+      (hour < other.hour) || (hour == other.hour && (min < other.min || (min == other.min && sec < other.sec)))
     end
 
-    def after?(t2)
-      (hour > t2.hour) || (hour == t2.hour && (min > t2.min || (min == t2.min && sec > t2.sec)))
+    def after?(other)
+      (hour > other.hour) || (hour == other.hour && (min > other.min || (min == other.min && sec > other.sec)))
     end
 
     def adjust_for(am_pm)
@@ -354,19 +358,19 @@ module Nickel
       # perform validation on the new time.  That won't catch something like this though:  ZTime.new("2215", :am)
       # so we will check for that here.
       # If user is providing :am or :pm, the hour must be between 1 and 12
-      raise "ZTime#adjust_for says: you specified am or pm with 1 > hour > 12" unless hour >= 1 && hour <= 12
+      fail 'ZTime#adjust_for says: you specified am or pm with 1 > hour > 12' unless hour >= 1 && hour <= 12
       if am_pm == :am || am_pm == 'am'
-        change_hour_to(ZTime.am_to_24hr(self.hour))
+        change_hour_to(ZTime.am_to_24hr(hour))
       elsif am_pm == :pm || am_pm == 'pm'
-        change_hour_to(ZTime.pm_to_24hr(self.hour))
+        change_hour_to(ZTime.pm_to_24hr(hour))
       else
-        raise "ZTime#adjust_for says: you passed an invalid value for am_pm, use :am or :pm"
+        fail 'ZTime#adjust_for says: you passed an invalid value for am_pm, use :am or :pm'
       end
       @firm = true
     end
 
     def validate
-      raise "ZTime#validate says: invalid time" unless valid
+      fail 'ZTime#validate says: invalid time' unless valid
     end
 
     def valid
@@ -374,23 +378,23 @@ module Nickel
     end
 
     def valid_hour
-      hour >= 0 and hour < 24
+      hour >= 0 && hour < 24
     end
 
     def valid_minute
-      min >= 0 and min < 60
+      min >= 0 && min < 60
     end
 
     def valid_second
-      sec >= 0 and sec < 60
+      sec >= 0 && sec < 60
     end
 
     def lazy(s)
       # someone isn't following directions, but we will let it slide
       s.length == 1 && s = "0#{s}0000"        # only provided h
-      s.length == 2 && s << "0000"            # only provided hh
-      s.length == 4 && s << "00"              # only provided hhmm
-      return s
+      s.length == 2 && s << '0000'            # only provided hh
+      s.length == 4 && s << '00'              # only provided hhmm
+      s
     end
   end
 end

@@ -1,24 +1,23 @@
 module Nickel
-
   # Some notes about this class, type can take the following values:
   # :single, :daily, :weekly, :daymonthly, :datemonthly,
   Occurrence = Struct.new(:type, :start_date, :end_date, :start_time, :end_time, :interval, :day_of_week, :week_of_month, :date_of_month) do
 
     def initialize(h)
-      h.each { |k,v| send("#{k}=", v) }
+      h.each { |k, v| send("#{k}=", v) }
     end
 
     def inspect
-      "#<Occurrence " + members.select{|m| self[m]}.map{|m| %(#{m}: #{self[m]})}.join(", ") + ">"
+      '#<Occurrence ' + members.select { |m| self[m] }.map { |m| %(#{m}: #{self[m]}) }.join(', ') + '>'
     end
 
     def finalize(cur_date)
       cur_date = start_date unless start_date.nil?
       case type
-        when :daily then finalize_daily(cur_date)
-        when :weekly then finalize_weekly(cur_date)
-        when :datemonthly then finalize_datemonthly(cur_date)
-        when :daymonthly then finalize_daymonthly(cur_date)
+      when :daily then finalize_daily(cur_date)
+      when :weekly then finalize_weekly(cur_date)
+      when :datemonthly then finalize_datemonthly(cur_date)
+      when :daymonthly then finalize_daymonthly(cur_date)
       end
     end
 
@@ -33,7 +32,7 @@ module Nickel
       # starting DATE"; we want to find the first occurrence after DATE
       self.start_date = cur_date.this(day_of_week)
 
-      if !end_date.nil?
+      unless end_date.nil?
         # find the real end date, if someone says "every monday until
         # dec 1"; find the actual last occurrence
         self.end_date = end_date.prev(day_of_week)
