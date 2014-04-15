@@ -6,3 +6,5 @@ rvm:
   - 1.9
   - jruby
   - rbx
+branches:
+  only: master
