@@ -1,6 +1,6 @@
-if ENV['TRAVIS'] && ENV['COVERALLS'] && RUBY_ENGINE == 'ruby'
-  require 'coveralls'
-  Coveralls.wear!
+if ENV['TRAVIS'] && ENV['TEST_COVERAGE'] && RUBY_ENGINE == 'ruby'
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
 end
 
 RSpec.configure do |config|
