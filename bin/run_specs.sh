@@ -11,4 +11,4 @@ function run_specs_one_by_one {
 
 run_specs_one_by_one
 
-COVERALLS=true rspec --warnings
+TEST_COVERAGE=true rspec --warnings

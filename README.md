@@ -5,6 +5,7 @@ Nickel
 [![Build Status](http://img.shields.io/travis/iainbeeston/nickel/master.svg)](https://travis-ci.org/iainbeeston/nickel)
 [![Coverage Status](http://img.shields.io/coveralls/iainbeeston/nickel/master.svg)](https://coveralls.io/r/iainbeeston/nickel)
 [![Code Climate](http://img.shields.io/codeclimate/github/iainbeeston/nickel.svg)](https://codeclimate.com/github/iainbeeston/nickel)
+[![Coverage Status](http://img.shields.io/codeclimate/coverage/github/iainbeeston/nickel.svg)](https://codeclimate.com/github/iainbeeston/nickel)
 
 Nickel extracts date, time, and message information from naturally worded text.
 
