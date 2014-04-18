@@ -2189,6 +2189,12 @@ describe Nickel do
       let(:query) { 'tomorrow anytime' }
       let(:run_date) { Time.local(2014, 4, 18) }
 
+      describe '#message' do
+        it 'is empty' do
+          expect(n.message).to be_empty
+        end
+      end
+
       describe '#occurrences' do
         it 'is tomorrow' do
           expect(n.occurrences).to match_array [
@@ -2201,6 +2207,12 @@ describe Nickel do
     context "when the query is 'all day tomorrow'" do
       let(:query) { 'all day tomorrow' }
       let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it 'is empty' do
+          expect(n.message).to be_empty
+        end
+      end
 
       describe '#occurrences' do
         it 'is tomorrow' do

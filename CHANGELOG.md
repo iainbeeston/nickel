@@ -1,3 +1,7 @@
+0.1.5
+-----
+* Better bugfix for queries containing "anytime"
+
 0.1.4
 -----
 * Bugfix for queries containing "anytime"

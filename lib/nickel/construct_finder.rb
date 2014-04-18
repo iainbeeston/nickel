@@ -1011,7 +1011,7 @@ module Nickel
     end
 
     def found_all_day
-#      @constructs << TimeConstruct.new(time: nil, comp_start: @pos, comp_end: @pos += 1, found_in: __method__)
+      @constructs << Construct.new(comp_start: @pos, comp_end: @pos += 1, found_in: __method__)
     end
 
     def match_tomorrow
