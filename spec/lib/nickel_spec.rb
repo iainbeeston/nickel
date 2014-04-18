@@ -968,12 +968,13 @@ describe Nickel do
       end
     end
 
-    context "when the query is '6 days from tomorrow'", broken: true do
+    context "when the query is '6 days from tomorrow'", :broken do
       let(:query) { '6 days from tomorrow' }
       let(:run_date) { Time.local(2014, 2, 12) }
 
       describe '#occurrences' do
         it 'is 7 days from now' do
+          # returns only tomorrow, with the message '6 days'
           expect(n.occurrences).to match_array [
             Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140218'))
           ]
@@ -1360,13 +1361,13 @@ describe Nickel do
       end
     end
 
-    context "when the query is 'every monday at 2pm and wednesday at 4pm'", broken: true do
-      # FIXME: this spec should have two occurrences
+    context "when the query is 'every monday at 2pm and wednesday at 4pm'", :broken do
       let(:query) { 'every monday at 2pm and wednesday at 4pm' }
       let(:run_date) { Time.local(2008, 9, 18) }
 
       describe '#occurrences' do
         it 'is every Monday at 2:00pm and every Wednesday at 4:00pm' do
+          # returns only monday at 2pm
           expect(n.occurrences).to match_array [
             Nickel::Occurrence.new(type: :weekly, day_of_week: 0, interval: 1, start_date: Nickel::ZDate.new('20080922'), start_time: Nickel::ZTime.new('14')),
             Nickel::Occurrence.new(type: :weekly, day_of_week: 2, interval: 1, start_date: Nickel::ZDate.new('20080924'), start_time: Nickel::ZTime.new('16'))
@@ -1930,6 +1931,315 @@ describe Nickel do
               Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140225'))
             ]
           end
+        end
+      end
+    end
+
+    context "when the query is 'meeting with Jimmy at 7am'", :broken do
+      let(:query) { 'meeting with Jimmy at 7am' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'meeting with Jimmy'" do
+          expect(n.message).to eq 'meeting with Jimmy'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 7am today' do
+          # returns no occurrences at all
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'), start_time: Nickel::ZTime.new('7'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'meeting at 8 o'clock'", :broken do
+      let(:query) { "meeting at 8 o'clock" }
+      let(:run_date) { Time.local(2014, 4, 18, 12, 0) }
+
+      describe '#message' do
+        it "is 'meeting'" do
+          expect(n.message).to eq 'meeting'
+        end
+      end
+
+      describe '#occurrences' do
+        it "is the next 8 o'clock" do
+          # returns no occurrences
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'), start_time: Nickel::ZTime.new('20'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let's do it today'", :broken do
+      let(:query) { "let's do it today" }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'let's do it'" do
+          # returns "lets do it" (no apostrophe)
+          expect(n.message).to eq "let's do it"
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is today' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let us do it today'" do
+      let(:query) { 'let us do it today' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'let us do it'" do
+          expect(n.message).to eq "let us do it"
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is today' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let us do it today!'", :broken do
+      let(:query) { 'let us do it today!' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'let us do it!'" do
+          # returns "let us do it today!"
+          expect(n.message).to eq 'let us do it!'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is today' do
+          # returns no occurrences
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow morning'", :broken do
+      let(:query) { 'tomorrow morning' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 3am to 12pm tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('3'), end_time: Nickel::ZTime.new('12'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow afternoon'", :broken do
+      let(:query) { 'tomorrow afternoon' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 12pm to 6pm tomorrow' do
+          # returns tomorrow at 12pm
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('12'), end_time: Nickel::ZTime.new('18'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow evening'", :broken do
+      let(:query) { 'tomorrow evening' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 6pm to 9pm tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('18'), end_time: Nickel::ZTime.new('21'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow night'", :broken do
+      let(:query) { 'tomorrow night' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 9pm tomorrow to 3am the day after tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('9'), end_date: Nickel::ZDate.new('20140420'), end_time: Nickel::ZTime.new('3'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let us go dancing at 3 in the morning'", :broken do
+      let(:query) { 'let us go dancing at 3 in the morning' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'let us go dancing'" do
+          expect(n.message).to eq 'let us go dancing'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 3am' do
+          # returns no occurrences
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('3'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let us go dancing on 12/07/2014'" do
+      let(:query) { 'let us go dancing on 12/07/2014' }
+
+      describe '#message' do
+        it "is 'let us go dancing'" do
+          expect(n.message).to eq 'let us go dancing'
+
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 7th of December 2014' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141207'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'every sunday until 2015", :broken do
+      let(:query) { 'every sunday until 2015' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'every sunday until the last sunday of 2014' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :weekly, interval: 1, day_of_week: 6, start_date: Nickel::ZDate.new('20140420'), end_date: Nickel::ZDate.new('20141228'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'give me two cents in 5 minutes'", :broken do
+      let(:query) { 'give me two cents in 5 minutes' }
+      let(:run_date) { Time.local(2014, 4, 18, 12, 0) }
+
+      describe '#message' do
+        it "is 'give me two cents'" do
+          # returns give me cents
+          expect(n.message).to eq 'give me two cents'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 12:05pm' do
+          # returns 2am
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'), start_time: Nickel::ZTime.new('1205'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'give me two cents in 3 days'", :broken do
+      let(:query) { 'give me two cents in 3 days' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'give me two cents'" do
+          # returns give me cents
+          expect(n.message).to eq 'give me two cents'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is two days from now' do
+          # returns 2am 3 days from now
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140421'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow anytime'" do
+      let(:query) { 'tomorrow anytime' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is tomorrow' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'all day tomorrow'" do
+      let(:query) { 'all day tomorrow' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is tomorrow' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'job search apply at virgin intergalactic'" do
+      let(:query) { 'job search apply at virgin intergalactic' }
+
+      describe '#message' do
+        it "is 'job search apply at virgin intergalactic'" do
+          expect(n.message).to eq 'job search apply at virgin intergalactic'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is an empty array' do
+          expect(n.occurrences).to be_empty
+        end
+      end
+    end
+
+    context "when the query is 'job search - apply at virgin intergalactic'", :broken do
+      let(:query) { 'job search - apply at virgin intergalactic' }
+
+      describe '#message' do
+        it "is 'job search - apply at virgin intergalactic'" do
+          expect(n.message).to eq 'job search - apply at virgin intergalactic'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is an empty array' do
+          # returns every day from today
+          expect(n.occurrences).to be_empty
         end
       end
     end
