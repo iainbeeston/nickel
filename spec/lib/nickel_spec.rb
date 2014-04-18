@@ -2210,5 +2210,38 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'job search apply at virgin intergalactic'" do
+      let(:query) { 'job search apply at virgin intergalactic' }
+
+      describe '#message' do
+        it "is 'job search apply at virgin intergalactic'" do
+          expect(n.message).to eq 'job search apply at virgin intergalactic'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is an empty array' do
+          expect(n.occurrences).to be_empty
+        end
+      end
+    end
+
+    context "when the query is 'job search - apply at virgin intergalactic'", :broken do
+      let(:query) { 'job search - apply at virgin intergalactic' }
+
+      describe '#message' do
+        it "is 'job search - apply at virgin intergalactic'" do
+          expect(n.message).to eq 'job search - apply at virgin intergalactic'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is an empty array' do
+          # returns every day from today
+          expect(n.occurrences).to be_empty
+        end
+      end
+    end
   end
 end
