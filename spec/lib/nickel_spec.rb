@@ -2142,5 +2142,47 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'give me two cents in 5 minutes'", :broken do
+      let(:query) { 'give me two cents in 5 minutes' }
+      let(:run_date) { Time.local(2014, 4, 18, 12, 0) }
+
+      describe '#message' do
+        it "is 'give me two cents'" do
+          # returns give me cents
+          expect(n.message).to eq 'give me two cents'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 12:05pm' do
+          # returns 2am
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'), start_time: Nickel::ZTime.new('1205'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'give me two cents in 3 days'", :broken do
+      let(:query) { 'give me two cents in 3 days' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'give me two cents'" do
+          # returns give me cents
+          expect(n.message).to eq 'give me two cents'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is two days from now' do
+          # returns 2am 3 days from now
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140421'))
+          ]
+        end
+      end
+    end
   end
 end
