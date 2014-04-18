@@ -2090,5 +2090,44 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'let us go dancing at 3 in the morning'", :broken do
+      let(:query) { 'let us go dancing at 3 in the morning' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#message' do
+        it "is 'let us go dancing'" do
+          expect(n.message).to eq 'let us go dancing'
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 3am' do
+          # returns no occurrences
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('3'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'let us go dancing on 12/07/2014'" do
+      let(:query) { 'let us go dancing on 12/07/2014' }
+
+      describe '#message' do
+        it "is 'let us go dancing'" do
+          expect(n.message).to eq 'let us go dancing'
+
+        end
+      end
+
+      describe '#occurrences' do
+        it 'is 7th of December 2014' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141207'))
+          ]
+        end
+      end
+    end
   end
 end
