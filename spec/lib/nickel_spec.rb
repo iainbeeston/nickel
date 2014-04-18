@@ -2184,5 +2184,31 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'tomorrow anytime'" do
+      let(:query) { 'tomorrow anytime' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is tomorrow' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'all day tomorrow'" do
+      let(:query) { 'all day tomorrow' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is tomorrow' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'))
+          ]
+        end
+      end
+    end
   end
 end
