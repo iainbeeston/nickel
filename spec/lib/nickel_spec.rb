@@ -2129,5 +2129,18 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'every sunday until 2015", :broken do
+      let(:query) { 'every sunday until 2015' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'every sunday until the last sunday of 2014' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :weekly, interval: 1, day_of_week: 6, start_date: Nickel::ZDate.new('20140420'), end_date: Nickel::ZDate.new('20141228'))
+          ]
+        end
+      end
+    end
   end
 end
