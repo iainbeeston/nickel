@@ -974,6 +974,7 @@ describe Nickel do
 
       describe '#occurrences' do
         it 'is 7 days from now' do
+          # returns only tomorrow, with the message '6 days'
           expect(n.occurrences).to match_array [
             Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140218'))
           ]
@@ -1361,12 +1362,12 @@ describe Nickel do
     end
 
     context "when the query is 'every monday at 2pm and wednesday at 4pm'", broken: true do
-      # FIXME: this spec should have two occurrences
       let(:query) { 'every monday at 2pm and wednesday at 4pm' }
       let(:run_date) { Time.local(2008, 9, 18) }
 
       describe '#occurrences' do
         it 'is every Monday at 2:00pm and every Wednesday at 4:00pm' do
+          # returns only monday at 2pm
           expect(n.occurrences).to match_array [
             Nickel::Occurrence.new(type: :weekly, day_of_week: 0, interval: 1, start_date: Nickel::ZDate.new('20080922'), start_time: Nickel::ZTime.new('14')),
             Nickel::Occurrence.new(type: :weekly, day_of_week: 2, interval: 1, start_date: Nickel::ZDate.new('20080924'), start_time: Nickel::ZTime.new('16'))
