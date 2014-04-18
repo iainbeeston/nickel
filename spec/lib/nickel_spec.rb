@@ -2014,5 +2014,61 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'tomorrow morning'", :broken do
+      let(:query) { 'tomorrow morning' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 3am to 12pm tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('3'), end_time: Nickel::ZTime.new('12'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow afternoon'", :broken do
+      let(:query) { 'tomorrow afternoon' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 12pm to 6pm tomorrow' do
+          # returns tomorrow at 12pm
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('12'), end_time: Nickel::ZTime.new('18'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow evening'", :broken do
+      let(:query) { 'tomorrow evening' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 6pm to 9pm tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('18'), end_time: Nickel::ZTime.new('21'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'tomorrow night'", :broken do
+      let(:query) { 'tomorrow night' }
+      let(:run_date) { Time.local(2014, 4, 18) }
+
+      describe '#occurrences' do
+        it 'is 9pm tomorrow to 3am the day after tomorrow' do
+          # returns tomorrow
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140419'), start_time: Nickel::ZTime.new('9'), end_date: Nickel::ZDate.new('20140420'), end_time: Nickel::ZTime.new('3'))
+          ]
+        end
+      end
+    end
   end
 end
