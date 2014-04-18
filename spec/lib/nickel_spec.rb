@@ -968,7 +968,7 @@ describe Nickel do
       end
     end
 
-    context "when the query is '6 days from tomorrow'", broken: true do
+    context "when the query is '6 days from tomorrow'", :broken do
       let(:query) { '6 days from tomorrow' }
       let(:run_date) { Time.local(2014, 2, 12) }
 
@@ -1361,7 +1361,7 @@ describe Nickel do
       end
     end
 
-    context "when the query is 'every monday at 2pm and wednesday at 4pm'", broken: true do
+    context "when the query is 'every monday at 2pm and wednesday at 4pm'", :broken do
       let(:query) { 'every monday at 2pm and wednesday at 4pm' }
       let(:run_date) { Time.local(2008, 9, 18) }
 
