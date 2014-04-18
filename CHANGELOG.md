@@ -1,3 +1,7 @@
+0.1.4
+-----
+* Bugfix for queries containing "anytime"
+
 0.1.3
 -----
 * Bugfix for "cannot load such file -- nickel/version"
