@@ -1,3 +1,7 @@
+0.1.3
+-----
+* Bugfix for "cannot load such file -- nickel/version"
+
 0.1.2
 -----
 * Deprecated ZDate#is_today?, ZTime#is_am? and RecurrenceConstruct#get_interval

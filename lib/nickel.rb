@@ -4,8 +4,8 @@
 #
 # The second term is optional.
 
-require 'nickel/version'
-require 'nickel/nlp'
+require_relative 'nickel/version'
+require_relative 'nickel/nlp'
 
 module Nickel
   class << self
