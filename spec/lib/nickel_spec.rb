@@ -1955,6 +1955,26 @@ describe Nickel do
       end
     end
 
+    context "when the query is 'meeting at 8 o'clock'", :broken do
+      let(:query) { "meeting at 8 o'clock" }
+      let(:run_date) { Time.local(2014, 4, 18, 12, 0) }
+
+      describe '#message' do
+        it "is 'meeting'" do
+          expect(n.message).to eq 'meeting'
+        end
+      end
+
+      describe '#occurrences' do
+        it "is the next 8 o'clock" do
+          # returns no occurrences
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20140418'), start_time: Nickel::ZTime.new('20'))
+          ]
+        end
+      end
+    end
+
     context "when the query is 'let's do it today'", :broken do
       let(:query) { "let's do it today" }
       let(:run_date) { Time.local(2014, 4, 18) }
