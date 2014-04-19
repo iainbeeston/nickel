@@ -6,6 +6,9 @@ module Nickel
     end
   end
 
+  class NullConstruct < Construct
+  end
+
   class DateConstruct < Construct
     attr_accessor :date
     def interpret
