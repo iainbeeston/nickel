@@ -12,7 +12,7 @@ module Nickel
     attr_reader :occurrences, :message
 
     def initialize(query, date_time = Time.now)
-      fail InvalidDateTimeError unless [DateTime, Time].include?(date_time.class)
+      fail InvalidDateTimeError unless date_time.respond_to?(:strftime)
       str_time = date_time.strftime('%Y%m%dT%H%M%S')
       validate_input query, str_time
       @query = query.dup
@@ -100,7 +100,7 @@ module Nickel
 
   class InvalidDateTimeError < StandardError
     def message
-      'You must pass in a ruby DateTime or Time class object'
+      'You must pass in an instance of DateTime, Time or ActiveSupport::TimeWithZone'
     end
   end
 end
