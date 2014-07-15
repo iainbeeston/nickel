@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.authors            = ["Lou Zell", "Iain Beeston"]
 
   s.files              = `git ls-files`.split($/)
-  s.test_files         = s.files.grep(%r{^(test|spec)/})
+  s.test_files         = s.files.grep(%r{^spec/})
   s.require_paths      = ["lib"]
 
   if RUBY_ENGINE == 'rbx'
