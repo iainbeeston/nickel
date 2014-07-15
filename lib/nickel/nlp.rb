@@ -12,7 +12,6 @@ module Nickel
     attr_reader :occurrences, :message
 
     def initialize(query, date_time = Time.now)
-      fail InvalidDateTimeError unless [DateTime, Time].include?(date_time.class)
       str_time = date_time.strftime('%Y%m%dT%H%M%S')
       validate_input query, str_time
       @query = query.dup
@@ -95,12 +94,6 @@ module Nickel
     def validate_input(query, date_time)
       fail 'Empty NLP query' unless query.length > 0
       fail 'NLP says: date_time is not in the correct format' unless date_time =~ /^\d{8}T\d{6}$/
-    end
-  end
-
-  class InvalidDateTimeError < StandardError
-    def message
-      'You must pass in a ruby DateTime or Time class object'
     end
   end
 end
