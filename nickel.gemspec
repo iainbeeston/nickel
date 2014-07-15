@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.test_files         = s.files.grep(%r{^spec/})
   s.require_paths      = ["lib"]
 
+  s.required_ruby_version = '>= 1.9'
+
   if RUBY_ENGINE == 'rbx'
     s.add_dependency 'rubysl-date'
     s.add_dependency 'rubysl-time'
