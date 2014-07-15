@@ -4,8 +4,8 @@ rvm:
   - 2.1
   - 2.0
   - 1.9
-  - jruby
-  - rbx
+  - jruby-1.7
+  - rbx-2
 branches:
   only: master
 env:
