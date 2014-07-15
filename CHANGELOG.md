@@ -1,3 +1,8 @@
+0.1.6
+-----
+* Removed type checking on dates passed to NLP
+* Made explicit the ruby version required in the gemspec
+
 0.1.5
 -----
 * Better bugfix for queries containing "anytime"
