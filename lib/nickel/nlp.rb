@@ -1,9 +1,9 @@
-require_relative 'zdate'
-require_relative 'ztime'
-require_relative 'nlp_query'
-require_relative 'occurrence'
-require_relative 'construct_finder'
-require_relative 'construct_interpreter'
+require 'nickel/zdate'
+require 'nickel/ztime'
+require 'nickel/nlp_query'
+require 'nickel/occurrence'
+require 'nickel/construct_finder'
+require 'nickel/construct_interpreter'
 
 module Nickel
   class NLP

@@ -1,6 +1,6 @@
 require 'spec_helper'
-require_relative '../../../lib/nickel/occurrence'
-require_relative '../../../lib/nickel/zdate'
+require 'nickel/occurrence'
+require 'nickel/zdate'
 
 module Nickel
   describe Occurrence do

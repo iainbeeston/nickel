@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../../lib/nickel/construct'
+require 'nickel/construct'
 
 module Nickel
   describe RecurrenceConstruct do

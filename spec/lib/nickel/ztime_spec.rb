@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../../lib/nickel/ztime'
+require 'nickel/ztime'
 
 module Nickel
   describe ZTime do

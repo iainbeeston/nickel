@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../../../lib/nickel/zdate'
+require 'nickel/zdate'
 
 module Nickel
   describe ZDate do

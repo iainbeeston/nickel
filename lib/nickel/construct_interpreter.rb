@@ -1,5 +1,5 @@
-require_relative 'occurrence'
-require_relative 'construct'
+require 'nickel/occurrence'
+require 'nickel/construct'
 
 module Nickel
   class ConstructInterpreter

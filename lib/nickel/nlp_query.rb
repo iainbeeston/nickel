@@ -1,6 +1,6 @@
-require_relative 'zdate'
-require_relative 'ztime'
-require_relative 'nlp_query_constants'
+require 'nickel/zdate'
+require 'nickel/ztime'
+require 'nickel/nlp_query_constants'
 
 module Nickel
   class NLPQuery

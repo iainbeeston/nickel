@@ -1,6 +1,6 @@
-require_relative 'construct'
-require_relative 'zdate'
-require_relative 'ztime'
+require 'nickel/construct'
+require 'nickel/zdate'
+require 'nickel/ztime'
 
 module Nickel
   class ConstructFinder

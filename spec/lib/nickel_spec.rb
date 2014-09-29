@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'time'
-require_relative '../../lib/nickel'
-require_relative '../../lib/nickel/occurrence'
-require_relative '../../lib/nickel/zdate'
-require_relative '../../lib/nickel/ztime'
+require 'nickel'
+require 'nickel/occurrence'
+require 'nickel/zdate'
+require 'nickel/ztime'
 
 describe Nickel do
   describe '#parse' do
