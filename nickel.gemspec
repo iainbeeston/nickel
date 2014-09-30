@@ -26,6 +26,8 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'rubysl-bundler'
   end
 
+  s.add_dependency "i18n", ">= 0.6"
+
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", ">= 3.1"
