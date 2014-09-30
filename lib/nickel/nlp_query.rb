@@ -20,15 +20,13 @@ module Nickel
     def query_formatting
       query_str.gsub!(/\n/, '')
       query_str.downcase!
-      remove_unused_punctuation
-      replace_backslashes
+      substitute('nickel.nlp_query.substitutions.punctuation')
       remove_unnecessary_words
       standardize_holidays
       standardize_days
       standardize_months
       standardize_numbers
       standardize_am_pm
-      replace_hyphens
       insert_repeats_before_words_indicating_recurrence_lame
       insert_space_at_end_of_string_lame
       @after_formatting = query_str.dup    # save current state
@@ -67,15 +65,13 @@ module Nickel
       standardize_input
     end
 
-    def remove_unused_punctuation
-      nsub!(/,/, ' ')
-      nsub!(/\./, '')
-      nsub!(/;/, '')
-      nsub!(/['`]/, '')
-    end
-
-    def replace_backslashes
-      nsub!(/\\/, '/')
+    def substitute(i18n_key)
+      I18n.t(i18n_key).each do |sub|
+        to = sub[:to]
+        Array(sub[:from]).each do |from|
+          nsub!(from, to)
+        end
+      end
     end
 
     def standardize_holidays
@@ -369,10 +365,6 @@ module Nickel
       nsub!(/([0-9])(?:\s*)p\b/, '\1pm')  # allows 5p as 5pm
       nsub!(/\s+am\b/, 'am')  # removes any spaces before am, shouldn't I check for preceeding digits?
       nsub!(/\s+pm\b/, 'pm')  # removes any spaces before pm, shouldn't I check for preceeding digits?
-    end
-
-    def replace_hyphens
-      nsub!(/--?/, ' through ')
     end
 
     def insert_repeats_before_words_indicating_recurrence_lame
