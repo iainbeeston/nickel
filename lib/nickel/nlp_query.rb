@@ -23,7 +23,7 @@ module Nickel
       substitute('nickel.nlp_query.substitutions.punctuation')
       substitute('nickel.nlp_query.substitutions.unnecessary_words')
       substitute('nickel.nlp_query.substitutions.holidays')
-      standardize_days
+      substitute('nickel.nlp_query.substitutions.day_names')
       standardize_months
       standardize_numbers
       standardize_am_pm
@@ -72,33 +72,6 @@ module Nickel
           nsub!(from, to)
         end
       end
-    end
-
-    def standardize_days
-      nsub!(/mondays/, 'every mon')
-      nsub!(/monday/, 'mon')
-      nsub!(/tuesdays/, 'every tue')
-      nsub!(/tuesadys/, 'every tue')
-      nsub!(/tuesday/, 'tue')
-      nsub!(/tuesady/, 'tue')
-      nsub!(/wednesdays/, 'every wed')
-      nsub!(/wednesday/, 'wed')
-      nsub!(/thursdays/, 'every thu')
-      nsub!(/thurdsays/, 'every thu')
-      nsub!(/thursadys/, 'every thu')
-      nsub!(/thursday/, 'thu')
-      nsub!(/thurdsay/, 'thu')
-      nsub!(/thursady/, 'thu')
-      nsub!(/\bthurd?\b/, 'thu')
-      nsub!(/\bthurs?d?\b/, 'thu')
-      nsub!(/fridays/, 'every fri')
-      nsub!(/firdays/, 'every fri')
-      nsub!(/friday/, 'fri')
-      nsub!(/firday/, 'fri')
-      nsub!(/saturdays/, 'every sat')
-      nsub!(/saturday/, 'sat')
-      nsub!(/sundays/, 'every sun')
-      nsub!(/sunday/, 'sun')
     end
 
     def standardize_months
