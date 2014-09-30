@@ -26,7 +26,7 @@ module Nickel
       substitute('nickel.nlp_query.substitutions.day_names')
       substitute('nickel.nlp_query.substitutions.month_names')
       substitute('nickel.nlp_query.substitutions.numbers')
-      standardize_am_pm
+      substitute('nickel.nlp_query.substitutions.times')
       insert_repeats_before_words_indicating_recurrence_lame
       insert_space_at_end_of_string_lame
       @after_formatting = query_str.dup    # save current state
@@ -72,13 +72,6 @@ module Nickel
           nsub!(from, to)
         end
       end
-    end
-
-    def standardize_am_pm
-      nsub!(/([0-9])(?:\s*)a\b/, '\1am')  # allows 5a as 5am
-      nsub!(/([0-9])(?:\s*)p\b/, '\1pm')  # allows 5p as 5pm
-      nsub!(/\s+am\b/, 'am')  # removes any spaces before am, shouldn't I check for preceeding digits?
-      nsub!(/\s+pm\b/, 'pm')  # removes any spaces before pm, shouldn't I check for preceeding digits?
     end
 
     def insert_repeats_before_words_indicating_recurrence_lame
