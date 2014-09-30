@@ -21,7 +21,7 @@ module Nickel
       query_str.gsub!(/\n/, '')
       query_str.downcase!
       substitute('nickel.nlp_query.substitutions.punctuation')
-      remove_unnecessary_words
+      substitute('nickel.nlp_query.substitutions.unnecessary_words')
       standardize_holidays
       standardize_days
       standardize_months
@@ -78,35 +78,6 @@ module Nickel
       nsub!(/c?h[oa]nn?[aui][ck][ck]?[ua]h?/, 'hannukkah')
       nsub!(/x-?mas/, 'christmas')
       nsub!(/st\s+(patrick|patty|pat)s?(\s+day)?/, 'st patricks day')
-    end
-
-    def remove_unnecessary_words
-      nsub!(/coming/, '')
-      nsub!(/o'?clock/, '')
-      nsub!(/\s*in\s+(the\s+)?(morning|am)/, ' am')
-      nsub!(/\s*in\s+(the\s+)?(afternoon|pm|evenn?ing)/, ' pm')
-      nsub!(/\s*at\s+night/, 'pm')
-      nsub!(/(after\s*)?noon(ish)?/, '12:00pm')
-      nsub!(/\bmidnight\b/, '12:00am')
-      nsub!(/final/, 'last')
-      nsub!(/recur(s|ring)?/, 'repeats')
-      nsub!(/\beach\b/, 'every')
-      nsub!(/running\s+(until|through)/, 'through')
-      nsub!(/run(s|ning)/, 'for')
-      nsub!(/go(ing|es)/, 'for')
-      nsub!(/next\s+occ?urr?[ae]nce(\s+is)?/, 'start')
-      nsub!(/next\s+date(\s+it)?(\s+occurs)?(\s+is)?/, 'start')
-      nsub!(/forever/, 'repeats daily')
-      nsub!(/\bany(?:\s*)day\b/, 'every day')
-      nsub!(/^anytime$/, 'every day')  # user entered anytime by itself, not 'dayname anytime', caught next
-      nsub!(/any(\s)?time|whenever/, 'all day')
-      nsub!(/\beveryday\b/, 'every day')
-      nsub!(/\beveryother\b/, 'every other')
-      nsub!(/weekends/, 'every sat sun')
-      nsub!(/\btill\b/, 'through')
-      nsub!(/bi[-\s]monthly/, 'bimonthly')
-      nsub!(/tri[-\s]monthly/, 'trimonthly')
-      nsub!(/weekdays|every\s+weekday/, 'every monday through friday')
     end
 
     def standardize_days
