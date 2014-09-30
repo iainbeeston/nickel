@@ -24,7 +24,7 @@ module Nickel
       substitute('nickel.nlp_query.substitutions.unnecessary_words')
       substitute('nickel.nlp_query.substitutions.holidays')
       substitute('nickel.nlp_query.substitutions.day_names')
-      standardize_months
+      substitute('nickel.nlp_query.substitutions.month_names')
       standardize_numbers
       standardize_am_pm
       insert_repeats_before_words_indicating_recurrence_lame
@@ -72,25 +72,6 @@ module Nickel
           nsub!(from, to)
         end
       end
-    end
-
-    def standardize_months
-      nsub!(/january/, 'jan')
-      nsub!(/february/, 'feb')
-      nsub!(/febr/, 'feb')
-      nsub!(/march/, 'mar')
-      nsub!(/april/, 'apr')
-      nsub!(/may/, 'may')
-      nsub!(/june/, 'jun')
-      nsub!(/july/, 'jul')
-      nsub!(/august/, 'aug')
-      nsub!(/september/, 'sep')
-      nsub!(/sept/, 'sep')
-      nsub!(/october/, 'oct')
-      nsub!(/november/, 'nov')
-      nsub!(/novermber/, 'nov')
-      nsub!(/novem/, 'nov')
-      nsub!(/decemb?e?r?/, 'dec')
     end
 
     def standardize_numbers
