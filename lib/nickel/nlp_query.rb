@@ -22,7 +22,7 @@ module Nickel
       query_str.downcase!
       substitute('nickel.nlp_query.substitutions.punctuation')
       substitute('nickel.nlp_query.substitutions.unnecessary_words')
-      standardize_holidays
+      substitute('nickel.nlp_query.substitutions.holidays')
       standardize_days
       standardize_months
       standardize_numbers
@@ -72,12 +72,6 @@ module Nickel
           nsub!(from, to)
         end
       end
-    end
-
-    def standardize_holidays
-      nsub!(/c?h[oa]nn?[aui][ck][ck]?[ua]h?/, 'hannukkah')
-      nsub!(/x-?mas/, 'christmas')
-      nsub!(/st\s+(patrick|patty|pat)s?(\s+day)?/, 'st patricks day')
     end
 
     def standardize_days
