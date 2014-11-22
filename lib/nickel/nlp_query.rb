@@ -71,14 +71,6 @@ module Nickel
     attr_accessor :query_str
 
     def standardize_input
-      nsub!(/last\s+#{DAY_OF_WEEK}/, '5th \1')     # last dayname  =>  5th dayname
-      nsub!(/\ba\s+(week|month|day)/, '1 \1')     # a month|week|day  =>  1 month|week|day
-      nsub!(/^(through|until)/, 'today through')   # ^through  =>  today through
-      nsub!(/every\s*(night|morning)/, 'every day')
-      nsub!(/tonight/, 'today')
-      nsub!(/this(?:\s*)morning/, 'today')
-      nsub!(/before\s+12pm/, '6am to 12pm')        # arbitrary
-
       # Handle 'THE' Cases
       # Attempt to pick out where a user entered 'the' when they really mean 'every'.
       # For example,
