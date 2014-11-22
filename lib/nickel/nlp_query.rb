@@ -20,19 +20,16 @@ module Nickel
     end
 
     def query_formatting
-      query_str.gsub!(/\n/, '')
       query_str.downcase!
       remove_unused_punctuation
-      replace_backslashes
       run_spell_check
       remove_unnecessary_words
       standardize_days
       standardize_months
       standardize_numbers
       standardize_am_pm
-      replace_hyphens
       insert_repeats_before_words_indicating_recurrence_lame
-      insert_space_at_end_of_string_lame
+      query_str.concat(' ')
       @after_formatting = query_str.dup    # save current state
     end
 
@@ -70,14 +67,13 @@ module Nickel
     end
 
     def remove_unused_punctuation
+      nsub!(/\n/, '')
       nsub!(/,/, ' ')
       nsub!(/\./, '')
       nsub!(/;/, '')
       nsub!(/['`]/, '')
-    end
-
-    def replace_backslashes
       nsub!(/\\/, '/')
+      nsub!(/--?/, ' through ')
     end
 
     def run_spell_check
@@ -385,10 +381,6 @@ module Nickel
       nsub!(/\s+pm\b/, 'pm')  # removes any spaces before pm, shouldn't I check for preceeding digits?
     end
 
-    def replace_hyphens
-      nsub!(/--?/, ' through ')
-    end
-
     def insert_repeats_before_words_indicating_recurrence_lame
       comps = query_str.split
       (daily_index = comps.index('daily')) && comps[daily_index - 1] != 'repeats' && comps[daily_index] = 'repeats daily'
@@ -397,11 +389,6 @@ module Nickel
       if (rejoin = comps.join(' ')) != query_str
         nsub!(/.+/, rejoin)
       end
-    end
-
-    def insert_space_at_end_of_string_lame
-  #      nsub!(/(.+)/,'\1 ')  # I don't really want to be notified about this
-      query_str.gsub!(/(.+)/, '\1 ')
     end
 
     def to_s
