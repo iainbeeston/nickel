@@ -16,23 +16,13 @@ module Nickel
         sub(/--?/, ' through ')
 
         # spell check
-        sub(/tomm?orr?ow|romorrow/, 'tomorrow')
-        sub(/weeknd/, 'weekend')
         sub(/weekends/, 'every sat sun')
         sub(/everyother/, 'every other')
-        sub(/weak/, 'week')
         sub(/everyweek/, 'every week')
         sub(/everymonth/, 'every month')
-        sub(/frist/, '1st')
-        sub(/eveyr|evrey/, 'every')
-        sub(/fridya|friady|fridy/, 'friday')
-        sub(/thurdsday/, 'thursday')
-        sub(/frouth/, 'fourth')
         sub(/\btill\b/, 'through')
-        sub(/\bthru\b|\bthrouh\b|\bthough\b|\bthrew\b|\bthrow\b|\bthroug\b|\bthuogh\b/, 'through')
         sub(/weekdays|every\s+weekday/, 'every monday through friday')
         sub(/\bevery?day\b/, 'every day')
-        sub(/eigth/, 'eighth')
         sub(/bi[-\s]monthly/, 'bimonthly')
         sub(/tri[-\s]monthly/, 'trimonthly')
 

@@ -825,8 +825,8 @@ describe Nickel do
       end
     end
 
-    context "when the query is 'the twentyeigth'" do
-      let(:query) { 'the twentyeigth' }
+    context "when the query is 'the twentyeighth'" do
+      let(:query) { 'the twentyeighth' }
       let(:run_date) { Time.local(2010, 3, 20) }
 
       describe '#occurrences' do
