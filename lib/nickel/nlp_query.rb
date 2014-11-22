@@ -382,13 +382,9 @@ module Nickel
     end
 
     def insert_repeats_before_words_indicating_recurrence_lame
-      comps = query_str.split
-      (daily_index = comps.index('daily')) && comps[daily_index - 1] != 'repeats' && comps[daily_index] = 'repeats daily'
-      (weekly_index = comps.index('weekly')) && comps[weekly_index - 1] != 'repeats' && comps[weekly_index] = 'repeats weekly'
-      (monthly_index = comps.index('monthly')) && comps[monthly_index - 1] != 'repeats' && comps[monthly_index] = 'repeats monthly'
-      if (rejoin = comps.join(' ')) != query_str
-        nsub!(/.+/, rejoin)
-      end
+      nsub!(/(?<!repeats )daily/, 'repeats daily')
+      nsub!(/(?<!repeats )weekly/, 'repeats weekly')
+      nsub!(/(?<!repeats )monthly/, 'repeats monthly')
     end
 
     def to_s
