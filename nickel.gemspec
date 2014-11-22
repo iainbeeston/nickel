@@ -19,13 +19,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9'
 
-  if RUBY_ENGINE == 'rbx'
-    s.add_dependency 'rubysl-date'
-    s.add_dependency 'rubysl-time'
-    s.add_development_dependency 'rubysl-rake'
-    s.add_development_dependency 'rubysl-bundler'
-  end
-
   s.add_development_dependency "bundler"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec", ">= 3.1"
