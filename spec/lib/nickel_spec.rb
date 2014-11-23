@@ -2337,5 +2337,44 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'every 3 days'" do
+      let(:query) { 'every 3 days' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is every 3rd day' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :daily, start_date: Nickel::ZDate.new('20141123'), interval: 3),
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'every 2 weeks'", :broken do
+      let(:query) { 'every 2 weeks' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is every 2nd week' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :weekly, start_date: Nickel::ZDate.new('20141123'), interval: 2),
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'every 4 months'", :broken do
+      let(:query) { 'every 4 months' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is every 4 months' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :datemonthly, start_date: Nickel::ZDate.new('20141123'), interval: 1, date_of_month: 23),
+          ]
+        end
+      end
+    end
   end
 end

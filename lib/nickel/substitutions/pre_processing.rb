@@ -180,6 +180,19 @@ module Nickel
         # "mon wed every week" --> every mon wed
         sub(/((#{DAY_OF_WEEK.source}(?:\s*)){1,7})(?:of\s+)?(?:every|each)(\s+other)?\s+week/, 'every \4 \1')
 
+        # "every 2|3 weeks" --> every 2nd|3rd week
+        sub(/(?:repeats\s+)?every\s+(\d+)\s+(day|week|month)s?/) do |m1, m2|
+          ordinal = case m1
+                    when '2' then
+                      'nd'
+                    when '3' then
+                      'rd'
+                    else
+                      'th'
+                    end
+          'every ' + m1 + ordinal + ' ' + m2
+        end
+
         # "every week on mon tue fri" --> every mon tue fri
         sub(/(?:repeats\s+)?every\s+(?:(other|3rd|2nd)\s+)?weeks?\s+(?:\bon\s+)?((?:#{DAY_OF_WEEK_NB.source}\s+){1,7})/, 'every \1 \2')
 
