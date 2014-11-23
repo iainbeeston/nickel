@@ -612,7 +612,7 @@ module Nickel
         # the 23rd of this|the month --> 23rd this month
         # this month on the 23rd --> 23rd this month
         sub(/(?:the\s+)?#{DATE_DD.source}\s+(?:of\s+)?(?:this|the)\s+month/, '\1 this month')
-        sub(/this\s+month\s+(?:(?:on|the)\s+)?(?:(?:on|the)\s+)?#{DATE_DD.source}/, '\1 this month')
+        sub(/this\s+month\s+(?:(?:on|the)\s+)?(?:(?:on|the)\s+)?#{DATE_DD.source}(?!\s+#{DAY_OF_WEEK.source}\s+this\s+month)/, '\1 this month')
 
         # Ordinal next month:
         # this will slip by now

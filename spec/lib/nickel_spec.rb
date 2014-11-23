@@ -2255,5 +2255,87 @@ describe Nickel do
         end
       end
     end
+
+    context "when the query is 'first sunday of the month'" do
+      let(:query) { 'first sunday of the month' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the first sunday of the current month' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141102'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'first sunday of the month until january 31st'" do
+      let(:query) { 'first sunday of the month until january 31st' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the first sunday of the current month' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :daymonthly, start_date: Nickel::ZDate.new('20141207'), end_date: Nickel::ZDate.new('20150131'), interval: 1, day_of_week: 6, week_of_month: 1)
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'the 2nd and 3rd saturday of the month'" do
+      let(:query) { 'the 2nd and 3rd saturday of this month' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the second and third sunday of the current month' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141108')),
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141115'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'on the 2nd and 3rd saturday of the month until january 31st" do
+      let(:query) { 'on the 2nd and 3rd saturday of the month until january 31st' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the second and third saturday of every month up until january' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :daymonthly, start_date: Nickel::ZDate.new('20141213'), end_date: Nickel::ZDate.new('20150131'), interval: 1, day_of_week: 5, week_of_month: 2),
+            Nickel::Occurrence.new(type: :daymonthly, start_date: Nickel::ZDate.new('20141220'), end_date: Nickel::ZDate.new('20150131'), interval: 1, day_of_week: 5, week_of_month: 3)
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'on the 3rd saturday and 5th tuesday of the month'" do
+      let(:query) { 'on the 3rd saturday and 5th tuesday of the month' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the third saturday and the last tuesday of the current month' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141115')),
+            Nickel::Occurrence.new(type: :single, start_date: Nickel::ZDate.new('20141125'))
+          ]
+        end
+      end
+    end
+
+    context "when the query is 'on the 3rd saturday and 5th tuesday of the month until january 31st'" do
+      let(:query) { 'on the 3rd saturday and 5th tuesday of the month until january 31st' }
+      let(:run_date) { Time.local(2014, 11, 23) }
+
+      describe '#occurrences' do
+        it 'is the third saturday and the last tuesday of every month up until january' do
+          expect(n.occurrences).to match_array [
+            Nickel::Occurrence.new(type: :daymonthly, start_date: Nickel::ZDate.new('20141220'), end_date: Nickel::ZDate.new('20150131'), interval: 1, day_of_week: 5, week_of_month: 3),
+            Nickel::Occurrence.new(type: :daymonthly, start_date: Nickel::ZDate.new('20141125'), end_date: Nickel::ZDate.new('20150131'), interval: 1, day_of_week: 1, week_of_month: -1)
+          ]
+        end
+      end
+    end
   end
 end
