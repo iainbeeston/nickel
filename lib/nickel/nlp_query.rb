@@ -11,6 +11,7 @@ module Nickel
 
     def initialize(query_str)
       @query_str = query_str.dup
+      @changed_in = []
     end
 
     attr_reader :after_formatting, :changed_in
@@ -42,8 +43,7 @@ module Nickel
     def nsub!(*args)
       if m = query_str.match(args[0])    # m will now hold the FIRST set of backreferenced matches
         # there is at least one match
-        @changed_in ||= []
-        @changed_in << caller[1][/(\w+)\W*$/, 1]
+        @changed_in << caller[1]
         if block_given?
           # query_str.gsub!(args[0]) {yield(*m.to_a[1..-1])}    # There is a bug here: If gsub matches more than once,
                                                       # then the first set of referenced matches will be passed to the block
