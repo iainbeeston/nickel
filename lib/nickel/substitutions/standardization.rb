@@ -256,15 +256,6 @@ module Nickel
         sub(/([0-9])(?:\s*)p\b/, '\1pm')  # allows 5p as 5pm
         sub(/\s+am\b/, 'am')  # removes any spaces before am, shouldn't I check for preceeding digits?
         sub(/\s+pm\b/, 'pm')  # removes any spaces before pm, shouldn't I check for preceeding digits?
-
-        # miscellaneous
-        sub(/last\s+#{DAY_OF_WEEK.source}/, '5th \1')     # last dayname  =>  5th dayname
-        sub(/\ba\s+(week|month|day)/, '1 \1')     # a month|week|day  =>  1 month|week|day
-        sub(/^(through|until)/, 'today through')   # ^through  =>  today through
-        sub(/every\s*(night|morning)/, 'every day')
-        sub(/tonight/, 'today')
-        sub(/this(?:\s*)morning/, 'today')
-        sub(/before\s+12pm/, '6am to 12pm')        # arbitrary
       end
     end
   end
