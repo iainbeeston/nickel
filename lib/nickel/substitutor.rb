@@ -1,11 +1,17 @@
 module Nickel
   module Substitutor
+    def self.extended(mod)
+      mod.instance_variable_set(:@blocks, [])
+    end
+
     def apply(nlp_query)
-      Evaluator.new(nlp_query).instance_eval(&@substitutions)
+      @blocks.each do |blk|
+        Evaluator.new(nlp_query).instance_eval(&blk)
+      end
     end
 
     def substitutions(&block)
-      @substitutions = block
+      @blocks << block
     end
 
     protected
