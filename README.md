@@ -2,10 +2,10 @@ Nickel
 ======
 
 [![Gem Version](http://img.shields.io/gem/v/nickel.svg)](http://rubygems.org/gems/nickel)
+[![Inline docs](http://inch-ci.org/github/iainbeeston/nickel.svg?branch=master)](http://inch-ci.org/github/iainbeeston/nickel)
 [![Build Status](http://img.shields.io/travis/iainbeeston/nickel/master.svg)](https://travis-ci.org/iainbeeston/nickel)
 [![Code Climate](http://img.shields.io/codeclimate/github/iainbeeston/nickel.svg)](https://codeclimate.com/github/iainbeeston/nickel)
 [![Coverage Status](http://img.shields.io/codeclimate/coverage/github/iainbeeston/nickel.svg)](https://codeclimate.com/github/iainbeeston/nickel)
-[![Inline docs](http://inch-ci.org/github/iainbeeston/nickel.svg?branch=master)](http://inch-ci.org/github/iainbeeston/nickel)
 
 Nickel extracts date, time, and message information from naturally worded text.
 
