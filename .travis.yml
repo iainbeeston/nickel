@@ -1,11 +1,12 @@
 language: ruby
 script: bin/run_specs.sh
 rvm:
+  - 2.2
   - 2.1
   - 2.0
   - 1.9
-  - jruby-1.7
-  - rbx-2
+  - jruby
+  - rbx
 branches:
   only: master
 env:
