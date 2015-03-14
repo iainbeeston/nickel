@@ -11,4 +11,4 @@ branches:
   only: master
 env:
   global:
-    secure: CrU4e01+yfyszZ8DYBdrqq/kCzuWif4wezsPtrjJuQEnm158KVRgjxIU9GrFqJeus7gsMFb4E/FWrTxMjsqe84l2pppAoEMz04ckktDL+Hck8aOIuR77Q9VbFqaEYc/2fNbLCNIGoIDu7g1lmJZvW46BlwALBPNMcMvpyjY7DII=
+    - CODECLIMATE_REPO_TOKEN=1e88b3c41713520cf916ba011dad063d420f98fddd64c8b081850aba9ebcae2e
